@@ -1,0 +1,297 @@
+﻿<Page x:Class="UniPlanner.Pages.EventsPage"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	  mc:Ignorable="d" d:DesignHeight="550" d:DesignWidth="850" Title="Events">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="60"/>
+			<RowDefinition Height="1*"/>
+		</Grid.RowDefinitions>
+		<Grid Grid.Row="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="3*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+			<Border Grid.Column="0" Style="{StaticResource Panel}" Margin="0,0,0,10">
+				<Button Grid.Column="0" x:Name="TodayButton" Style="{StaticResource PageButton}" Click="TodayButtonClick">
+					<TextBlock Text="today"/>
+				</Button>
+			</Border>
+			<Border Grid.Column="1" Margin="10,0,10,10" Style="{StaticResource Panel}">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock Grid.Column="0" Text="view:"/>
+					<Button Grid.Column="1" x:Name="MonthButton" Style="{StaticResource SelectedButton}" Click="MonthButtonClick">
+						<TextBlock Text="month"/>
+					</Button>
+					<Button Grid.Column="2" x:Name="WeekButton" Style="{StaticResource DeselectedButton}" Click="WeekButtonClick">
+						<TextBlock Text="week"/>
+					</Button>
+					<Button Grid.Column="3" x:Name="DayButton" Style="{StaticResource DeselectedButton}" Click="DayButtonClick">
+						<TextBlock Text="day"/>
+					</Button>
+				</Grid>
+			</Border>
+			<Border Grid.Column="2" Margin="0,0,0,10" Style="{StaticResource Panel}">
+				<Button Grid.Column="1" Style="{StaticResource PageButton}" Click="AddButtonClick">
+					<TextBlock Text="add"/>
+				</Button>
+			</Border>
+		</Grid>
+		<Border Grid.Row="1" x:Name="MonthPanel" Style="{StaticResource Panel}" Visibility="Visible">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="40"/>
+					<RowDefinition Height="25"/>
+					<RowDefinition Height="1*"/>
+				</Grid.RowDefinitions>
+				<Grid Grid.Row="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="40"/>
+						<ColumnDefinition Width="40"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock x:Name="MonthHeader" Style="{StaticResource Header}"/>
+					<Button Grid.Column="1" Style="{StaticResource HeaderExpandButtonFlipped}" Click="MonthBackButtonClick"/>
+					<Button Grid.Column="2" Style="{StaticResource HeaderExpandButton}" Click="MonthForwardButtonClick"/>
+				</Grid>
+				<Grid Grid.Row="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock Grid.Column="0" Grid.Row="0" Text="mon"/>
+					<TextBlock Grid.Column="1" Grid.Row="0" Text="tue"/>
+					<TextBlock Grid.Column="2" Grid.Row="0" Text="wed"/>
+					<TextBlock Grid.Column="3" Grid.Row="0" Text="thu"/>
+					<TextBlock Grid.Column="4" Grid.Row="0" Text="fri"/>
+					<TextBlock Grid.Column="5" Grid.Row="0" Text="sat"/>
+					<TextBlock Grid.Column="6" Grid.Row="0" Text="sun"/>
+				</Grid>
+				<Grid Grid.Row="2" x:Name="MonthArea">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<Rectangle Grid.Column="0" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource VerticalGridline}" HorizontalAlignment="Left"/>
+					<Rectangle Grid.Column="0" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource VerticalGridline}"/>
+					<Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource VerticalGridline}"/>
+					<Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource VerticalGridline}"/>
+					<Rectangle Grid.Column="3" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource VerticalGridline}"/>
+					<Rectangle Grid.Column="4" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource VerticalGridline}"/>
+					<Rectangle Grid.Column="5" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource VerticalGridline}"/>
+					<Rectangle Grid.Column="6" Grid.Row="0" Grid.RowSpan="6" Style="{StaticResource VerticalGridline}"/>
+					<Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="7" Style="{StaticResource HorizontalGridline}"/>
+					<Rectangle Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="7" Style="{StaticResource HorizontalGridline}"/>
+					<Rectangle Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" Style="{StaticResource HorizontalGridline}"/>
+					<Rectangle Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="7" Style="{StaticResource HorizontalGridline}"/>
+					<Rectangle Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="7" Style="{StaticResource HorizontalGridline}"/>
+					<Rectangle Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="7" Style="{StaticResource HorizontalGridline}"/>
+					<Rectangle Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="7" Style="{StaticResource HorizontalGridline}" VerticalAlignment="Bottom"/>
+					<TextBlock Grid.Column="0" Grid.Row="0" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="1" Grid.Row="0" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="2" Grid.Row="0" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="3" Grid.Row="0" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="4" Grid.Row="0" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="5" Grid.Row="0" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="6" Grid.Row="0" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="0" Grid.Row="1" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="1" Grid.Row="1" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="2" Grid.Row="1" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="3" Grid.Row="1" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="4" Grid.Row="1" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="5" Grid.Row="1" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="6" Grid.Row="1" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="0" Grid.Row="2" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="1" Grid.Row="2" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="2" Grid.Row="2" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="3" Grid.Row="2" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="4" Grid.Row="2" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="5" Grid.Row="2" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="6" Grid.Row="2" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="0" Grid.Row="3" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="1" Grid.Row="3" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="2" Grid.Row="3" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="3" Grid.Row="3" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="4" Grid.Row="3" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="5" Grid.Row="3" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="6" Grid.Row="3" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="0" Grid.Row="4" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="1" Grid.Row="4" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="2" Grid.Row="4" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="3" Grid.Row="4" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="4" Grid.Row="4" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="5" Grid.Row="4" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="6" Grid.Row="4" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="0" Grid.Row="5" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="1" Grid.Row="5" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="2" Grid.Row="5" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="3" Grid.Row="5" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="4" Grid.Row="5" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="5" Grid.Row="5" Style="{StaticResource CalendarDate}"/>
+					<TextBlock Grid.Column="6" Grid.Row="5" Style="{StaticResource CalendarDate}"/>
+				</Grid>
+			</Grid>
+		</Border>
+		<Border Grid.Row="1" x:Name="WeekPanel" Style="{StaticResource Panel}" Visibility="Collapsed">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="40"/>
+					<RowDefinition Height="25"/>
+					<RowDefinition Height="50"/>
+					<RowDefinition Height="1*"/>
+				</Grid.RowDefinitions>
+				<Grid Grid.Row="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="40"/>
+						<ColumnDefinition Width="40"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock Grid.Column="0" x:Name="WeekHeader" Style="{StaticResource Header}"/>
+					<Button Grid.Column="1" Style="{StaticResource HeaderExpandButtonFlipped}" Click="WeekBackButtonClick"/>
+					<Button Grid.Column="2" Style="{StaticResource HeaderExpandButton}" Click="WeekForwardButtonClick"/>
+				</Grid>
+				<Grid Grid.Row="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="17"/>
+					</Grid.ColumnDefinitions>
+					<Grid Grid.Column="0" x:Name="WeekDayTextArea">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="50"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock x:Name="Mon" Grid.Column="1" Grid.Row="0"/>
+						<TextBlock x:Name="Tue" Grid.Column="2" Grid.Row="0"/>
+						<TextBlock x:Name="Wed" Grid.Column="3" Grid.Row="0"/>
+						<TextBlock x:Name="Thu" Grid.Column="4" Grid.Row="0"/>
+						<TextBlock x:Name="Fri" Grid.Column="5" Grid.Row="0"/>
+						<TextBlock x:Name="Sat" Grid.Column="6" Grid.Row="0"/>
+						<TextBlock x:Name="Sun" Grid.Column="7" Grid.Row="0"/>
+					</Grid>
+				</Grid>
+				<Grid Grid.Row="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="17"/>
+					</Grid.ColumnDefinitions>
+					<Grid Grid.Column="0" x:Name="WeekAllDayArea" Background="#E5E5E5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="50"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="all-day"/>
+					</Grid>
+				</Grid>
+				<ScrollViewer Grid.Row="3" Grid.RowSpan="2" x:Name="WeekScrollViewer">
+					<Grid x:Name="WeekArea" Height="1460" VerticalAlignment="Top">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="50"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="00:00" Margin="0,0,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="01:00" Margin="0,60,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="02:00" Margin="0,120,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="03:00" Margin="0,180,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="04:00" Margin="0,240,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="05:00" Margin="0,300,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="06:00" Margin="0,360,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="07:00" Margin="0,420,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="08:00" Margin="0,480,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="09:00" Margin="0,540,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="10:00" Margin="0,600,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="11:00" Margin="0,660,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="12:00" Margin="0,720,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="13:00" Margin="0,780,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="14:00" Margin="0,840,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="15:00" Margin="0,900,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="16:00" Margin="0,960,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="17:00" Margin="0,1020,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="18:00" Margin="0,1080,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="19:00" Margin="0,1140,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="20:00" Margin="0,1200,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="21:00" Margin="0,1260,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="22:00" Margin="0,1320,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="23:00" Margin="0,1380,0,0" VerticalAlignment="Top"/>
+						<TextBlock Grid.Column="0" Text="00:00" Margin="0,1440,0,0" VerticalAlignment="Top"/>
+						<Rectangle Grid.Column="0" Style="{StaticResource VerticalGridline}"/>
+						<Rectangle Grid.Column="1" Style="{StaticResource VerticalGridline}"/>
+						<Rectangle Grid.Column="2" Style="{StaticResource VerticalGridline}"/>
+						<Rectangle Grid.Column="3" Style="{StaticResource VerticalGridline}"/>
+						<Rectangle Grid.Column="4" Style="{StaticResource VerticalGridline}"/>
+						<Rectangle Grid.Column="5" Style="{StaticResource VerticalGridline}"/>
+						<Rectangle Grid.Column="6" Style="{StaticResource VerticalGridline}"/>
+						<Rectangle Grid.Column="7" Style="{StaticResource VerticalGridline}"/>
+						<Rectangle Grid.Column="0" Grid.ColumnSpan="8" x:Name="TimeLine" Style="{StaticResource TimeLine}"/>
+					</Grid>
+				</ScrollViewer>
+			</Grid>
+		</Border>
+		<Border Grid.Row="1" x:Name="DayPanel" Style="{StaticResource Panel}" Visibility="Collapsed">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="40"/>
+					<RowDefinition Height="1*"/>
+				</Grid.RowDefinitions>
+				<Grid Grid.Row="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="40"/>
+						<ColumnDefinition Width="40"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock Grid.Column="0" x:Name="DayHeader" Style="{StaticResource Header}"/>
+					<Button Grid.Column="1" Style="{StaticResource HeaderExpandButtonFlipped}" Click="DayBackButtonClick"/>
+					<Button Grid.Column="2" Style="{StaticResource HeaderExpandButton}" Click="DayForwardButtonClick"/>
+				</Grid>
+				<ScrollViewer Grid.Row="1">
+					<StackPanel x:Name="DayArea"/>
+				</ScrollViewer>
+			</Grid>
+		</Border>
+		<Popup x:Name="EventEditorPopup"/>
+	</Grid>
+</Page>

@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="UniPlanner.UserControls.TaskControls.SubtaskEditor"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 Height="100" Width="400">
+	<Border Style="{StaticResource Popup}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="65"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Column="0" Text="*subtask:" Style="{StaticResource Title}"/>
+				<TextBox Grid.Column="1" x:Name="SubtaskInput"/>
+			</Grid>
+			<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" Style="{StaticResource StopButton}" Click="CancelButtonClick">
+					<TextBlock Text="cancel"/>
+				</Button>
+				<Button Grid.Column="1" Style="{StaticResource StartButton}" Click="SaveButtonClick">
+					<TextBlock Text="save"/>
+				</Button>
+			</Grid>
+		</Grid>
+	</Border>
+</UserControl>

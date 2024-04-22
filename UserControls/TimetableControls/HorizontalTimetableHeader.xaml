@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="UniPlanner.UserControls.TimetableControls.HorizontalTimetableHeader"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 mc:Ignorable="d" d:DesignHeight="80" d:DesignWidth="650">
+	<Grid Style="{StaticResource WhiteMargin}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="40"/>
+		</Grid.ColumnDefinitions>
+		<StackPanel Grid.Column="0">
+			<TextBlock x:Name="HeaderText" MinHeight="25" Text="hooray!&#x0a;&#x0a;you have no timetabled events today." Style="{StaticResource Header}"/>
+			<TextBlock x:Name="SubtitleText" Style="{StaticResource Subheader}"/>
+		</StackPanel>
+		<Grid Grid.Column="1">
+			<Button x:Name="CollapseButton" Style="{StaticResource HeaderCollapseButton}" Visibility="Collapsed" Click="CollapseButtonClick"/>
+			<Button x:Name="ExpandButton" Style="{StaticResource HeaderExpandButton}" Visibility="Collapsed" Click="ExpandButtonClick"/>
+		</Grid>
+	</Grid>
+</UserControl>

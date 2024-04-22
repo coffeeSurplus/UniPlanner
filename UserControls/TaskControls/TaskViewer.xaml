@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="UniPlanner.UserControls.TaskControls.TaskViewer"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 mc:Ignorable="d" d:DesignHeight="50" d:DesignWidth="650">
+	<StackPanel x:Name="SubtaskArea" Style="{StaticResource TextPanel}">
+		<Grid Style="{StaticResource White}" MouseEnter="ShowButtonsEvent" MouseLeave="HideButtonsEvent">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="40"/>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="40"/>
+				<ColumnDefinition Width="40"/>
+				<ColumnDefinition Width="40"/>
+			</Grid.ColumnDefinitions>
+			<Button Grid.Column="0" x:Name="CompleteButton" Style="{StaticResource IncompleteButton}" Click="CompleteButtonClick"/>
+			<StackPanel x:Name="TextArea" Grid.Column="1" Grid.ColumnSpan="4" Style="{StaticResource VerticalPanel}">
+				<StackPanel Style="{StaticResource HorizontalPanel}">
+					<TextBlock x:Name="PriorityText" Style="{StaticResource Priority}"/>
+					<TextBlock x:Name="TitleText" Style="{StaticResource Title}"/>
+				</StackPanel>
+				<TextBlock x:Name="SubtitleText" Style="{StaticResource Subtitle}"/>
+			</StackPanel>
+			<Button Grid.Column="2" x:Name="AddButton" Style="{StaticResource AddButton}" Visibility="Collapsed" Click="AddButtonClick"/>
+			<Button Grid.Column="3" x:Name="EditButton" Style="{StaticResource EditButton}" Visibility="Collapsed" Click="EditButtonClick"/>
+			<Button Grid.Column="4" x:Name="DeleteButton" Style="{StaticResource DeleteButton}" Visibility="Collapsed" Click="DeleteButtonClick"/>
+		</Grid>
+	</StackPanel>
+</UserControl>

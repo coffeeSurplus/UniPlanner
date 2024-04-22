@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="UniPlanner.UserControls.TaskControls.TaskEditor"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 Height="300" Width="400">
+	<Border Style="{StaticResource Popup}">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Column="0" Grid.Row="0" Text="*task:" Style="{StaticResource Title}"/>
+			<TextBox Grid.Column="1" Grid.Row="0" x:Name="TaskInput"/>
+			<TextBlock Grid.Column="0" Grid.Row="1" Text="details:" Style="{StaticResource Title}"/>
+			<TextBox Grid.Column="1" Grid.Row="1" x:Name="DetailsInput"/>
+			<TextBlock Grid.Column="0" Grid.Row="2" Text="subject:" Style="{StaticResource Title}"/>
+			<TextBox Grid.Column="1" Grid.Row="2" x:Name="SubjectInput"/>
+			<TextBlock Grid.Column="0" Grid.Row="3" Text="date:" Style="{StaticResource Title}"/>
+			<TextBox Grid.Column="1" Grid.Row="3" x:Name="DateInput"/>
+			<TextBlock Grid.Column="0" Grid.Row="4" Text="time:" Style="{StaticResource Title}"/>
+			<TextBox Grid.Column="1" Grid.Row="4" x:Name="TimeInput"/>
+			<TextBlock Grid.Column="0" Grid.Row="5" Text="*priority:" Style="{StaticResource Title}"/>
+			<Grid Grid.Column="1" Grid.Row="5" x:Name="PriorityButtons">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" x:Name="NoPriorityButton" Style="{StaticResource SelectedButton}" Click="PriorityButtonClick">
+					<TextBlock Text="none"/>
+				</Button>
+				<Button Grid.Column="1" x:Name="LowPriorityButton" Style="{StaticResource DeselectedButton}" Click="PriorityButtonClick">
+					<TextBlock Text="low"/>
+				</Button>
+				<Button Grid.Column="2" x:Name="MediumPriorityButton" Style="{StaticResource DeselectedButton}" Click="PriorityButtonClick">
+					<TextBlock Text="medium"/>
+				</Button>
+				<Button Grid.Column="3" x:Name="HighPriorityButton" Style="{StaticResource DeselectedButton}" Click="PriorityButtonClick">
+					<TextBlock Text="high"/>
+				</Button>
+			</Grid>
+			<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" Style="{StaticResource StopButton}" Click="CancelButtonClick">
+					<TextBlock Text="cancel"/>
+				</Button>
+				<Button Grid.Column="1" Style="{StaticResource StartButton}" Click="SaveButtonClick">
+					<TextBlock Text="save"/>
+				</Button>
+			</Grid> 
+		</Grid>
+	</Border>
+</UserControl>

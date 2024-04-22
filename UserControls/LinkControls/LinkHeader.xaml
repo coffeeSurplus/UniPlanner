@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="UniPlanner.UserControls.LinkControls.LinkHeader"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 mc:Ignorable="d" d:DesignHeight="40" d:DesignWidth="650">
+	<Grid Style="{StaticResource White}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="40"/>
+		</Grid.ColumnDefinitions>
+		<TextBlock Grid.Column="0" x:Name="HeaderText" Text="no links added." Style="{StaticResource Header}"/>
+		<Grid Grid.Column="1">
+			<Button x:Name="CollapseButton" Style="{StaticResource HeaderCollapseButton}" Visibility="Collapsed" Click="CollapseButtonClick"/>
+			<Button x:Name="ExpandButton" Style="{StaticResource HeaderExpandButton}" Visibility="Collapsed" Click="ExpandButtonClick"/>
+		</Grid>
+	</Grid>
+</UserControl>

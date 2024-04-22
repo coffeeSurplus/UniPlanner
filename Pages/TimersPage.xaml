@@ -1,0 +1,36 @@
+﻿<Page x:Class="UniPlanner.Pages.TimersPage"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	  mc:Ignorable="d" d:DesignHeight="550" d:DesignWidth="850" Title="Timers">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="60"/>
+			<RowDefinition Height="1*"/>
+		</Grid.RowDefinitions>
+		<Border Grid.Row="0" Style="{StaticResource Panel}" Margin="0,0,0,10">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" x:Name="StopwatchButton" Style="{StaticResource SelectedButton}" Click="StopwatchButtonClick">
+					<TextBlock Text="stopwatch"/>
+				</Button>
+				<Button Grid.Column="1" x:Name="TimerButton" Style="{StaticResource DeselectedButton}" Click="TimerButtonClick">
+					<TextBlock Text="timer"/>
+				</Button>
+				<Button Grid.Column="2" x:Name="PomodoroButton" Style="{StaticResource DeselectedButton}" Click="PomodoroButtonClick">
+					<TextBlock Text="pomodoro"/>
+				</Button>
+			</Grid>
+		</Border>
+		<Grid Grid.Row="1">
+			<Border x:Name="StopwatchPanel" Visibility="Visible"/>
+			<Border x:Name="TimerPanel" Visibility="Collapsed"/>
+			<Border x:Name="PomodoroPanel" Visibility="Collapsed"/>
+		</Grid>
+	</Grid>
+</Page>

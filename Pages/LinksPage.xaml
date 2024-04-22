@@ -1,0 +1,70 @@
+﻿<Page x:Class="UniPlanner.Pages.LinksPage"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	  mc:Ignorable="d" d:DesignHeight="550" d:DesignWidth="850" Title="Links">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="200"/>
+		</Grid.ColumnDefinitions>
+		<Border Grid.Column="0" Style="{StaticResource Panel}" Margin="0,0,10,0">
+			<ScrollViewer>
+				<StackPanel x:Name="LinkArea"/>
+			</ScrollViewer>
+		</Border>
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="155"/>
+				<RowDefinition Height="155"/>
+				<RowDefinition Height="60"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+			<Border Grid.Row="0" Style="{StaticResource Panel}" Margin="0,0,0,10">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="45"/>
+						<RowDefinition Height="10"/>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+					</Grid.RowDefinitions>
+					<TextBlock Text="groups"/>
+					<Line Grid.Row="1" X2="180"/>
+					<Button Grid.Row="2" x:Name="ExpandButton" Style="{StaticResource SelectedButton}" Click="ExpandAllButtonClick">
+						<TextBlock Text="expand all"/>
+					</Button>
+					<Button Grid.Row="3" x:Name="CollapseButton" Style="{StaticResource DeselectedButton}" Click="CollapseAllButtonClick">
+						<TextBlock Text="collapse all"/>
+					</Button>
+				</Grid>
+			</Border>
+			<Border Grid.Row="1" Style="{StaticResource Panel}" Margin="0,0,0,10">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="45"/>
+						<RowDefinition Height="10"/>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+					</Grid.RowDefinitions>
+					<TextBlock Text="view"/>
+					<Line Grid.Row="1" X2="180"/>
+					<Button Grid.Row="2" x:Name="ShowAllButton" Style="{StaticResource SelectedButton}" Click="ShowAllButtonClick">
+						<TextBlock Text="show all"/>
+					</Button>
+					<Button Grid.Row="3" x:Name="FavouritesOnlyButton" Style="{StaticResource DeselectedButton}" Click="FavouritesOnlyButtonClick">
+						<TextBlock Text="favourites only"/>
+					</Button>
+				</Grid>
+			</Border>
+			<Border Grid.Row="2" Style="{StaticResource Panel}" Margin="0,0,0,10">
+				<Grid>
+					<Button Style="{StaticResource PageButton}" Click="NewLinkButtonClick">
+						<TextBlock Text="new link"/>
+					</Button>
+					<Popup x:Name="LinkEditorPopup"/>
+				</Grid>
+			</Border>
+		</Grid>
+	</Grid>
+</Page>

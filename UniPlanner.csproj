@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>Icon.ico</ApplicationIcon>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PublishSingleFile>true</PublishSingleFile>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Resources\Alarms\Ascending.wav" />
+		<None Remove="Resources\Alarms\Bounce.wav" />
+		<None Remove="Resources\Alarms\Chimes.wav" />
+		<None Remove="Resources\Alarms\Chords.wav" />
+		<None Remove="Resources\Alarms\Descending.wav" />
+		<None Remove="Resources\Alarms\Echo.wav" />
+		<None Remove="Resources\Alarms\Jingle.wav" />
+		<None Remove="Resources\Alarms\Tap.wav" />
+		<None Remove="Resources\Alarms\Transition.wav" />
+		<None Remove="Resources\Alarms\Xylophone.wav" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Alarms\Ascending.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Bounce.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Chimes.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Chords.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Descending.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Echo.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Jingle.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Tap.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Transition.wav" />
+		<EmbeddedResource Include="Resources\Alarms\Xylophone.wav" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FontAwesome.Sharp" Version="6.3.0" />
+		<PackageReference Include="QuestPDF" Version="2023.12.6" />
+	</ItemGroup>
+
+</Project>

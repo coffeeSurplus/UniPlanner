@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="UniPlanner.UserControls.TaskControls.PdfEditor"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 Height="180" Width="400">
+	<Border Style="{StaticResource Popup}">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="120"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Column="0" Grid.Row="0" Text="*group by:" Style="{StaticResource Title}"/>
+			<Grid Grid.Column="1" Grid.Row="0" x:Name="GroupButtons">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" x:Name="SubjectButton" Style="{StaticResource SelectedButton}" Click="GroupButtonClick">
+					<TextBlock Text="subject"/>
+				</Button>
+				<Button Grid.Column="1" x:Name="DateButton" Style="{StaticResource DeselectedButton}" Click="GroupButtonClick">
+					<TextBlock Text="date"/>
+				</Button>
+				<Button Grid.Column="2" x:Name="PriorityButton" Style="{StaticResource DeselectedButton}" Click="GroupButtonClick">
+					<TextBlock Text="priority"/>
+				</Button>
+			</Grid>
+			<Line Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" X2="380"/>
+			<TextBlock Grid.Column="0" Grid.Row="1" Text="*order by:" Style="{StaticResource Title}"/>
+			<Grid Grid.Column="1" Grid.Row="1" x:Name="DateButtons">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" x:Name="AscendingButton" Style="{StaticResource SelectedButton}" Click="OrderButtonClick">
+					<TextBlock Text="ascending"/>
+				</Button>
+				<Button Grid.Column="1" x:Name="DescendingButton" Style="{StaticResource DeselectedButton}" Click="OrderButtonClick">
+					<TextBlock Text="descending"/>
+				</Button>
+			</Grid>
+			<Line Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" X2="380"/>
+			<TextBlock Grid.Column="0" Grid.Row="2" Text="*completed tasks:" Style="{StaticResource Title}"/>
+			<Grid Grid.Column="1" Grid.Row="2" x:Name="CompletedTasksButtons">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" x:Name="IncludeButton" Style="{StaticResource SelectedButton}" Click="CompletedTasksButtonClick">
+					<TextBlock Text="include"/>
+				</Button>
+				<Button Grid.Column="1" x:Name="ExcludeButton" Style="{StaticResource DeselectedButton}" Click="CompletedTasksButtonClick">
+					<TextBlock Text="exclude"/>
+				</Button>
+			</Grid>
+			<Line Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" X2="380"/>
+			<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" Style="{StaticResource StopButton}" Click="CancelButtonClick">
+					<TextBlock Text="cancel"/>
+				</Button>
+				<Button Grid.Column="1" Style="{StaticResource StartButton}" Click="GeneratePdfButtonClick">
+					<TextBlock Text="generate pdf"/>
+				</Button>
+			</Grid>
+		</Grid>
+		</Border>
+</UserControl>

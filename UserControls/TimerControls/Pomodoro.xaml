@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="UniPlanner.UserControls.TimerControls.Pomodoro"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="800">
+	<DockPanel>
+		<ScrollViewer DockPanel.Dock="Right" x:Name="PomodoroOptions" Width="200" Margin="10,0,0,0" Visibility="Visible">
+			<StackPanel>
+				<Border Style="{StaticResource Panel}" Margin="0,0,0,10">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="50"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="50"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="pomodoro"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource Underline}"/>
+						<Grid Grid.Row="2">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="100"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="0" Style="{StaticResource ArrowLeftButton}" Click="DecreasePomodoroButtonClick"/>
+							<TextBlock Grid.Column="1" x:Name="PomodoroText" Text="2 hours"/>
+							<Button Grid.Column="2" Style="{StaticResource ArrowRightButton}" Click="IncreasePomodoroButtonClick"/>
+						</Grid>
+					</Grid>
+				</Border>
+				<Border Style="{StaticResource Panel}" Margin="0,0,0,10">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="50"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="50"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="break"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource Underline}"/>
+						<Grid Grid.Row="2">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="100"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="0" Style="{StaticResource ArrowLeftButton}" Click="DecreaseBreakButtonClick"/>
+							<TextBlock Grid.Column="1" x:Name="BreakText" Text="5 mins"/>
+							<Button Grid.Column="2" Style="{StaticResource ArrowRightButton}" Click="IncreaseBreakButtonClick"/>
+						</Grid>
+					</Grid>
+				</Border>
+				<Border Style="{StaticResource Panel}" Margin="0,0,0,10">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="50"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="50"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="repeat"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource Underline}"/>
+						<Grid Grid.Row="2">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="100"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="0" Style="{StaticResource ArrowLeftButton}" Click="DecreaseRepeatButtonClick"/>
+							<TextBlock Grid.Column="1" x:Name="RepeatText" Text="1"/>
+							<Button Grid.Column="2" Style="{StaticResource ArrowRightButton}" Click="IncreaseRepeatButtonClick"/>
+						</Grid>
+					</Grid>
+				</Border>
+				<Border Height="50" Style="{StaticResource Panel}">
+					<Button Style="{StaticResource PageButton}" Click="ResetAllButtonClick">
+						<TextBlock Text="reset all"/>
+					</Button>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+		<Grid DockPanel.Dock="Left">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="100"/>
+			</Grid.RowDefinitions>
+			<Border Grid.Row="0" Style="{StaticResource Panel}" Margin="0,0,0,10">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="50"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" x:Name="ModeDisplay" Text="pomodoro (1 of 1)"/>
+					<Rectangle Grid.Row="1" Style="{StaticResource Underline}"/>
+					<Viewbox Grid.Row="2" MaxHeight="170">
+						<TextBlock x:Name="TimeDisplay" Text="25:00" Style="{StaticResource Timer}"/>
+					</Viewbox>
+				</Grid>
+			</Border>
+			<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0" Style="{StaticResource Panel}" Margin="0,0,5,0">
+					<Grid>
+						<Button x:Name="StartButton" Style="{StaticResource StartButton}" Click="StartButtonClick" Visibility="Visible">
+							<TextBlock Text="start"/>
+						</Button>
+						<Button x:Name="StopButton" Style="{StaticResource StopButton}" Click="StopButtonClick" Visibility="Collapsed">
+							<TextBlock Text="stop"/>
+						</Button>
+					</Grid>
+				</Border>
+				<Border Grid.Column="1" Style="{StaticResource Panel}" Margin="5,0,0,0">
+					<Grid>
+						<Button x:Name="ResetButton" Style="{StaticResource PageButton}" Click="ResetButtonClick" Visibility="Visible">
+							<TextBlock Text="reset"/>
+						</Button>
+						<Button x:Name="RestartButton" Style="{StaticResource PageButton}" Click="RestartButtonClick" Visibility="Collapsed">
+							<TextBlock Text="restart"/>
+						</Button>
+					</Grid>
+				</Border>
+				<Border Grid.Column="0" Grid.ColumnSpan="2"  x:Name="EndTimerButton" Style="{StaticResource Panel}" Visibility="Collapsed">
+					<Button Style="{StaticResource PageButton}" Click="EndTimerButtonClick">
+						<TextBlock Text="end timer"/>
+					</Button>
+				</Border>
+			</Grid>
+		</Grid>
+	</DockPanel>
+</UserControl>

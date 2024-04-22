@@ -1,0 +1,121 @@
+﻿<Page x:Class="UniPlanner.Pages.TasksPage"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	  mc:Ignorable="d" d:DesignHeight="550" d:DesignWidth="850" Title="Tasks">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="200"/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Column="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="60"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0" Style="{StaticResource Panel}" Margin="0,0,10,10">
+					<Button Style="{StaticResource PageButton}" Click="NewTaskButtonClick">
+						<TextBlock Text="new task"/>
+					</Button>
+				</Border>
+				<Border Grid.Column="1" Style="{StaticResource Panel}" Margin="0,0,10,10">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="75"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="remove:"/>
+						<Button Grid.Column="1" Style="{StaticResource PageButton}" Click="RemoveCompletedButtonClick">
+							<TextBlock Text="completed"/>
+						</Button>
+						<Button Grid.Column="2" Style="{StaticResource PageButton}" Click="RemoveOverdueButtonClick">
+							<TextBlock Text="overdue"/>
+						</Button>
+					</Grid>
+				</Border>
+			</Grid>
+			<Border Grid.Row="1" Style="{StaticResource Panel}" Margin="0,0,10,0">
+				<ScrollViewer>
+					<StackPanel x:Name="TaskArea"/>
+				</ScrollViewer>
+			</Border>
+		</Grid>
+		<ScrollViewer Grid.Column="1">
+			<StackPanel>
+				<Border Style="{StaticResource Panel}" Margin="0,0,0,10">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="group by"/>
+						<Line Grid.Row="1" X2="180"/>
+						<Button Grid.Row="2" x:Name="SubjectButton" Style="{StaticResource SelectedButton}" Click="SubjectButtonClick">
+							<TextBlock Text="subject"/>
+						</Button>
+						<Button Grid.Row="3" x:Name="DateButton" Style="{StaticResource DeselectedButton}" Click="DateButtonClick">
+							<TextBlock Text="date"/>
+						</Button>
+						<Button Grid.Row="4" x:Name="PriorityButton" Style="{StaticResource DeselectedButton}" Click="PriorityButtonClick">
+							<TextBlock Text="priority"/>
+						</Button>
+					</Grid>
+				</Border>
+				<Border Style="{StaticResource Panel}" Margin="0,0,0,10">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="order by"/>
+						<Line Grid.Row="1" X2="180"/>
+						<Button Grid.Row="2" x:Name="AscendingButton" Style="{StaticResource SelectedButton}" Click="AscendingButtonClick">
+							<TextBlock Text="ascending"/>
+						</Button>
+						<Button Grid.Row="3" x:Name="DescendingButton" Style="{StaticResource DeselectedButton}" Click="DescendingButtonClick">
+							<TextBlock Text="descending"/>
+						</Button>
+					</Grid>
+				</Border>
+				<Border Style="{StaticResource Panel}" Margin="0,0,0,10">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="completed tasks"/>
+						<Line Grid.Row="1" X2="180"/>
+						<Button Grid.Row="2" x:Name="ShowCompletedButton" Style="{StaticResource SelectedButton}" Click="ShowCompletedButtonClick">
+							<TextBlock Text="show"/>
+						</Button>
+						<Button Grid.Row="3" x:Name="HideCompletedButton" Style="{StaticResource DeselectedButton}" Click="HideCompletedButtonClick">
+							<TextBlock Text="hide"/>
+						</Button>
+					</Grid>
+				</Border>
+				<Border Height="50" Style="{StaticResource Panel}">
+					<Button Style="{StaticResource PageButton}" Click="SaveAsPdfButtonClick">
+						<TextBlock Text="save as pdf"/>
+					</Button>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+		<Popup x:Name="TaskEditorPopup"/>
+		<Popup x:Name="SubtaskEditorPopup"/>
+		<Popup x:Name="PdfEditorPopup"/>
+	</Grid>
+</Page>

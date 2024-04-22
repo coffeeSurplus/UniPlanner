@@ -33,6 +33,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="Gallery\EventsMonth.png" />
+		<None Remove="Gallery\EventsWeek.png" />
+		<None Remove="Gallery\Home.png" />
+		<None Remove="Gallery\Links.png" />
+		<None Remove="Gallery\Tasks.png" />
+		<None Remove="Gallery\TimersPomodoro.png" />
+		<None Remove="Gallery\TimersStopwatch.png" />
+		<None Remove="Gallery\TimersTimer.png" />
+		<None Remove="Gallery\TimetableHorizontal.png" />
+		<None Remove="Gallery\TimetableVertical.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Content Include="Icon.ico" />
 	</ItemGroup>
 

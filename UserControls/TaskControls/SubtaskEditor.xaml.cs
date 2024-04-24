@@ -21,16 +21,17 @@ namespace UniPlanner.UserControls.TaskControls
 			Subtask = new() { Title = string.Empty };
 			SubtaskInput.Text = string.Empty;
 			newSubtask = true;
+			Keyboard.Focus(SubtaskInput);
 		}
 		public void SetDisplay(Subtask task)
 		{
 			Subtask = task;
 			SubtaskInput.Text = task.Title;
 			newSubtask = false;
+			Keyboard.Focus(SubtaskInput);
 		}
-		public void FocusKeyboard() => Keyboard.Focus(SubtaskInput);
 
-		private void CancelEdit() => TasksPage.SubtaskEditorPopup.IsOpen = false;
+		private void CancelEdit() => TasksPage.HideSubtaskEditorPopup();
 		private bool CheckInputs()
 		{
 			if (string.IsNullOrWhiteSpace(SubtaskInput.Text))
@@ -51,7 +52,7 @@ namespace UniPlanner.UserControls.TaskControls
 					Task.Subtasks.Add(Subtask);
 
 				TasksPage.UpdateTaskList();
-				TasksPage.SubtaskEditorPopup.IsOpen = false;
+				TasksPage.HideSubtaskEditorPopup();
 			}
 		}
 		private void CancelButtonClick(object sender, RoutedEventArgs e) => CancelEdit();

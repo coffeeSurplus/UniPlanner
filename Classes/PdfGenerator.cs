@@ -19,9 +19,11 @@ namespace UniPlanner.Classes
 				x.Page(x =>
 				{
 					x.SetPage();
+
 					x.Content().Column(x =>
 					{
 						x.AddTitle();
+
 						for (int taskIndex = 0; taskIndex < taskList.Count; taskIndex++)
 						{
 							string header = groupMode switch
@@ -30,6 +32,7 @@ namespace UniPlanner.Classes
 								2 => taskList[taskIndex].DateHeader(),
 								_ => taskList[taskIndex].PriorityHeader(),
 							};
+
 							if (taskIndex == 0 || header != groupMode switch
 							{
 								1 => taskList[taskIndex - 1].SubjectHeader(),
@@ -41,6 +44,7 @@ namespace UniPlanner.Classes
 							x.Item().Decoration(x =>
 							{
 								x.AddTask(taskList[taskIndex]);
+
 								if (taskList[taskIndex].Subtasks.Count != 0)
 									x.AddSubtasks(taskList[taskIndex]);
 							});
@@ -58,39 +62,78 @@ namespace UniPlanner.Classes
 				2 => OrderByDate(taskList, ascending),
 				_ => OrderByPriority(taskList, ascending)
 			};
+
 			taskList = OrderSubtasks(taskList);
+
 			if (!includeCompleted)
 				RemoveCompleted(taskList);
+
 			return taskList;
 		}
 		private static List<Task> OrderBySubject(List<Task> taskList, bool ascending)
 		{
 			return taskList = ascending
-				? ([.. taskList.OrderBy(x => x.Subject == null).ThenBy(x => x.Subject).ThenBy(x => x.Completed).ThenBy(x => x.Title)])
-				: ([.. taskList.OrderBy(x => x.Subject == null).ThenByDescending(x => x.Subject).ThenBy(x => x.Completed).ThenByDescending(x => x.Title)]);
+
+				? ([.. taskList
+					.OrderBy(x => x.Subject == null)
+					.ThenBy(x => x.Subject)
+					.ThenBy(x => x.Completed)
+					.ThenBy(x => x.Title)])
+
+				: ([.. taskList
+					.OrderBy(x => x.Subject == null)
+					.ThenByDescending(x => x.Subject)
+					.ThenBy(x => x.Completed)
+					.ThenByDescending(x => x.Title)]);
 		}
 		private static List<Task> OrderByDate(List<Task> taskList, bool ascending)
 		{
 			return taskList = ascending
-				? ([.. taskList.OrderBy(x => x.Date == null).ThenBy(x => x.Date).ThenBy(x => x.Completed).ThenBy(x => x.Time != null).ThenBy(x => x.Time).ThenBy(x => x.Title)])
-				: ([.. taskList.OrderBy(x => x.Date == null).ThenByDescending(x => x.Date).ThenBy(x => x.Completed).ThenBy(x => x.Time != null).ThenBy(x => x.Time).ThenByDescending(x => x.Title)]);
+
+				? ([.. taskList
+					.OrderBy(x => x.Date == null)
+					.ThenBy(x => x.Date)
+					.ThenBy(x => x.Completed)
+					.ThenBy(x => x.Time != null)
+					.ThenBy(x => x.Time)
+					.ThenBy(x => x.Title)])
+
+				: ([.. taskList
+					.OrderBy(x => x.Date == null)
+					.ThenByDescending(x => x.Date)
+					.ThenBy(x => x.Completed)
+					.ThenBy(x => x.Time != null)
+					.ThenBy(x => x.Time)
+					.ThenByDescending(x => x.Title)]);
 		}
 		private static List<Task> OrderByPriority(List<Task> taskList, bool ascending)
 		{
 			return taskList = ascending
-				? [.. taskList.OrderBy(x => x.Priority == null).ThenByDescending(x => x.Priority).ThenBy(x => x.Completed).ThenBy(x => x.Title)]
-				: [.. taskList.OrderByDescending(x => x.Priority == null).ThenBy(x => x.Priority).ThenBy(x => x.Completed).ThenByDescending(x => x.Title)];
+
+				? [.. taskList
+					.OrderBy(x => x.Priority == null)
+					.ThenByDescending(x => x.Priority)
+					.ThenBy(x => x.Completed)
+					.ThenBy(x => x.Title)]
+
+				: [.. taskList
+					.OrderByDescending(x => x.Priority == null)
+					.ThenBy(x => x.Priority)
+					.ThenBy(x => x.Completed)
+					.ThenByDescending(x => x.Title)];
 		}
 		private static List<Task> OrderSubtasks(List<Task> taskList)
 		{
 			foreach (Task task in taskList)
 				task.Subtasks = [.. task.Subtasks.OrderBy(x => x.Completed).ThenBy(x => x.Title)];
+
 			return taskList;
 		}
 		private static List<Task> RemoveCompleted(List<Task> taskList)
 		{
 			foreach (Task task in taskList)
 				task.Subtasks.RemoveAll(x => x.Completed);
+
 			taskList.RemoveAll(x => x.Completed && x.Subtasks.Count == 0);
 			return taskList;
 		}
@@ -146,7 +189,8 @@ namespace UniPlanner.Classes
 			x.Content().Row(x =>
 			{
 				if (task.Completed)
-					x.ConstantItem(24).AlignMiddle().AlignCenter().Height(16).Width(16).Border(1).BorderColor("#E5E5E5").Canvas((x, y) => x.DrawPath(Styles.LargeTick, Styles.GreenLarge));
+					x.ConstantItem(24).AlignMiddle().AlignCenter().Height(16).Width(16).Border(1).BorderColor("#E5E5E5")
+						.Canvas((x, y) => x.DrawPath(Styles.LargeTick, Styles.GreenLarge));
 				else
 					x.ConstantItem(24).AlignMiddle().AlignCenter().Height(16).Width(16).Border(1).BorderColor("#E5E5E5");
 
@@ -192,7 +236,9 @@ namespace UniPlanner.Classes
 						{
 							if (subtask.Completed)
 							{
-								x.ConstantItem(24).AlignMiddle().AlignCenter().Height(12).Width(12).Border(1).BorderColor("#E5E5E5").Canvas((x, y) => x.DrawPath(Styles.SmallTick, Styles.GreenSmall));
+								x.ConstantItem(24).AlignMiddle().AlignCenter().Height(12).Width(12).Border(1).BorderColor("#E5E5E5")
+									.Canvas((x, y) => x.DrawPath(Styles.SmallTick, Styles.GreenSmall));
+
 								x.RelativeItem(1).Text(subtask.Title).Style(Styles.SubtaskStrikethrough);
 							}
 							else
@@ -230,6 +276,7 @@ namespace UniPlanner.Classes
 							x.AddDays();
 							x.AddCells(minTime, maxTime);
 							x.AddTimes(minTime, maxTime);
+
 							foreach (Timetable timetable in timetableList)
 								x.AddEvent(timetable, minTime);
 						});
@@ -238,8 +285,13 @@ namespace UniPlanner.Classes
 			}).GeneratePdf();
 		}
 
-		private static int MinTime(List<Timetable> timetableList) => timetableList.Any(x => x.StartTime.ToTimeSpan().TotalHours < 9) ? (int)Math.Floor(timetableList.Min(x => x.StartTime.ToTimeSpan().TotalHours)) : 9;
-		private static int MaxTime(List<Timetable> timetableList) => timetableList.Any(x => x.EndTime.ToTimeSpan().TotalHours > 16) ? (int)Math.Ceiling(timetableList.Max(x => x.EndTime.ToTimeSpan().TotalHours)) : 16;
+		private static int MinTime(List<Timetable> timetableList) => timetableList.Any(x => x.StartTime.ToTimeSpan().TotalHours < 9)
+			? (int)Math.Floor(timetableList.Min(x => x.StartTime.ToTimeSpan().TotalHours))
+			: 9;
+
+		private static int MaxTime(List<Timetable> timetableList) => timetableList.Any(x => x.EndTime.ToTimeSpan().TotalHours > 16)
+			? (int)Math.Ceiling(timetableList.Max(x => x.EndTime.ToTimeSpan().TotalHours))
+			: 16;
 
 		private static void SetPage(this PageDescriptor x, int minTime, int maxTime)
 		{
@@ -275,8 +327,10 @@ namespace UniPlanner.Classes
 				x.Cell().Row(2).Column((uint)column).Height(10).BorderVertical(1).BorderColor("#19223F");
 
 			for (int row = 3; row < maxTime - minTime + 3; row++)
+			{
 				for (int column = 2; column <= 6; column++)
 					x.Cell().Row((uint)row).Column((uint)column).Height(60).Border(1).BorderColor("#19223F");
+			}
 
 			for (int column = 2; column <= 6; column++)
 				x.Cell().Row((uint)(maxTime - minTime + 3)).Column((uint)column).Height(10).BorderVertical(1).BorderColor("#19223F");
@@ -284,28 +338,39 @@ namespace UniPlanner.Classes
 		private static void AddTimes(this TableDescriptor x, int minTime, int maxTime)
 		{
 			for (int row = minTime; row <= maxTime; row++)
-				x.Cell().Column(0).Row((uint)(row - minTime + 2)).RowSpan(2).AlignCenter().AlignMiddle().PaddingBottom(row == minTime ? 50 : row == maxTime ? -50 : 0).Text($"{row:00}:00");
+				x.Cell().Column(0).Row((uint)(row - minTime + 2)).RowSpan(2)
+					.AlignCenter().AlignMiddle().PaddingBottom(row == minTime ? 50 : row == maxTime ? -50 : 0)
+					.Text($"{row:00}:00");
 		}
 		private static void AddEvent(this TableDescriptor x, Timetable timetable, int minTime)
 		{
-			x.Cell().Column((uint)timetable.Day + 1).Row((uint)(Math.Floor(timetable.StartTime.ToTimeSpan().TotalHours) - minTime + 3)).RowSpan((uint)(Math.Ceiling(timetable.EndTime.ToTimeSpan().TotalHours) - Math.Floor(timetable.StartTime.ToTimeSpan().TotalHours))).PaddingTop((uint)(timetable.StartTime.ToTimeSpan().TotalMinutes % 60)).PaddingBottom((uint)(60 - (timetable.EndTime.ToTimeSpan().TotalMinutes % 60 == 0 ? 60 : timetable.EndTime.ToTimeSpan().TotalMinutes % 60))).Background(Styles.BackgroundColour(timetable.Colour)).BorderTop(timetable.StartTime.ToTimeSpan().TotalMinutes % 60 == 0 ? 1 : 0).BorderBottom(timetable.EndTime.ToTimeSpan().TotalMinutes % 60 == 0 ? 1 : 0).BorderVertical(1).BorderColor("#19223F").AlignCenter().AlignMiddle().Text(x =>
-			{
-				List<string> subtitleText = [];
-				if (timetable.Details != null)
-					subtitleText.Add(timetable.Details);
-				if (timetable.Subject != null)
-					subtitleText.Add(timetable.Subject);
-				if (timetable.Location != null)
-					subtitleText.Add(timetable.Location);
-
-				if (subtitleText.Count != 0 && timetable.Length() >= 30)
+			x.Cell().Column((uint)timetable.Day + 1).Row((uint)(Math.Floor(timetable.StartTime.ToTimeSpan().TotalHours) - minTime + 3))
+				.RowSpan((uint)(Math.Ceiling(timetable.EndTime.ToTimeSpan().TotalHours) - Math.Floor(timetable.StartTime.ToTimeSpan().TotalHours)))
+				.PaddingTop((uint)(timetable.StartTime.ToTimeSpan().TotalMinutes % 60))
+				.PaddingBottom((uint)(60 - (timetable.EndTime.ToTimeSpan().TotalMinutes % 60 == 0
+					? 60
+					: timetable.EndTime.ToTimeSpan().TotalMinutes % 60)))
+				.Background(Styles.BackgroundColour(timetable.Colour))
+				.BorderTop(timetable.StartTime.ToTimeSpan().TotalMinutes % 60 == 0 ? 1 : 0)
+				.BorderBottom(timetable.EndTime.ToTimeSpan().TotalMinutes % 60 == 0 ? 1 : 0)
+				.BorderVertical(1).BorderColor("#19223F").AlignCenter().AlignMiddle().Text(x =>
 				{
-					x.Line(timetable.Title).Style(Styles.Task);
-					x.Span(string.Join(" • ", subtitleText)).Style(Styles.Subtitle);
-				}
-				else
-					x.Span(timetable.Title).Style(Styles.Task);
-			});
+					List<string> subtitleText = [];
+					if (timetable.Details != null)
+						subtitleText.Add(timetable.Details);
+					if (timetable.Subject != null)
+						subtitleText.Add(timetable.Subject);
+					if (timetable.Location != null)
+						subtitleText.Add(timetable.Location);
+
+					if (subtitleText.Count != 0 && timetable.Length() >= 30)
+					{
+						x.Line(timetable.Title).Style(Styles.Task);
+						x.Span(string.Join(" • ", subtitleText)).Style(Styles.Subtitle);
+					}
+					else
+						x.Span(timetable.Title).Style(Styles.Task);
+				});
 		}
 	}
 

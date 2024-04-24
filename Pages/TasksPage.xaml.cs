@@ -20,13 +20,34 @@ namespace UniPlanner.Pages
 		public TasksPage() => InitializeComponent();
 		public TasksPage SetDisplay()
 		{
-			TaskEditorPopup.Child = new TaskEditor() { TasksPage = this };
+			TaskEditorPopup.Child = new TaskEditor() { TasksPage = this, DataManager = DataManager };
 			SubtaskEditorPopup.Child = new SubtaskEditor() { TasksPage = this, Task = new Classes.Task() { Title = string.Empty } };
 			PdfEditorPopup.Child = new PdfEditor() { TasksPage = this, TaskList = taskList }.SetDisplay(taskList);
 			taskList = DataManager.TaskList;
 			UpdateView();
 			return this;
 		}
+
+		public void ShowTaskEditorPopup(Classes.Task? task = null)
+		{
+			if (task != null)
+				((TaskEditor)TaskEditorPopup.Child).SetDisplay(task);
+			else
+				((TaskEditor)TaskEditorPopup.Child).SetDefaultDisplay();
+
+			TaskEditorPopup.IsOpen = true;
+		}
+		public void HideTaskEditorPopup() => TaskEditorPopup.IsOpen = false;
+		public void ShowSubtaskEditorPopup(Classes.Task task, Subtask? subtask = null)
+		{
+			if (subtask != null)
+				((SubtaskEditor)SubtaskEditorPopup.Child).SetDisplay(subtask);
+			else
+				((SubtaskEditor)SubtaskEditorPopup.Child).SetDefaultDisplay(task);
+
+			SubtaskEditorPopup.IsOpen = true;
+		}
+		public void HideSubtaskEditorPopup() => SubtaskEditorPopup.IsOpen = false;
 
 		public void CollapseGroup(string header, int mode)
 		{
@@ -207,13 +228,7 @@ namespace UniPlanner.Pages
 			};
 		}
 
-		private void NewTask()
-		{
-			((TaskEditor)TaskEditorPopup.Child).SetDefaultDisplay();
-			TaskEditorPopup.IsOpen = true;
-			((TaskEditor)TaskEditorPopup.Child).FocusKeyboard();
-		}
-		private void NewTaskButtonClick(object sender, RoutedEventArgs e) => NewTask();
+		private void NewTaskButtonClick(object sender, RoutedEventArgs e) => ShowTaskEditorPopup();
 
 		private void RemoveCompleted()
 		{

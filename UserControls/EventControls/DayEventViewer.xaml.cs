@@ -29,12 +29,7 @@ namespace UniPlanner.UserControls.EventControls
 			return this;
 		}
 
-		private void EditEvent()
-		{
-			((EventEditor)EventsPage.EventEditorPopup.Child).SetDisplay(Event);
-			EventsPage.EventEditorPopup.IsOpen = true;
-			((EventEditor)EventsPage.EventEditorPopup.Child).FocusKeyboard();
-		}
+		private void EditEvent() => EventsPage.ShowPopup(Event);
 		private void DeleteEvent()
 		{
 			EventsPage.DataManager.EventList.Remove(Event);

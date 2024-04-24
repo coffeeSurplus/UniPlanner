@@ -33,12 +33,7 @@ namespace UniPlanner.UserControls.TaskControls
 			Subtask.Completed ^= true;
 			TasksPage.UpdateTaskList();
 		}
-		private void EditSubtask()
-		{
-			((SubtaskEditor)TasksPage.SubtaskEditorPopup.Child).SetDisplay(Subtask);
-			TasksPage.SubtaskEditorPopup.IsOpen = true;
-			((SubtaskEditor)TasksPage.SubtaskEditorPopup.Child).FocusKeyboard();
-		}
+		private void EditSubtask() => TasksPage.ShowSubtaskEditorPopup(Task, Subtask);
 		private void DeleteSubtask()
 		{
 			Task.Subtasks.Remove(Subtask);

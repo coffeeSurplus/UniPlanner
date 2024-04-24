@@ -11,15 +11,15 @@ namespace UniPlanner.Classes
 		public List<Link> LinkList { get; set; }
 		public Settings Settings { get; set; }
 
-		private const string timetablePath = @"data\timetablelist.json";
-		private const string taskPath = @"data\tasklist.json";
-		private const string eventPath = @"data\eventlist.json";
-		private const string linkPath = @"data\linklist.json";
-		private const string settingsPath = @"data\settings.json";
+		private const string timetablePath = @"TimetableList.json";
+		private const string taskPath = @"TaskList.json";
+		private const string eventPath = @"EventList.json";
+		private const string linkPath = @"LinkList.json";
+		private const string settingsPath = @"Settings.json";
 
 		public DataManager()
 		{
-			Directory.CreateDirectory(@"data");
+			Directory.CreateDirectory(GetPath(string.Empty));
 			TimetableList = GetTimetableList();
 			TaskList = GetTaskList();
 			EventList = GetEventList();
@@ -27,34 +27,23 @@ namespace UniPlanner.Classes
 			Settings = GetSettings();
 		}
 
-		private static List<Timetable> GetTimetableList()
+		private static List<T> GetList<T>(string path)
 		{
-			if (!File.Exists(timetablePath))
-				WriteFile(timetablePath, new List<Timetable>());
-			return JsonSerializer.Deserialize<List<Timetable>>(ReadFile(timetablePath))!;
+			if (!File.Exists(GetPath(path)))
+				WriteFile(path, new List<T>());
+
+			return JsonSerializer.Deserialize<List<T>>(ReadFile(path))!;
 		}
-		private static List<Task> GetTaskList()
-		{
-			if (!File.Exists(taskPath))
-				WriteFile(taskPath, new List<Task>());
-			return JsonSerializer.Deserialize<List<Task>>(ReadFile(taskPath))!;
-		}
-		private static List<Event> GetEventList()
-		{
-			if (!File.Exists(eventPath))
-				WriteFile(eventPath, new List<Event>());
-			return JsonSerializer.Deserialize<List<Event>>(ReadFile(eventPath))!;
-		}
-		private static List<Link> GetLinkList()
-		{
-			if (!File.Exists(linkPath))
-				WriteFile(linkPath, new List<Link>());
-			return JsonSerializer.Deserialize<List<Link>>(ReadFile(linkPath))!;
-		}
+			
+		private static List<Timetable> GetTimetableList() => GetList<Timetable>(timetablePath);
+		private static List<Task> GetTaskList() => GetList<Task>(taskPath);
+		private static List<Event> GetEventList() => GetList<Event>(eventPath);
+		private static List<Link> GetLinkList() => GetList<Link>(linkPath);
 		private static Settings GetSettings()
 		{
-			if (!File.Exists(settingsPath))
+			if (!File.Exists(GetPath(settingsPath)))
 				WriteFile(settingsPath, new Settings());
+
 			return JsonSerializer.Deserialize<Settings>(ReadFile(settingsPath))!;
 		}
 
@@ -64,32 +53,38 @@ namespace UniPlanner.Classes
 		public void UpdateLinkList() => WriteFile(linkPath, LinkList);
 		public void UpdateSettings() => WriteFile(settingsPath, Settings);
 
+		private static string GetPath(string path) => Environment.ExpandEnvironmentVariables($@"%AppData%\UniPlanner\{path}");
 		private static string ReadFile(string path)
 		{
 			bool successful = false;
 			string output = string.Empty;
+
 			do
 			{
 				try
 				{
-					output = File.ReadAllText(path);
+					output = File.ReadAllText(GetPath(path));
 					successful = true;
 				}
 				catch { }
+
 			} while (!successful);
+
 			return output;
 		}
 		private static void WriteFile(string path, object data)
 		{
 			bool updated = false;
+
 			do
 			{
 				try
 				{
-					File.WriteAllText(path, JsonSerializer.Serialize(data));
+					File.WriteAllText(GetPath(path), JsonSerializer.Serialize(data));
 					updated = true;
 				}
 				catch { }
+
 			} while (!updated);
 		}
 	}

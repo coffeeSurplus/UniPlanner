@@ -10,6 +10,7 @@ namespace UniPlanner.UserControls.LinkControls
 {
 	public partial class LinkEditor : UserControl
 	{
+		public required DataManager DataManager { get; init; }
 		public required LinksPage LinksPage { get; init; }
 
 		private readonly OpenFolderDialog folderDialog = new();
@@ -29,6 +30,7 @@ namespace UniPlanner.UserControls.LinkControls
 			favourite = false;
 			newLink = true;
 			SetFavouriteButton();
+			Keyboard.Focus(TitleInput);
 		}
 		public void SetDisplay(Link link)
 		{
@@ -40,6 +42,7 @@ namespace UniPlanner.UserControls.LinkControls
 			favourite = link.Favourite;
 			newLink = false;
 			SetFavouriteButton();
+			Keyboard.Focus(TitleInput);
 		}
 		public void FocusKeyboard() => Keyboard.Focus(TitleInput);
 
@@ -80,7 +83,7 @@ namespace UniPlanner.UserControls.LinkControls
 
 			return errorList.Count == 0;
 		}
-		private void CancelEdit() => LinksPage.LinkEditorPopup.IsOpen = false;
+		private void CancelEdit() => LinksPage.HidePopup();
 		private void SaveLink()
 		{
 			if (CheckInputs())
@@ -88,10 +91,10 @@ namespace UniPlanner.UserControls.LinkControls
 				Link.SetValues(TitleInput.Text, GroupInput.Text, SubgroupInput.Text, UrlInput.Text, favourite);
 
 				if (newLink)
-					LinksPage.DataManager.LinkList.Add(Link);
+					DataManager.LinkList.Add(Link);
 
 				LinksPage.UpdateLinkList();
-				LinksPage.LinkEditorPopup.IsOpen = false;
+				LinksPage.HidePopup();
 			}
 		}
 		private void CancelButtonClick(object sender, RoutedEventArgs e) => CancelEdit();

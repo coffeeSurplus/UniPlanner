@@ -1,12 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using UniPlanner.Classes;
 using UniPlanner.Pages;
 
 namespace UniPlanner.UserControls.TaskControls
 {
 	public partial class TaskEditor : UserControl
 	{
+		public required DataManager DataManager { get; init; }
 		public required TasksPage TasksPage { get; init; }
 
 		private readonly Style SelectedColourButtonStyle = (Style)Application.Current.FindResource("SelectedButton");
@@ -28,6 +30,7 @@ namespace UniPlanner.UserControls.TaskControls
 			selectedPriority = null;
 			newTask = true;
 			SetPriorityButtons(NoPriorityButton);
+			Keyboard.Focus(TaskInput);
 		}
 		public void SetDisplay(Classes.Task task)
 		{
@@ -47,8 +50,9 @@ namespace UniPlanner.UserControls.TaskControls
 				3 => HighPriorityButton,
 				_ => NoPriorityButton
 			});
+
+			Keyboard.Focus(TaskInput);
 		}
-		public void FocusKeyboard() => Keyboard.Focus(TaskInput);
 
 		private void SetPriorityButtons(Button selectedButton)
 		{
@@ -67,7 +71,7 @@ namespace UniPlanner.UserControls.TaskControls
 		}
 		private void PriorityButtonClick(object sender, RoutedEventArgs e) => SetPriorityButtons((Button)sender);
 
-		private void CancelEdit() => TasksPage.TaskEditorPopup.IsOpen = false;
+		private void CancelEdit() => TasksPage.HideTaskEditorPopup();
 		private bool CheckInputs()
 		{
 			List<string> errorList = [];
@@ -96,10 +100,10 @@ namespace UniPlanner.UserControls.TaskControls
 				task.SetValues(TaskInput.Text, DetailsInput.Text, SubjectInput.Text, DateInput.Text, TimeInput.Text, selectedPriority);
 
 				if (newTask)
-					TasksPage.DataManager.TaskList.Add(task);
+					DataManager.TaskList.Add(task);
 
 				TasksPage.UpdateTaskList();
-				TasksPage.TaskEditorPopup.IsOpen = false;
+				TasksPage.HideTaskEditorPopup();
 			}
 		}
 		private void CancelButtonClick(object sender, RoutedEventArgs e) => CancelEdit();

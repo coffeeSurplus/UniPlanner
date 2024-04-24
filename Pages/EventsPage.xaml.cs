@@ -27,7 +27,6 @@ namespace UniPlanner.Pages
 			"Sat" => -5,
 			_ => -6
 		});
-
 		private DateOnly MonthDate => DayDate.AddDays(1 - DayDate.Day);
 
 		private static DateOnly DefaultDate => DateOnly.FromDateTime(DateTime.Now);
@@ -36,10 +35,22 @@ namespace UniPlanner.Pages
 		public EventsPage SetDisplay()
 		{
 			eventList = DataManager.EventList;
-			EventEditorPopup.Child = new EventEditor() { EventsPage = this };
+			EventEditorPopup.Child = new EventEditor() { EventsPage = this, DataManager = DataManager };
 			UpdateView();
 			return this;
 		}
+
+		public void ShowPopup(Event? @event = null)
+		{
+			if (@event != null)
+				((EventEditor)EventEditorPopup.Child).SetDisplay(@event);
+			else
+				((EventEditor)EventEditorPopup.Child).SetDefaultDisplay();
+
+			EventEditorPopup.IsOpen = true;
+		}
+		public void HidePopup() => EventEditorPopup.IsOpen = false;
+
 		public void UpdateEventList()
 		{
 			DataManager.UpdateEventList();
@@ -247,13 +258,7 @@ namespace UniPlanner.Pages
 		private void WeekButtonClick(object sender, RoutedEventArgs e) => ViewWeekPanel();
 		private void DayButtonClick(object sender, RoutedEventArgs e) => ViewDayPanel();
 
-		private void AddEvent()
-		{
-			((EventEditor)EventEditorPopup.Child).SetDefaultDisplay();
-			EventEditorPopup.IsOpen = true;
-			((EventEditor)EventEditorPopup.Child).FocusKeyboard();
-		}
-		private void AddButtonClick(object sender, RoutedEventArgs e) => AddEvent();
+		private void AddButtonClick(object sender, RoutedEventArgs e) => ShowPopup();
 
 		private void MonthBack()
 		{

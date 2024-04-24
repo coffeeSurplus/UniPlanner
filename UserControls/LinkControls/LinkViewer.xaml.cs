@@ -49,12 +49,7 @@ namespace UniPlanner.UserControls.LinkControls
 			else
 				MessageBox.Show("Could not open url.", "UniPlanner", MessageBoxButton.OK, MessageBoxImage.Error);
 		}
-		private void EditLink()
-		{
-			((LinkEditor)LinksPage.LinkEditorPopup.Child).SetDisplay(Link);
-			LinksPage.LinkEditorPopup.IsOpen = true;
-			((LinkEditor)LinksPage.LinkEditorPopup.Child).FocusKeyboard();
-		}
+		private void EditLink() => LinksPage.ShowPopup(Link);
 		private void DeleteLink()
 		{
 			LinksPage.DataManager.LinkList.Remove(Link);

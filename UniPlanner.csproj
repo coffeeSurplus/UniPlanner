@@ -20,46 +20,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Resources\Alarms\Ascending.wav" />
-		<None Remove="Resources\Alarms\Bounce.wav" />
-		<None Remove="Resources\Alarms\Chimes.wav" />
-		<None Remove="Resources\Alarms\Chords.wav" />
-		<None Remove="Resources\Alarms\Descending.wav" />
-		<None Remove="Resources\Alarms\Echo.wav" />
-		<None Remove="Resources\Alarms\Jingle.wav" />
-		<None Remove="Resources\Alarms\Tap.wav" />
-		<None Remove="Resources\Alarms\Transition.wav" />
-		<None Remove="Resources\Alarms\Xylophone.wav" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Remove="Gallery\EventsMonth.png" />
-		<None Remove="Gallery\EventsWeek.png" />
-		<None Remove="Gallery\Home.png" />
-		<None Remove="Gallery\Links.png" />
-		<None Remove="Gallery\Tasks.png" />
-		<None Remove="Gallery\TimersPomodoro.png" />
-		<None Remove="Gallery\TimersStopwatch.png" />
-		<None Remove="Gallery\TimersTimer.png" />
-		<None Remove="Gallery\TimetableHorizontal.png" />
-		<None Remove="Gallery\TimetableVertical.png" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Content Include="Icon.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Resources\Alarms\Ascending.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Bounce.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Chimes.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Chords.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Descending.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Echo.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Jingle.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Tap.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Transition.wav" />
-		<EmbeddedResource Include="Resources\Alarms\Xylophone.wav" />
+		<EmbeddedResource Include="Resources\Ascending.wav" />
+		<EmbeddedResource Include="Resources\Bounce.wav" />
+		<EmbeddedResource Include="Resources\Chimes.wav" />
+		<EmbeddedResource Include="Resources\Chords.wav" />
+		<EmbeddedResource Include="Resources\Descending.wav" />
+		<EmbeddedResource Include="Resources\Echo.wav" />
+		<EmbeddedResource Include="Resources\Jingle.wav" />
+		<EmbeddedResource Include="Resources\Tap.wav" />
+		<EmbeddedResource Include="Resources\Transition.wav" />
+		<EmbeddedResource Include="Resources\Xylophone.wav" />
 	</ItemGroup>
 
 	<ItemGroup>

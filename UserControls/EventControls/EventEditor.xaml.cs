@@ -8,6 +8,7 @@ namespace UniPlanner.UserControls.EventControls
 {
 	public partial class EventEditor : UserControl
 	{
+		public required DataManager DataManager { get; init; }
 		public required EventsPage EventsPage { get; init; }
 
 		private readonly Style SelectedColourButtonStyle = (Style)Application.Current.FindResource("SelectedColourButton");
@@ -31,6 +32,7 @@ namespace UniPlanner.UserControls.EventControls
 			selectedColour = 0;
 			newEvent = true;
 			SetColourButtons(WhiteButton);
+			Keyboard.Focus(TitleInput);
 		}
 		public void SetDisplay(Event @event)
 		{
@@ -56,8 +58,9 @@ namespace UniPlanner.UserControls.EventControls
 				8 => PinkButton,
 				_ => WhiteButton
 			});
+
+			Keyboard.Focus(TitleInput);
 		}
-		public void FocusKeyboard() => Keyboard.Focus(TitleInput);
 
 		private void SetColourButtons(Button selectedButton)
 		{
@@ -123,7 +126,7 @@ namespace UniPlanner.UserControls.EventControls
 
 			return errorList.Count == 0;
 		}
-		private void CancelEdit() => EventsPage.EventEditorPopup.IsOpen = false;
+		private void CancelEdit() => EventsPage.HidePopup();
 		private void SaveEvent()
 		{
 			if (CheckInputs())
@@ -131,10 +134,10 @@ namespace UniPlanner.UserControls.EventControls
 				@event.SetValues(TitleInput.Text, DetailsInput.Text, LocationInput.Text, DateInput.Text, StartTimeInput.Text, EndTimeInput.Text, selectedColour);
 
 				if (newEvent)
-					EventsPage.DataManager.EventList.Add(@event);
+					DataManager.EventList.Add(@event);
 
 				EventsPage.UpdateEventList();
-				EventsPage.EventEditorPopup.IsOpen = false;
+				EventsPage.HidePopup();
 			}
 		}
 		private void CancelButtonClick(object sender, RoutedEventArgs e) => CancelEdit();

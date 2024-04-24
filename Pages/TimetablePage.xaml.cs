@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using UniPlanner.Classes;
+using UniPlanner.UserControls.LinkControls;
 using UniPlanner.UserControls.TimetableControls;
 
 namespace UniPlanner.Pages
@@ -25,10 +26,21 @@ namespace UniPlanner.Pages
 		public TimetablePage SetDisplay()
 		{
 			timetableList = DataManager.TimetableList;
-			TimetableEditorPopup.Child = new TimetableEditor() { TimetablePage = this };
+			TimetableEditorPopup.Child = new TimetableEditor() { TimetablePage = this, DataManager = DataManager };
 			UpdateView();
 			return this;
 		}
+
+		public void ShowPopup(Timetable? timetable = null)
+		{
+			if (timetable != null)
+				((TimetableEditor)TimetableEditorPopup.Child).SetDisplay(timetable);
+			else
+				((TimetableEditor)TimetableEditorPopup.Child).SetDefaultDisplay();
+
+			TimetableEditorPopup.IsOpen = true;
+		}
+		public void HidePopup() => TimetableEditorPopup.IsOpen = false;
 
 		public void ExpandGroup(int day)
 		{
@@ -219,12 +231,6 @@ namespace UniPlanner.Pages
 		private void HorizontalButtonClick(object sender, RoutedEventArgs e) => ShowHorizontalPanel();
 		private void TodayButtonClick(object sender, RoutedEventArgs e) => ShowTodayPanel();
 
-		private void AddTimetable()
-		{
-			((TimetableEditor)TimetableEditorPopup.Child).SetDefaultDisplay();
-			TimetableEditorPopup.IsOpen = true;
-			((TimetableEditor)TimetableEditorPopup.Child).FocusKeyboard();
-		}
 		private void SaveAsPdf()
 		{
 			SaveFileDialog saveFileDialog = new()
@@ -260,7 +266,7 @@ namespace UniPlanner.Pages
 				}
 			}
 		}
-		private void AddButtonClick(object sender, RoutedEventArgs e) => AddTimetable();
+		private void AddButtonClick(object sender, RoutedEventArgs e) => ShowPopup();
 		private void SaveAsPdfButtonClick(object sender, RoutedEventArgs e) => SaveAsPdf();
 	}
 }

@@ -36,12 +36,7 @@ namespace UniPlanner.UserControls.TimetableControls
 			return this;
 		}
 
-		private void EditTimetable()
-		{
-			((TimetableEditor)TimetablePage.TimetableEditorPopup.Child).SetDisplay(Timetable);
-			TimetablePage.TimetableEditorPopup.IsOpen = true;
-			((TimetableEditor)TimetablePage.TimetableEditorPopup.Child).FocusKeyboard();
-		}
+		private void EditTimetable() => TimetablePage.ShowPopup(Timetable);
 		private void DeleteTimetable()
 		{
 			TimetablePage.DataManager.TimetableList.Remove(Timetable);

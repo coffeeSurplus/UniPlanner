@@ -136,7 +136,7 @@ namespace UniPlanner.Pages
 			SetAlarm((Button)sender);
 			alarm?.Dispose();
 			alarm = new(Assembly.GetExecutingAssembly()
-				.GetManifestResourceStream($"UniPlanner.Resources.Alarms.{DataManager.Settings.AlarmSound}.wav"));
+				.GetManifestResourceStream($"UniPlanner.Resources.{DataManager.Settings.AlarmSound}.wav"));
 			alarm.Play();
 		}
 

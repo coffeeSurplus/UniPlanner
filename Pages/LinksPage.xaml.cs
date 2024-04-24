@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using UniPlanner.Classes;
+using UniPlanner.UserControls.EventControls;
 using UniPlanner.UserControls.LinkControls;
 
 namespace UniPlanner.Pages
@@ -19,9 +20,20 @@ namespace UniPlanner.Pages
 		public LinksPage SetDisplay()
 		{
 			UpdateView();
-			LinkEditorPopup.Child = new LinkEditor() { LinksPage = this };
+			LinkEditorPopup.Child = new LinkEditor() { LinksPage = this, DataManager = DataManager };
 			return this;
 		}
+
+		public void ShowPopup(Link? link = null)
+		{
+			if (link != null)
+				((LinkEditor)LinkEditorPopup.Child).SetDisplay(link);
+			else
+				((LinkEditor)LinkEditorPopup.Child).SetDefaultDisplay();
+
+			LinkEditorPopup.IsOpen = true;
+		}
+		public void HidePopup() => LinkEditorPopup.IsOpen = false;
 
 		public void CollapseGroup(string header)
 		{
@@ -179,12 +191,6 @@ namespace UniPlanner.Pages
 		private void ShowAllButtonClick(object sender, RoutedEventArgs e) => ShowAll();
 		private void FavouritesOnlyButtonClick(object sender, RoutedEventArgs e) => FavouritesOnly();
 
-		private void NewLink()
-		{
-			((LinkEditor)LinkEditorPopup.Child).SetDefaultDisplay();
-			LinkEditorPopup.IsOpen = true;
-			((LinkEditor)LinkEditorPopup.Child).FocusKeyboard();
-		}
-		private void NewLinkButtonClick(object sender, RoutedEventArgs e) => NewLink();
+		private void NewLinkButtonClick(object sender, RoutedEventArgs e) => ShowPopup();
 	}
 }

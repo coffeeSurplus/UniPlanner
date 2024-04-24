@@ -39,12 +39,7 @@ namespace UniPlanner.UserControls.TimetableControls
 			return this;
 		}
 
-		private void EditTimetable()
-		{
-			((TimetableEditor)TimetablePage.TimetableEditorPopup.Child).SetDisplay(Timetable);
-			TimetablePage.TimetableEditorPopup.IsOpen = true;
-			((TimetableEditor)TimetablePage.TimetableEditorPopup.Child).FocusKeyboard();
-		}
+		private void EditTimetable() => TimetablePage.ShowPopup(Timetable);
 		private void DeleteTimetable()
 		{
 			if (MessageBox.Show("Are you sure?", "Delete event", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)

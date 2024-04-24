@@ -8,6 +8,7 @@ namespace UniPlanner.UserControls.TimetableControls
 {
 	public partial class TimetableEditor : UserControl
 	{
+		public required DataManager DataManager { get; init; }
 		public required TimetablePage TimetablePage { get; init; }
 
 		private readonly Style SelectedColourButtonStyle = (Style)Application.Current.FindResource("SelectedColourButton");
@@ -35,6 +36,7 @@ namespace UniPlanner.UserControls.TimetableControls
 			newTimetable = true;
 			SetDayButtons(MondayButton);
 			SetColourButtons(WhiteButton);
+			Keyboard.Focus(TitleInput);
 		}
 		public void SetDisplay(Timetable timetable)
 		{
@@ -70,8 +72,9 @@ namespace UniPlanner.UserControls.TimetableControls
 				8 => PinkButton,
 				_ => WhiteButton
 			});
+
+			Keyboard.Focus(TitleInput);
 		}
-		public void FocusKeyboard() => Keyboard.Focus(TitleInput);
 
 		private void SetDayButtons(Button selectedButton)
 		{
@@ -113,7 +116,7 @@ namespace UniPlanner.UserControls.TimetableControls
 		}
 		private void ColourButtonClick(object sender, RoutedEventArgs e) => SetColourButtons((Button)sender);
 
-		private void CancelEdit() => TimetablePage.TimetableEditorPopup.IsOpen = false;
+		private void CancelEdit() => TimetablePage.HidePopup();
 		private bool CheckInputs()
 		{
 			List<string> errorList = [];
@@ -156,10 +159,10 @@ namespace UniPlanner.UserControls.TimetableControls
 				timetable.SetValues(TitleInput.Text, DetailsInput.Text, SubjectInput.Text, LocationInput.Text, selectedDay, StartTimeInput.Text, EndTimeInput.Text, selectedColour);
 
 				if (newTimetable)
-					TimetablePage.DataManager.TimetableList.Add(timetable);
+					DataManager.TimetableList.Add(timetable);
 
 				TimetablePage.UpdateTimetableList();
-				TimetablePage.TimetableEditorPopup.IsOpen = false;
+				TimetablePage.HidePopup();
 			}
 		}
 		private void CancelButtonClick(object sender, RoutedEventArgs e) => CancelEdit();

@@ -70,18 +70,8 @@ namespace UniPlanner.UserControls.TaskControls
 			Task.Completed ^= true;
 			TasksPage.UpdateTaskList();
 		}
-		private void AddSubtask()
-		{
-			((SubtaskEditor)TasksPage.SubtaskEditorPopup.Child).SetDefaultDisplay(Task);
-			TasksPage.SubtaskEditorPopup.IsOpen = true;
-			((SubtaskEditor)TasksPage.SubtaskEditorPopup.Child).FocusKeyboard();
-		}
-		private void EditTask()
-		{
-			((TaskEditor)TasksPage.TaskEditorPopup.Child).SetDisplay(Task);
-			TasksPage.TaskEditorPopup.IsOpen = true;
-			((TaskEditor)TasksPage.TaskEditorPopup.Child).FocusKeyboard();
-		}
+		private void AddSubtask() => TasksPage.ShowSubtaskEditorPopup(Task);
+		private void EditTask() => TasksPage.ShowTaskEditorPopup(Task);
 		private void DeleteTask()
 		{
 			TasksPage.DataManager.TaskList.Remove(Task);

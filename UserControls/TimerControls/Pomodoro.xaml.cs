@@ -63,7 +63,7 @@ namespace UniPlanner.UserControls.TimerControls
 		private void TimerFinished()
 		{
 			alarm = new(Assembly.GetExecutingAssembly()
-				.GetManifestResourceStream($"UniPlanner.Resources.Alarms.{DataManager.Settings.AlarmSound}.wav"));
+				.GetManifestResourceStream($"UniPlanner.Resources.{DataManager.Settings.AlarmSound}.wav"));
 			alarm!.PlayLooping();
 			EndTimerButton.Visibility = Visibility.Visible;
 		}

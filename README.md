@@ -75,6 +75,10 @@ UniPlanner - easily plan around your revision with this simple, friendly user in
 * choose pomodoro length, brek length, number of repeats
 * 10 timer sounds to choose from (stolen from windows clock app)
 
+## 'where exe'
+
+i've uploaded the application as a single self-contained execuable file which you can find [here](UniPlanner.zip) or at the UniPlanner.zip file. once extracted, it's roughly 160 Mb large.
+
 ## libraries used
 
 * FontAwesome.Sharp - for side panel icons

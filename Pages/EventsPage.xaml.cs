@@ -42,12 +42,12 @@ namespace UniPlanner.Pages
 
 		public void ShowPopup(Event? @event = null)
 		{
+			EventEditorPopup.IsOpen = true;
+
 			if (@event != null)
 				((EventEditor)EventEditorPopup.Child).SetDisplay(@event);
 			else
 				((EventEditor)EventEditorPopup.Child).SetDefaultDisplay();
-
-			EventEditorPopup.IsOpen = true;
 		}
 		public void HidePopup() => EventEditorPopup.IsOpen = false;
 

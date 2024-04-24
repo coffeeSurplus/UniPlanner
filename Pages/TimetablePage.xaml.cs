@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using UniPlanner.Classes;
-using UniPlanner.UserControls.LinkControls;
 using UniPlanner.UserControls.TimetableControls;
 
 namespace UniPlanner.Pages
@@ -33,12 +32,12 @@ namespace UniPlanner.Pages
 
 		public void ShowPopup(Timetable? timetable = null)
 		{
+			TimetableEditorPopup.IsOpen = true;
+
 			if (timetable != null)
 				((TimetableEditor)TimetableEditorPopup.Child).SetDisplay(timetable);
 			else
 				((TimetableEditor)TimetableEditorPopup.Child).SetDefaultDisplay();
-
-			TimetableEditorPopup.IsOpen = true;
 		}
 		public void HidePopup() => TimetableEditorPopup.IsOpen = false;
 

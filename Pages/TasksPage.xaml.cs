@@ -30,22 +30,22 @@ namespace UniPlanner.Pages
 
 		public void ShowTaskEditorPopup(Classes.Task? task = null)
 		{
+			TaskEditorPopup.IsOpen = true;
+
 			if (task != null)
 				((TaskEditor)TaskEditorPopup.Child).SetDisplay(task);
 			else
 				((TaskEditor)TaskEditorPopup.Child).SetDefaultDisplay();
-
-			TaskEditorPopup.IsOpen = true;
 		}
 		public void HideTaskEditorPopup() => TaskEditorPopup.IsOpen = false;
 		public void ShowSubtaskEditorPopup(Classes.Task task, Subtask? subtask = null)
 		{
+			SubtaskEditorPopup.IsOpen = true;
+
 			if (subtask != null)
 				((SubtaskEditor)SubtaskEditorPopup.Child).SetDisplay(subtask);
 			else
 				((SubtaskEditor)SubtaskEditorPopup.Child).SetDefaultDisplay(task);
-
-			SubtaskEditorPopup.IsOpen = true;
 		}
 		public void HideSubtaskEditorPopup() => SubtaskEditorPopup.IsOpen = false;
 

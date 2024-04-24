@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using UniPlanner.Classes;
-using UniPlanner.UserControls.EventControls;
 using UniPlanner.UserControls.LinkControls;
 
 namespace UniPlanner.Pages
@@ -26,12 +25,12 @@ namespace UniPlanner.Pages
 
 		public void ShowPopup(Link? link = null)
 		{
+			LinkEditorPopup.IsOpen = true;
+
 			if (link != null)
 				((LinkEditor)LinkEditorPopup.Child).SetDisplay(link);
 			else
 				((LinkEditor)LinkEditorPopup.Child).SetDefaultDisplay();
-
-			LinkEditorPopup.IsOpen = true;
 		}
 		public void HidePopup() => LinkEditorPopup.IsOpen = false;
 

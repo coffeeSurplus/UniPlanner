@@ -34,7 +34,7 @@ namespace UniPlanner.Classes
 
 			return JsonSerializer.Deserialize<List<T>>(ReadFile(path))!;
 		}
-			
+
 		private static List<Timetable> GetTimetableList() => GetList<Timetable>(timetablePath);
 		private static List<Task> GetTaskList() => GetList<Task>(taskPath);
 		private static List<Event> GetEventList() => GetList<Event>(eventPath);

@@ -19,6 +19,7 @@ namespace UniPlanner.UserControls.TaskControls
 		private bool newTask = false;
 
 		public TaskEditor() => InitializeComponent();
+
 		public void SetDefaultDisplay()
 		{
 			task = new() { Title = string.Empty };

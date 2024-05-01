@@ -35,6 +35,7 @@ namespace UniPlanner.UserControls.TaskControls
 			DisplaySubtasks();
 			return this;
 		}
+
 		private void DisplaySubtitle()
 		{
 			List<string> subtitleText = [];

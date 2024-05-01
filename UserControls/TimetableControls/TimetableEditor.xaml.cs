@@ -22,6 +22,7 @@ namespace UniPlanner.UserControls.TimetableControls
 		private bool newTimetable = false;
 
 		public TimetableEditor() => InitializeComponent();
+
 		public void SetDefaultDisplay()
 		{
 			timetable = new() { Title = string.Empty, Colour = 0, Day = new(), StartTime = new(), EndTime = new() };

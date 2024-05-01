@@ -15,6 +15,7 @@ namespace UniPlanner.UserControls.TaskControls
 		private bool newSubtask = false;
 
 		public SubtaskEditor() => InitializeComponent();
+
 		public void SetDefaultDisplay(Classes.Task task)
 		{
 			Task = task;

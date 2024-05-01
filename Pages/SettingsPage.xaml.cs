@@ -16,7 +16,6 @@ namespace UniPlanner.Pages
 		private SoundPlayer? alarm;
 
 		public SettingsPage() => InitializeComponent();
-
 		public SettingsPage SetDisplay()
 		{
 			SetStartupButtons(DataManager.Settings.Startup ? NormalWindow : MaximisedWindow);

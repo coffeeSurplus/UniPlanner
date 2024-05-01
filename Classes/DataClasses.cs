@@ -57,7 +57,6 @@ namespace UniPlanner.Classes
 			1 => "tomorrow",
 			_ => $"{(DateOnly)Date:dddd d MMMM}".ToLower()
 		} : string.Empty;
-
 		public string TimeText() => Time != null ? $"{(TimeOnly)Time:H:mm}" : string.Empty;
 		public string ShortDate() => Date != null ? $"{(DateOnly)Date:d/M}" : string.Empty;
 		public string PriorityText() => Priority switch
@@ -77,7 +76,6 @@ namespace UniPlanner.Classes
 			< 7 => "this week",
 			_ => "later"
 		} : "no date";
-
 		public string PriorityHeader() => Priority switch
 		{
 			1 => "low priority",
@@ -146,18 +144,6 @@ namespace UniPlanner.Classes
 			Subgroup = !string.IsNullOrWhiteSpace(subgroup) ? subgroup.Trim().ToLower() : null;
 			Url = FormUrl(url.Trim());
 			Favourite = favourite;
-		}
-
-		public string ReturnUrl()
-		{
-			if (Directory.Exists(Url) || Uri.IsWellFormedUriString(Url, UriKind.Absolute))
-				return Url;
-			else if (Url.EndsWith('.'))
-				return $"https://{Url}com";
-			else if (Url.Contains('.'))
-				return $"https://{Url}";
-			else
-				return $"https://{Url}.com";
 		}
 
 		public static string FormUrl(string url)

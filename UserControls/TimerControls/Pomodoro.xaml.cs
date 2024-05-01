@@ -36,6 +36,7 @@ namespace UniPlanner.UserControls.TimerControls
 			timer.Tick += DisplayTime;
 			return this;
 		}
+
 		private void SetDefaultValues()
 		{
 			length = TimeSpan.FromMinutes(25);

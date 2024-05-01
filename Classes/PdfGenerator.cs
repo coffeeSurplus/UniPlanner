@@ -410,7 +410,6 @@ namespace UniPlanner.Classes
 		}
 		public static SKPaint GreenSmall = new() { Color = SKColor.Parse("#008B00"), IsStroke = true, StrokeWidth = 1 };
 		public static SKPaint GreenLarge = new() { Color = SKColor.Parse("#008B00"), IsStroke = true, StrokeWidth = 2 };
-		public static SKPaint NavySmall = new() { Color = SKColor.Parse("#19223F"), IsStroke = true, StrokeWidth = 1 };
 
 		public static string BackgroundColour(int colour) => colour switch
 		{

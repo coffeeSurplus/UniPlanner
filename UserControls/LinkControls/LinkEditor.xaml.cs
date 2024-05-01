@@ -44,7 +44,6 @@ namespace UniPlanner.UserControls.LinkControls
 			SetFavouriteButton();
 			Keyboard.Focus(TitleInput);
 		}
-		public void FocusKeyboard() => Keyboard.Focus(TitleInput);
 
 		private void SetFavouriteButton() => FavouriteButton.Style = (Style)FindResource(favourite ? "SelectedButton" : "DeselectedButton");
 		private void ToggleFavourite()

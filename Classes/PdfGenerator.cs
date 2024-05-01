@@ -140,12 +140,12 @@ namespace UniPlanner.Classes
 
 		private static int ReturnTaskCount(List<Task> taskList, int groupMode, string header)
 		{
-			return taskList.Count(x => !x.Completed && groupMode switch
+			return groupMode switch
 			{
-				1 => x.SubjectHeader() == header,
-				2 => x.DateHeader() == header,
-				_ => x.PriorityHeader() == header
-			});
+				1 => taskList.Where(x => x.SubjectHeader() == header).Count(x => !x.Completed),
+				2 => taskList.Where(x => x.DateHeader() == header).Count(x => !x.Completed),
+				_ => taskList.Where(x => x.PriorityHeader() == header).Count(x => !x.Completed)
+			};
 		}
 		private static int ReturnSubtaskCount(List<Task> taskList, int groupMode, string header)
 		{

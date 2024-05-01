@@ -77,7 +77,9 @@ UniPlanner - easily plan around your revision with this simple, friendly user in
 
 ## 'where exe'
 
-i've uploaded the application as a single self-contained execuable file which you can find [here](UniPlanner.zip) or at the UniPlanner.zip file. once extracted, it's roughly 160 Mb large.
+i've uploaded the application as an executable file - there are two versions:
+* [UniPlannerLarge](/WhereExe/UniPlannerLarge.zip) - self-contained .exe file, ~160 Mb in size. does not require any extra installations.
+* [UniPlannerSmall](/WhereExe/UniPlannerSmall.zip) - framework-dependent .exe file. ~16 Mb in size. required [.net 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to be installed.
 
 ## libraries used
 
@@ -109,7 +111,6 @@ i've uploaded the application as a single self-contained execuable file which yo
 **links**
 
 ![links page](/Gallery/Links.png)
-
 
 **timers**
 

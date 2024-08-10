@@ -1,0 +1,341 @@
+﻿<Page x:Class="UniPlanner.Source.Views.TaskView"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels"
+	  xmlns:view="clr-namespace:UniPlanner.Source.Views"
+	  Title="tasks"
+	  mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000">
+	<Page.DataContext>
+		<viewModel:TaskViewModel/>
+	</Page.DataContext>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="10"/>
+			<ColumnDefinition Width="200"/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Column="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="10"/>
+					<ColumnDefinition Width="60"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+					<Button Content="new task" Command="{Binding Path=NewTaskCommand}"/>
+				</Border>
+				<Border Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="60"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="remove:"/>
+						<Button Grid.Column="1" Content="completed" Command="{Binding Path=RemoveCompletedCommand}"/>
+						<Button Grid.Column="2" Content="overdue" Command="{Binding Path=RemoveOverdueCommand}"/>
+					</Grid>
+				</Border>
+			</Grid>
+			<Border Grid.Row="2" Style="{StaticResource ResourceKey=Panel}">
+				<Grid>
+					<TextBlock Text="tasks completed!&#x0a;&#x0a;relax and enjoy the moment." Style="{StaticResource ResourceKey=DefaultHeader}" Visibility="{Binding Path=DefaultMessageVisible, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}"/>
+					<ScrollViewer>
+						<ItemsControl ItemsSource="{Binding Path=TaskCollectionView.CollectionView}">
+							<ItemsControl.GroupStyle>
+								<GroupStyle>
+									<GroupStyle.ContainerStyle>
+										<Style TargetType="GroupItem">
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate>
+														<Expander>
+															<Expander.Header>
+																<StackPanel>
+																	<TextBlock Style="{StaticResource ResourceKey=Header}" Text="{Binding Path=Name}"/>
+																	<TextBlock Style="{StaticResource ResourceKey=Subheader}" Text="{Binding Path=Items, Converter={StaticResource ResourceKey=TaskSubheader}}"/>
+																</StackPanel>
+															</Expander.Header>
+															<ItemsPresenter/>
+														</Expander>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Style>
+									</GroupStyle.ContainerStyle>
+								</GroupStyle>
+							</ItemsControl.GroupStyle>
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<StackPanel>
+										<Grid>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="40"/>
+												<ColumnDefinition Width="1*"/>
+												<ColumnDefinition Width="40"/>
+												<ColumnDefinition Width="40"/>
+												<ColumnDefinition Width="40"/>
+											</Grid.ColumnDefinitions>
+											<CheckBox Grid.Column="0" Style="{StaticResource ResourceKey=CheckBoxLarge}" IsChecked="{Binding Path=Completed}" Command="{Binding Path=DataContext.TaskCompletedCommand, RelativeSource={RelativeSource AncestorType=view:TaskView}}"/>
+											<StackPanel Grid.Column="1" Grid.ColumnSpan="4" Style="{StaticResource ResourceKey=VerticalPanel}">
+												<StackPanel Style="{StaticResource ResourceKey=HorizontalPanel}">
+													<TextBlock Style="{StaticResource ResourceKey=Title}" Text="{Binding Path=Priority, Converter={StaticResource ResourceKey=TaskPriority}}" Foreground="{Binding Path=Completed, Converter={StaticResource ResourceKey=TaskColour}, ConverterParameter=#8B0000}" TextDecorations="{Binding Path=Completed, Converter={StaticResource ResourceKey=TaskStrikethrough}}"/>
+													<TextBlock Style="{StaticResource ResourceKey=Title}" Text="{Binding Path=Title}" Foreground="{Binding Path=Completed, Converter={StaticResource ResourceKey=TaskColour}, ConverterParameter=#19223F}" TextDecorations="{Binding Path=Completed, Converter={StaticResource ResourceKey=TaskStrikethrough}}"/>
+												</StackPanel>
+												<TextBlock Style="{StaticResource ResourceKey=Subtitle}" TextDecorations="{Binding Path=Completed, Converter={StaticResource ResourceKey=TaskStrikethrough}}">
+													<TextBlock.Text>
+														<MultiBinding Converter="{StaticResource ResourceKey=TaskSubtitle}">
+															<Binding Path="Subject"/>
+															<Binding Path="Date"/>
+															<Binding Path="Details"/>
+														</MultiBinding>
+													</TextBlock.Text>
+													<TextBlock.Visibility>
+														<MultiBinding Converter="{StaticResource ResourceKey=TaskSubtitleVisibility}">
+															<Binding Path="Subject"/>
+															<Binding Path="Date"/>
+															<Binding Path="Details"/>
+														</MultiBinding>
+													</TextBlock.Visibility>
+												</TextBlock>
+											</StackPanel>
+											<Button Grid.Column="2" Style="{StaticResource ResourceKey=AddButton}" Command="{Binding Path=DataContext.AddSubtaskCommand, RelativeSource={RelativeSource AncestorType=view:TaskView}}" CommandParameter="{Binding}"/>
+											<Button Grid.Column="3" Style="{StaticResource ResourceKey=EditButton}" Command="{Binding Path=DataContext.EditTaskCommand, RelativeSource={RelativeSource AncestorType=view:TaskView}}" CommandParameter="{Binding}"/>
+											<Button Grid.Column="4" Style="{StaticResource ResourceKey=RemoveButton}" Command="{Binding Path=DataContext.RemoveTaskCommand, RelativeSource={RelativeSource AncestorType=view:TaskView}}" CommandParameter="{Binding}"/>
+										</Grid>
+										<ItemsControl>
+											<ItemsControl.ItemsSource>
+												<MultiBinding Converter="{StaticResource ResourceKey=SubtaskCollectionView}">
+													<Binding Path="Subtasks"/>
+													<Binding Path="DataContext.ShowCompleted" RelativeSource="{RelativeSource AncestorType=view:TaskView}"/>
+													<Binding Path="DataContext.OrderByAscending" RelativeSource="{RelativeSource AncestorType=view:TaskView}"/>
+												</MultiBinding>
+											</ItemsControl.ItemsSource>
+											<ItemsControl.ItemTemplate>
+												<DataTemplate>
+													<Border Style="{StaticResource ResourceKey=IndentPanel}">
+														<Grid>
+															<Grid.ColumnDefinitions>
+																<ColumnDefinition Width="30"/>
+																<ColumnDefinition Width="1*"/>
+																<ColumnDefinition Width="30"/>
+																<ColumnDefinition Width="30"/>
+															</Grid.ColumnDefinitions>
+															<CheckBox Grid.Column="0" Style="{StaticResource ResourceKey=CheckBoxSmall}" IsChecked="{Binding Path=Completed}" Command="{Binding Path=DataContext.SubtaskCompletedCommand, RelativeSource={RelativeSource AncestorType=view:TaskView}}"/>
+															<TextBlock Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource ResourceKey=Subtitle}" Text="{Binding Path=Title}" Foreground="{Binding Path=Completed, Converter={StaticResource ResourceKey=TaskColour}, ConverterParameter=#19223F}" TextDecorations="{Binding Path=Completed, Converter={StaticResource ResourceKey=TaskStrikethrough}}"/>
+															<Button Grid.Column="2" Style="{StaticResource ResourceKey=EditButtonSmall}" Command="{Binding Path=DataContext.EditSubtaskCommand, RelativeSource={RelativeSource AncestorType=view:TaskView}}" CommandParameter="{Binding}"/>
+															<Button Grid.Column="3" Style="{StaticResource ResourceKey=RemoveButtonSmall}" Command="{Binding Path=DataContext.RemoveSubtaskCommand, RelativeSource={RelativeSource AncestorType=view:TaskView}}">
+																<Button.CommandParameter>
+																	<MultiBinding Converter="{StaticResource ResourceKey=SubtaskRemove}">
+																		<Binding RelativeSource="{RelativeSource AncestorType=ItemsControl}" Path="DataContext"/>
+																		<Binding/>
+																	</MultiBinding>
+																</Button.CommandParameter>
+															</Button>
+														</Grid>
+													</Border>
+												</DataTemplate>
+											</ItemsControl.ItemTemplate>
+										</ItemsControl>
+									</StackPanel>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</ScrollViewer>
+				</Grid>
+			</Border>
+		</Grid>
+		<ScrollViewer Grid.Column="2">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="185"/>
+					<RowDefinition Height="10"/>
+					<RowDefinition Height="145"/>
+					<RowDefinition Height="10"/>
+					<RowDefinition Height="145"/>
+					<RowDefinition Height="10"/>
+					<RowDefinition Height="50"/>
+				</Grid.RowDefinitions>
+				<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="group by"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+						<RadioButton Grid.Row="2" Content="subject" IsChecked="{Binding Path=Group, Converter={StaticResource ResourceKey=GeneralRadioToString}, ConverterParameter=Subject}" Command="{Binding Path=UpdateViewCommand}"/>
+						<RadioButton Grid.Row="3" Content="date" IsChecked="{Binding Path=Group, Converter={StaticResource ResourceKey=GeneralRadioToString}, ConverterParameter=Date}" Command="{Binding Path=UpdateViewCommand}"/>
+						<RadioButton Grid.Row="4" Content="priority" IsChecked="{Binding Path=Group, Converter={StaticResource ResourceKey=GeneralRadioToString}, ConverterParameter=Priority}" Command="{Binding Path=UpdateViewCommand}"/>
+					</Grid>
+				</Border>
+				<Border Grid.Row="2" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="order by"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+						<RadioButton Grid.Row="2" Content="ascending" IsChecked="{Binding Path=OrderByAscending}" Command="{Binding Path=UpdateViewCommand}"/>
+						<RadioButton Grid.Row="3" Content="descending" Command="{Binding Path=UpdateViewCommand}"/>
+					</Grid>
+				</Border>
+				<Border Grid.Row="4" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="completed tasks"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+						<RadioButton Grid.Row="2" Content="show" IsChecked="{Binding Path=ShowCompleted}" Command="{Binding Path=UpdateViewCommand}"/>
+						<RadioButton Grid.Row="3" Content="hide" Command="{Binding Path=UpdateViewCommand}"/>
+					</Grid>
+				</Border>
+				<Border Grid.Row="6" Style="{StaticResource ResourceKey=Panel}">
+					<Button Content="save as pdf" Command="{Binding Path=SaveAsPdfCommand}"/>
+				</Border>
+			</Grid>
+		</ScrollViewer>
+		<Popup IsOpen="{Binding Path=TaskEditorVisible}">
+			<Border>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="60"/>
+						<ColumnDefinition Width="340"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Column="0" Grid.Row="0" Text="*title:" Style="{StaticResource ResourceKey=Title}"/>
+					<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=CurrentTaskTitle, UpdateSourceTrigger=PropertyChanged}"/>
+					<TextBlock Grid.Column="0" Grid.Row="1" Text="details:" Style="{StaticResource ResourceKey=Title}"/>
+					<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=CurrentTaskDetails, UpdateSourceTrigger=PropertyChanged}"/>
+					<TextBlock Grid.Column="0" Grid.Row="2" Text="subject:" Style="{StaticResource ResourceKey=Title}"/>
+					<TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=CurrentTaskSubject, UpdateSourceTrigger=PropertyChanged}"/>
+					<TextBlock Grid.Column="0" Grid.Row="3" Text="date:" Style="{StaticResource ResourceKey=Title}"/>
+					<TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=CurrentTaskDate, UpdateSourceTrigger=PropertyChanged}"/>
+					<TextBlock Grid.Column="0" Grid.Row="4" Text="*priority:" Style="{StaticResource ResourceKey=Title}"/>
+					<Grid Grid.Column="1" Grid.Row="4">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<RadioButton Grid.Column="0" Content="none" IsChecked="{Binding Path=CurrentTaskPriority, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=4}"/>
+						<RadioButton Grid.Column="1" Content="low" IsChecked="{Binding Path=CurrentTaskPriority, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}"/>
+						<RadioButton Grid.Column="2" Content="medium" IsChecked="{Binding Path=CurrentTaskPriority, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}"/>
+						<RadioButton Grid.Column="3" Content="high" IsChecked="{Binding Path=CurrentTaskPriority, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}"/>
+					</Grid>
+					<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=CancelEditTaskCommand}"/>
+						<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=SaveEditTaskCommand}"/>
+					</Grid>
+				</Grid>
+			</Border>
+		</Popup>
+		<Popup IsOpen="{Binding Path=SubtaskEditorVisible}">
+			<Border>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="60"/>
+						<ColumnDefinition Width="340"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Column="0" Grid.Row="0" Text="*title:" Style="{StaticResource ResourceKey=Title}"/>
+					<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=CurrentSubtaskTitle, UpdateSourceTrigger=PropertyChanged}"/>
+					<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=CancelEditSubtaskCommand}"/>
+						<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=SaveEditSubtaskCommand}"/>
+					</Grid>
+				</Grid>
+			</Border>
+		</Popup>
+		<Popup IsOpen="{Binding Path=PdfEditorVisible}">
+			<Border>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="120"/>
+						<ColumnDefinition Width="280"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+						<RowDefinition Height="40"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Column="0" Grid.Row="0" Text="*group by:" Style="{StaticResource ResourceKey=Title}"/>
+					<Grid Grid.Column="1" Grid.Row="0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<RadioButton Grid.Column="0" Content="subject" IsChecked="{Binding Path=PdfGroup, Converter={StaticResource ResourceKey=GeneralRadioToString}, ConverterParameter=Subject}"/>
+						<RadioButton Grid.Column="1" Content="date" IsChecked="{Binding Path=PdfGroup, Converter={StaticResource ResourceKey=GeneralRadioToString}, ConverterParameter=Date}"/>
+						<RadioButton Grid.Column="2" Content="priority" IsChecked="{Binding Path=PdfGroup, Converter={StaticResource ResourceKey=GeneralRadioToString}, ConverterParameter=Priority}"/>
+					</Grid>
+					<TextBlock Grid.Column="0" Grid.Row="1" Text="*order by:" Style="{StaticResource ResourceKey=Title}"/>
+					<Grid Grid.Column="1" Grid.Row="1">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<RadioButton Grid.Column="0" Content="ascending" IsChecked="{Binding Path=PdfOrderByAscending}"/>
+						<RadioButton Grid.Column="1" Content="descending"/>
+					</Grid>
+					<TextBlock Grid.Column="0" Grid.Row="2" Text="*completed tasks:" Style="{StaticResource ResourceKey=Title}"/>
+					<Grid Grid.Column="1" Grid.Row="2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<RadioButton Grid.Column="0" Content="show" IsChecked="{Binding Path=PdfShowCompleted}"/>
+						<RadioButton Grid.Column="1" Content="hide"/>
+					</Grid>
+					<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=CancelEditPdfCommand}"/>
+						<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=SaveEditPdfCommand}"/>
+					</Grid>
+				</Grid>
+			</Border>
+		</Popup>
+	</Grid>
+</Page>

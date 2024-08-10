@@ -1,0 +1,287 @@
+﻿<Page x:Class="UniPlanner.Source.Views.TimersView"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels"
+	  Title="timers"
+	  mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000">
+	<Page.DataContext>
+		<viewModel:TimersViewModel/>
+	</Page.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="1*"/>
+		</Grid.RowDefinitions>
+		<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<RadioButton Grid.Column="0" Content="stopwatch" IsChecked="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}"/>
+				<RadioButton Grid.Column="1" Content="timer" IsChecked="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}"/>
+				<RadioButton Grid.Column="2" Content="pomodoro" IsChecked="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}"/>
+			</Grid>
+		</Border>
+		<Grid Grid.Row="2">
+			<Grid Visibility="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=0}">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="1*"/>
+					<RowDefinition Height="10"/>
+					<RowDefinition Height="100"/>
+				</Grid.RowDefinitions>
+				<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+					<TextBlock Style="{StaticResource ResourceKey=TimerText}" Text="{Binding Path=StopwatchViewModel.CurrentTime}"/>
+				</Border>
+				<Grid Grid.Row="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="10"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+						<ToggleButton Style="{StaticResource ResourceKey=StartStopButton}" IsChecked="{Binding Path=StopwatchViewModel.IsRunning}" Command="{Binding Path=StopwatchViewModel.StartStopwatchCommand}"/>
+					</Border>
+					<Border Grid.Column="2" Style="{StaticResource ResourceKey=Panel}">
+						<Button Content="{Binding Path=StopwatchViewModel.IsRunning, Converter={StaticResource ResourceKey=TimersResetRestartText}}" Command="{Binding Path=StopwatchViewModel.ResetStopwatchCommand}"/>
+					</Border>
+				</Grid>
+			</Grid>
+			<Grid Visibility="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=1}">
+				<DockPanel>
+					<Border DockPanel.Dock="Right" Width="200" Margin="10,0,0,0" Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=TimerViewModel.IsRunning, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="45"/>
+								<RowDefinition Height="10"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock Grid.Row="0" Text="length"/>
+							<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+							<ScrollViewer Grid.Row="2">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+										<RowDefinition Height="40"/>
+									</Grid.RowDefinitions>
+									<RadioButton Grid.Row="0" Content="1 min" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=60}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="1" Content="3 mins" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=180}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="2" Content="5 mins" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=300}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="3" Content="10 mins" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=600}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="4" Content="15 mins" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=900}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="5" Content="20 mins" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1200}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="6" Content="30 mins" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1800}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="7" Content="45 mins" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2700}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="8" Content="1 hour" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3600}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+									<RadioButton Grid.Row="9" Content="2 hours" IsChecked="{Binding Path=TimerViewModel.TimerLength, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=7200}" Command="{Binding Path=TimerViewModel.UpdateStartTimeCommand}"/>
+								</Grid>
+							</ScrollViewer>
+						</Grid>
+					</Border>
+					<Grid DockPanel.Dock="Left">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="100"/>
+						</Grid.RowDefinitions>
+						<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+							<Viewbox MaxWidth="527">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="1*"/>
+										<RowDefinition Height="150"/>
+										<RowDefinition Height="1*"/>
+									</Grid.RowDefinitions>
+									<Grid Grid.Row="0">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="1*"/>
+											<ColumnDefinition Width="150"/>
+											<ColumnDefinition Width="220"/>
+											<ColumnDefinition Width="150"/>
+											<ColumnDefinition Width="1*"/>
+										</Grid.ColumnDefinitions>
+										<Button Grid.Column="1" Style="{StaticResource ResourceKey=ArrowUpButton}" Visibility="{Binding Path=TimerViewModel.IsRunning, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}" Command="{Binding Path=TimerViewModel.IncreaseHourCommand}"/>
+										<Button Grid.Column="2" Style="{StaticResource ResourceKey=ArrowUpButton}" Visibility="{Binding Path=TimerViewModel.IsRunning, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}" Command="{Binding Path=TimerViewModel.IncreaseMinuteCommand}"/>
+										<Button Grid.Column="3" Style="{StaticResource ResourceKey=ArrowUpButton}" Visibility="{Binding Path=TimerViewModel.IsRunning, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}" Command="{Binding Path=TimerViewModel.IncreaseSecondCommand}"/>
+									</Grid>
+									<TextBlock Grid.Row="1" Style="{StaticResource ResourceKey=TimerText}" Text="{Binding Path=TimerViewModel.CurrentTime}"/>
+									<Grid Grid.Row="2">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="1*"/>
+											<ColumnDefinition Width="150"/>
+											<ColumnDefinition Width="220"/>
+											<ColumnDefinition Width="150"/>
+											<ColumnDefinition Width="1*"/>
+										</Grid.ColumnDefinitions>
+										<Button Grid.Column="1" Style="{StaticResource ResourceKey=ArrowDownButton}" Visibility="{Binding Path=TimerViewModel.IsRunning, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}" Command="{Binding Path=TimerViewModel.DecreaseHourCommand}"/>
+										<Button Grid.Column="2" Style="{StaticResource ResourceKey=ArrowDownButton}" Visibility="{Binding Path=TimerViewModel.IsRunning, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}" Command="{Binding Path=TimerViewModel.DecreaseMinuteCommand}"/>
+										<Button Grid.Column="3" Style="{StaticResource ResourceKey=ArrowDownButton}" Visibility="{Binding Path=TimerViewModel.IsRunning, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}" Command="{Binding Path=TimerViewModel.DecreaseSecondCommand}"/>
+									</Grid>
+								</Grid>
+							</Viewbox>
+						</Border>
+						<Grid Grid.Row="2">
+							<Grid Visibility="{Binding Path=TimerViewModel.IsFinished, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="10"/>
+									<ColumnDefinition Width="1*"/>
+								</Grid.ColumnDefinitions>
+								<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+									<ToggleButton Style="{StaticResource ResourceKey=StartStopButton}" IsChecked="{Binding Path=TimerViewModel.IsRunning}" Command="{Binding Path=TimerViewModel.StartTimerCommand}"/>
+								</Border>
+								<Border Grid.Column="2" Style="{StaticResource ResourceKey=Panel}">
+									<Button Content="{Binding Path=TimerViewModel.IsRunning, Converter={StaticResource ResourceKey=TimersResetRestartText}}" Command="{Binding Path=TimerViewModel.ResetTimerCommand}"/>
+								</Border>
+							</Grid>
+							<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=TimerViewModel.IsFinished, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}">
+								<Button Content="end timer" Command="{Binding Path=TimerViewModel.EndTimerCommand}"/>
+							</Border>
+						</Grid>
+					</Grid>
+				</DockPanel>
+			</Grid>
+			<Grid Visibility="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=2}">
+				<DockPanel>
+					<ScrollViewer DockPanel.Dock="Right" Margin="10,0,0,0" Width="200" Visibility="{Binding Path=PomodoroViewModel.IsRunning, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="115"/>
+								<RowDefinition Height="10"/>
+								<RowDefinition Height="115"/>
+								<RowDefinition Height="10"/>
+								<RowDefinition Height="115"/>
+								<RowDefinition Height="10"/>
+								<RowDefinition Height="50"/>
+							</Grid.RowDefinitions>
+							<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="45"/>
+										<RowDefinition Height="10"/>
+										<RowDefinition Height="50"/>
+									</Grid.RowDefinitions>
+									<TextBlock Grid.Row="0" Text="pomodoro"/>
+									<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+									<Grid Grid.Row="2">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="1*"/>
+											<ColumnDefinition Width="100"/>
+											<ColumnDefinition Width="1*"/>
+										</Grid.ColumnDefinitions>
+										<Button Grid.Column="0" Style="{StaticResource ResourceKey=ArrowLeftButton}" Command="{Binding Path=PomodoroViewModel.DecreasePomodoroCommand}"/>
+										<TextBlock Grid.Column="1" Text="{Binding Path=PomodoroViewModel.PomodoroLength, Converter={StaticResource ResourceKey=TimersSelectedPomodoro}}"/>
+										<Button Grid.Column="2" Style="{StaticResource ResourceKey=ArrowRightButton}" Command="{Binding Path=PomodoroViewModel.IncreasePomodoroCommand}"/>
+									</Grid>
+								</Grid>
+							</Border>
+							<Border Grid.Row="2" Style="{StaticResource ResourceKey=Panel}">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="45"/>
+										<RowDefinition Height="10"/>
+										<RowDefinition Height="50"/>
+									</Grid.RowDefinitions>
+									<TextBlock Grid.Row="0" Text="break"/>
+									<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+									<Grid Grid.Row="2">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="1*"/>
+											<ColumnDefinition Width="100"/>
+											<ColumnDefinition Width="1*"/>
+										</Grid.ColumnDefinitions>
+										<Button Grid.Column="0" Style="{StaticResource ResourceKey=ArrowLeftButton}" Command="{Binding Path=PomodoroViewModel.DecreaseBreakCommand}"/>
+										<TextBlock Grid.Column="1" Text="{Binding Path=PomodoroViewModel.BreakLength, Converter={StaticResource ResourceKey=TimersSelectedBreak}}"/>
+										<Button Grid.Column="2" Style="{StaticResource ResourceKey=ArrowRightButton}" Command="{Binding Path=PomodoroViewModel.IncreaseBreakCommand}"/>
+									</Grid>
+								</Grid>
+							</Border>
+							<Border Grid.Row="4" Style="{StaticResource ResourceKey=Panel}">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="45"/>
+										<RowDefinition Height="10"/>
+										<RowDefinition Height="50"/>
+									</Grid.RowDefinitions>
+									<TextBlock Grid.Row="0" Text="repeat"/>
+									<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+									<Grid Grid.Row="2">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="1*"/>
+											<ColumnDefinition Width="100"/>
+											<ColumnDefinition Width="1*"/>
+										</Grid.ColumnDefinitions>
+										<Button Grid.Column="0" Style="{StaticResource ResourceKey=ArrowLeftButton}" Command="{Binding Path=PomodoroViewModel.DecreaseRepeatCommand}"/>
+										<TextBlock Grid.Column="1" Text="{Binding Path=PomodoroViewModel.RepeatLength}"/>
+										<Button Grid.Column="2" Style="{StaticResource ResourceKey=ArrowRightButton}" Command="{Binding Path=PomodoroViewModel.IncreaseRepeatCommand}"/>
+									</Grid>
+								</Grid>
+							</Border>
+							<Border Grid.Row="6" Style="{StaticResource ResourceKey=Panel}">
+								<Button Content="reset all" Command="{Binding Path=PomodoroViewModel.ResetAllCommand}"/>
+							</Border>
+						</Grid>
+					</ScrollViewer>
+					<Grid DockPanel.Dock="Left">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="100"/>
+						</Grid.RowDefinitions>
+						<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="45"/>
+									<RowDefinition Height="1*"/>
+								</Grid.RowDefinitions>
+								<TextBlock Grid.Row="0">
+									<TextBlock.Text>
+										<MultiBinding Converter="{StaticResource ResourceKey=TimersStatus}">
+											<Binding Path="PomodoroViewModel.OnBreak"/>
+											<Binding Path="PomodoroViewModel.CurrentRepeat"/>
+											<Binding Path="PomodoroViewModel.RepeatLength"/>
+										</MultiBinding>
+									</TextBlock.Text>
+								</TextBlock>
+								<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+								<Viewbox Grid.Row="1" MaxHeight="170">
+									<TextBlock Style="{StaticResource ResourceKey=TimerText}" Text="{Binding Path=PomodoroViewModel.CurrentTime}"/>
+								</Viewbox>
+							</Grid>
+						</Border>
+						<Grid Grid.Row="2">
+							<Grid Visibility="{Binding Path=PomodoroViewModel.IsFinished, Converter={StaticResource ResourceKey=GeneralBoolToVisibilityInverted}}">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="10"/>
+									<ColumnDefinition Width="1*"/>
+								</Grid.ColumnDefinitions>
+								<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+									<ToggleButton Style="{StaticResource ResourceKey=StartStopButton}" IsChecked="{Binding Path=PomodoroViewModel.IsRunning}" Command="{Binding Path=PomodoroViewModel.StartTimerCommand}"/>
+								</Border>
+								<Border Grid.Column="2" Style="{StaticResource ResourceKey=Panel}">
+									<Button Content="{Binding Path=PomodoroViewModel.IsRunning, Converter={StaticResource ResourceKey=TimersResetRestartText}}" Command="{Binding Path=PomodoroViewModel.ResetTimerCommand}"/>
+								</Border>
+							</Grid>
+							<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=PomodoroViewModel.IsFinished, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}">
+								<Button Content="end timer" Command="{Binding Path=PomodoroViewModel.EndTimerCommand}"/>
+							</Border>
+						</Grid>
+					</Grid>
+				</DockPanel>
+			</Grid>
+		</Grid>
+	</Grid>
+</Page>

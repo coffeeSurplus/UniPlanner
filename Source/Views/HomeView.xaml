@@ -1,0 +1,200 @@
+﻿<Page x:Class="UniPlanner.Source.Views.HomeView"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels"
+	  xmlns:view="clr-namespace:UniPlanner.Source.Views"
+	  Title="home"
+	  mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000">
+	<Page.DataContext>
+		<viewModel:HomeViewModel/>
+	</Page.DataContext>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="10"/>
+			<ColumnDefinition Width="2*"/>
+		</Grid.ColumnDefinitions>
+		<Grid Grid.Column="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="70"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+			<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="1*"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" Text="{Binding Converter={StaticResource ResourceKey=HomeDate}}" Style="{StaticResource ResourceKey=Header}"/>
+					<TextBlock Grid.Row="1" Text="{Binding Path=Username, Converter={StaticResource ResourceKey=HomeUsername}}" Style="{StaticResource ResourceKey=Header}"/>
+				</Grid>
+			</Border>
+			<Border Grid.Row="2" Style="{StaticResource ResourceKey=Panel}">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="45"/>
+						<RowDefinition Height="10"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" Text="{Binding Path=TaskCount, Converter={StaticResource ResourceKey=HomeTaskCount}}" Style="{StaticResource ResourceKey=Header}"/>
+					<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+					<ItemsControl Grid.Row="2" ItemsSource="{Binding Path=TaskCollectionView.CollectionView}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<StackPanel Margin="5" Style="{StaticResource ResourceKey=VerticalPanel}">
+									<StackPanel Style="{StaticResource ResourceKey=HorizontalPanel}">
+										<TextBlock Style="{StaticResource ResourceKey=Priority}" Text="{Binding Path=Priority, Converter={StaticResource ResourceKey=TaskPriority}}"/>
+										<TextBlock Style="{StaticResource ResourceKey=Title}" Text="{Binding Path=Title}" />
+									</StackPanel>
+									<TextBlock Style="{StaticResource ResourceKey=Subtitle}">
+										<TextBlock.Text>
+											<MultiBinding Converter="{StaticResource ResourceKey=TaskSubtitle}">
+												<Binding Path="Subject"/>
+												<Binding Path="Date"/>
+												<Binding Path="Details"/>
+											</MultiBinding>
+										</TextBlock.Text>
+										<TextBlock.Visibility>
+											<MultiBinding Converter="{StaticResource ResourceKey=TaskSubtitleVisibility}">
+												<Binding Path="Subject"/>
+												<Binding Path="Date"/>
+												<Binding Path="Details"/>
+											</MultiBinding>
+										</TextBlock.Visibility>
+									</TextBlock>
+								</StackPanel>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</Grid>
+			</Border>
+		</Grid>
+		<Grid Grid.Column="2">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+			<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="45"/>
+						<RowDefinition Height="10"/>
+						<RowDefinition Height="1*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" Text="{Binding Path=TimetableCount, Converter={StaticResource ResourceKey=HomeTimetableCount}}" Style="{StaticResource ResourceKey=Header}"/>
+					<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+					<ItemsControl Grid.Row="2" ItemsSource="{Binding Path=TimetableCollectionView.CollectionView}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border Margin="5" Padding="5" Background="{Binding Path=Colour, Converter={StaticResource ResourceKey=GeneralIntToColour}}">
+									<StackPanel Style="{StaticResource ResourceKey=VerticalPanel}">
+										<TextBlock Style="{StaticResource ResourceKey=Title}">
+											<TextBlock.Text>
+												<MultiBinding Converter="{StaticResource ResourceKey=TimetableTitle}">
+													<Binding Path="StartTime"/>
+													<Binding Path="EndTime"/>
+													<Binding Path="Title"/>
+												</MultiBinding>
+											</TextBlock.Text>
+										</TextBlock>
+										<TextBlock Style="{StaticResource ResourceKey=Subtitle}">
+											<TextBlock.Text>
+												<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitle}">
+													<Binding Path="Details"/>
+													<Binding Path="Subject"/>
+													<Binding Path="Location"/>
+												</MultiBinding>
+											</TextBlock.Text>
+											<TextBlock.Visibility>
+												<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitleVisibility}">
+													<Binding Path="Details"/>
+													<Binding Path="Subject"/>
+													<Binding Path="Location"/>
+												</MultiBinding>
+											</TextBlock.Visibility>
+										</TextBlock>
+									</StackPanel>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</Grid>
+			</Border>
+			<Grid Grid.Row="2">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="10"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="{Binding Path=EventCount, Converter={StaticResource ResourceKey=HomeEventCount}}" Style="{StaticResource ResourceKey=Header}"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+						<ItemsControl Grid.Row="2" ItemsSource="{Binding Path=EventCollectionView.CollectionView}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Border Margin="5" Padding="5" Background="{Binding Path=Colour, Converter={StaticResource ResourceKey=GeneralIntToColour}}">
+										<StackPanel Style="{StaticResource ResourceKey=VerticalPanel}">
+											<TextBlock Style="{StaticResource ResourceKey=Title}">
+												<TextBlock.Text>
+													<MultiBinding Converter="{StaticResource ResourceKey=HomeEventTitle}">
+														<Binding Path="Date"/>
+														<Binding Path="AllDay"/>
+														<Binding Path="StartTime"/>
+														<Binding Path="EndTime"/>
+														<Binding Path="Title"/>
+													</MultiBinding>
+												</TextBlock.Text>
+											</TextBlock>
+											<TextBlock Style="{StaticResource ResourceKey=Subtitle}">
+												<TextBlock.Text>
+													<MultiBinding Converter="{StaticResource ResourceKey=EventSubtitle}">
+														<Binding Path="Details"/>
+														<Binding Path="Location"/>
+													</MultiBinding>
+												</TextBlock.Text>
+												<TextBlock.Visibility>
+													<MultiBinding Converter="{StaticResource ResourceKey=EventSubtitleVisibility}">
+														<Binding Path="Details"/>
+														<Binding Path="Location"/>
+													</MultiBinding>
+												</TextBlock.Visibility>
+											</TextBlock>
+										</StackPanel>
+									</Border>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</Grid>
+				</Border>
+				<Border Grid.Column="2" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="quick links" Style="{StaticResource ResourceKey=Header}"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+						<ItemsControl Grid.Row="2" ItemsSource="{Binding Path=LinkCollectionView.CollectionView}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Button Margin="5" Style="{StaticResource ResourceKey=LinkButton}" Content="{Binding Path=Title}" Command="{Binding Path=DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=view:HomeView}}" CommandParameter="{Binding Path=URL}"/>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</Grid>
+				</Border>
+			</Grid>
+		</Grid>
+	</Grid>
+</Page>

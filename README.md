@@ -85,6 +85,7 @@ i've uploaded the application as an executable file to the releases section - th
 
 * FontAwesome.Sharp - for side panel icons
 * QuestPDF - for generating pdf documents
+* SkiaSharp - for generating graphics on pdf documents
 
 ## gallery
 

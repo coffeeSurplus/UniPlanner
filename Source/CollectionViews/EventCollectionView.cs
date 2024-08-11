@@ -6,7 +6,7 @@ namespace UniPlanner.Source.CollectionViews;
 
 internal class EventDayCollectionView(List<EventModel> eventList, DateOnly currentDate) : EventCollectionViewBase(eventList, currentDate)
 {
-	public override void UpdateView(DateOnly currentDate) => EventCollectionView.Filter = (parameter) => ((EventModel)parameter).Date == currentDate;
+	public override void UpdateView(DateOnly currentDate) => EventCollectionView.Filter = (object parameter) => ((EventModel)parameter).Date == currentDate;
 }
 
 internal class EventMonthCollectionView : EventCollectionViewBase
@@ -17,15 +17,15 @@ internal class EventMonthCollectionView : EventCollectionViewBase
 		UpdateView(eventList, currentDate);
 	}
 
-	public override void UpdateView(DateOnly currentDate) => EventCollectionView.Filter = (parameter) => (((EventModel)parameter).Date.Year, ((EventModel)parameter).Date.Month) == (currentDate.Year, currentDate.Month);
+	public override void UpdateView(DateOnly currentDate) => EventCollectionView.Filter = (object parameter) => (((EventModel)parameter).Date.Year, ((EventModel)parameter).Date.Month) == (currentDate.Year, currentDate.Month);
 	public void UpdateView(List<EventModel> eventList, DateOnly currentDate)
 	{
 		EventCollectionView = new CollectionViewSource() { Source = eventList.GroupBy(x => x.Date).Select(x => new EventModelGroup(x.Key, new(x))) }.View;
-		EventCollectionView.Filter = (parameter) => (((EventModelGroup)parameter).Date.Year, ((EventModelGroup)parameter).Date.Month) == (currentDate.Year, currentDate.Month);
+		EventCollectionView.Filter = (object parameter) => (((EventModelGroup)parameter).Date.Year, ((EventModelGroup)parameter).Date.Month) == (currentDate.Year, currentDate.Month);
 	}
 }
 
 internal class EventWeekCollectionView(List<EventModel> eventList, DateOnly currentDate) : EventCollectionViewBase(eventList, currentDate)
 {
-	public override void UpdateView(DateOnly currentDate) => EventCollectionView.Filter = (parameter) => ((EventModel)parameter).Date.FirstDayOfWeek() == currentDate.FirstDayOfWeek();
+	public override void UpdateView(DateOnly currentDate) => EventCollectionView.Filter = (object parameter) => ((EventModel)parameter).Date.FirstDayOfWeek() == currentDate.FirstDayOfWeek();
 }

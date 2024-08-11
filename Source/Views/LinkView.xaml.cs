@@ -1,9 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace UniPlanner.Source.Views
+namespace UniPlanner.Source.Views;
+
+public partial class LinkView : Page
 {
-	public partial class LinkView : Page
-	{
-		public LinkView() => InitializeComponent();
-	}
+	public LinkView() => InitializeComponent();
 }

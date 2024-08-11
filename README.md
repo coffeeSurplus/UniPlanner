@@ -79,12 +79,13 @@ UniPlanner - easily plan around your revision with this simple, friendly user in
 
 i've uploaded the application as an executable file to the releases section - there are two versions:
 * UniPlannerLarge - self-contained .exe file, ~170 Mb in size. does not require any extra installations.
-* UniPlannerSmall - framework-dependent .exe file. ~30 Mb in size. required [.net 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to be installed.
+* UniPlannerSmall - framework-dependent .exe file. ~30 Mb in size. requires [.net 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to be installed.
 
 ## libraries used
 
 * FontAwesome.Sharp - for side panel icons
 * QuestPDF - for generating pdf documents
+* SkiaSharp - for generating graphics on pdf documents
 
 ## gallery
 

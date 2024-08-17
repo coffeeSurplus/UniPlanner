@@ -11,7 +11,7 @@ namespace UniPlanner.Source.Data;
 internal abstract class PdfGenerator
 {
 	private readonly string fileName;
-	private readonly SettingsModel settings = ((App)System.Windows.Application.Current).SettingsManager.Data;
+	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
 	protected readonly SaveFileDialog saveFileDialog = new() { DefaultExt = ".pdf", Filter = "Pdf File (*.pdf)|*.pdf|All files (*.*)|*.*", FilterIndex = 1 };
 
 	public PdfGenerator(string fileName)

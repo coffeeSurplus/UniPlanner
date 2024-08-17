@@ -8,9 +8,9 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class TaskViewModel : ViewModelBase
 {
-	private readonly DataManager<List<TaskModel>> dataManager = ((App)Application.Current).TaskManager;
-	private readonly List<TaskModel> taskList;
-	private readonly TaskPdfGenerator pdfGenerator;
+	private readonly DataManager<List<TaskModel>> dataManager = MainProgram.TaskManager;
+	private readonly List<TaskModel> taskList = MainProgram.TaskManager.Data;
+	private readonly TaskPdfGenerator pdfGenerator = new(MainProgram.TaskManager.Data);
 	private bool newTask = true;
 	private bool newSubtask = true;
 	private TaskModel currentTask = new();
@@ -19,10 +19,10 @@ internal class TaskViewModel : ViewModelBase
 	private string group = "Subject";
 	private bool orderByAscending = true;
 	private bool showCompleted = true;
-	private bool taskEditorVisible;
-	private bool subtaskEditorVisible;
-	private bool pdfEditorVisible;
-	private bool defaultMessageVisible;
+	private bool taskEditorVisible = false;
+	private bool subtaskEditorVisible = false;
+	private bool pdfEditorVisible = false;
+	private bool defaultMessageVisible = false;
 	private string currentTaskTitle = string.Empty;
 	private string currentTaskDetails = string.Empty;
 	private string currentTaskSubject = string.Empty;
@@ -133,7 +133,7 @@ internal class TaskViewModel : ViewModelBase
 	public RelayCommand CancelEditPdfCommand { get; }
 	public RelayCommand SaveEditPdfCommand { get; }
 
-	public TaskCollectionView TaskCollectionView { get; }
+	public TaskCollectionView TaskCollectionView { get; } = new(MainProgram.TaskManager.Data);
 
 	public TaskViewModel()
 	{
@@ -155,9 +155,6 @@ internal class TaskViewModel : ViewModelBase
 		SaveEditSubtaskCommand = new(SaveEditSubtask);
 		CancelEditPdfCommand = new(CancelEditPdf);
 		SaveEditPdfCommand = new(SaveEditPdf);
-		taskList = dataManager.Data;
-		pdfGenerator = new(taskList);
-		TaskCollectionView = new(taskList);
 		UpdateView(false);
 	}
 
@@ -338,7 +335,7 @@ internal class TaskViewModel : ViewModelBase
 		DefaultMessageVisible = taskList.Count == 0 || !ShowCompleted && taskList.All(x => x.Completed && x.Subtasks.All(x => x.Completed));
 		if (updateHomeView)
 		{
-			((App)Application.Current).UpdateHomeView();
+			MainProgram.UpdateHomeView();
 		}
 	}
 }

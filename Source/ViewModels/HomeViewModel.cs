@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using UniPlanner.Source.CollectionViews;
+﻿using UniPlanner.Source.CollectionViews;
 using UniPlanner.Source.Data;
 using UniPlanner.Source.Models;
 using UniPlanner.Source.MVVM;
@@ -8,16 +7,15 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class HomeViewModel : ViewModelBase
 {
-	private readonly SettingsModel settings = ((App)Application.Current).SettingsManager.Data;
-	private readonly List<TaskModel> taskList = ((App)Application.Current).TaskManager.Data;
-	private readonly List<TimetableModel> timetableList = ((App)Application.Current).TimetableManager.Data;
-	private readonly List<EventModel> eventList = ((App)Application.Current).EventManager.Data;
-	private readonly List<LinkModel> linkList = ((App)Application.Current).LinkManager.Data;
+	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
+	private readonly List<TaskModel> taskList = MainProgram.TaskManager.Data;
+	private readonly List<TimetableModel> timetableList = MainProgram.TimetableManager.Data;
+	private readonly List<EventModel> eventList = MainProgram.EventManager.Data;
 
-	private string username;
-	private int taskCount;
-	private int timetableCount;
-	private int eventCount;
+	private string username = string.Empty;
+	private int taskCount = 0;
+	private int timetableCount = 0;
+	private int eventCount = 0;
 
 	public string Username
 	{
@@ -42,19 +40,14 @@ internal class HomeViewModel : ViewModelBase
 
 	public RelayCommand OpenLinkCommand { get; }
 
-	public HomeTaskCollectionView TaskCollectionView { get; }
-	public HomeTimetableCollectionView TimetableCollectionView { get; }
-	public HomeEventCollectionView EventCollectionView { get; }
-	public HomeLinkCollectionView LinkCollectionView { get; }
+	public HomeTaskCollectionView TaskCollectionView { get; } = new(MainProgram.TaskManager.Data);
+	public HomeTimetableCollectionView TimetableCollectionView { get; } = new(MainProgram.TimetableManager.Data);
+	public HomeEventCollectionView EventCollectionView { get; } = new(MainProgram.EventManager.Data);
+	public HomeLinkCollectionView LinkCollectionView { get; } = new(MainProgram.LinkManager.Data);
 
 	public HomeViewModel()
 	{
 		OpenLinkCommand = new(OpenLink);
-		username = settings.Username;
-		TaskCollectionView = new(taskList);
-		TimetableCollectionView = new(timetableList);
-		EventCollectionView = new(eventList);
-		LinkCollectionView = new(linkList);
 		UpdateView();
 	}
 

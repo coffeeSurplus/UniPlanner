@@ -1,5 +1,4 @@
 ﻿using System.Media;
-using System.Windows;
 using UniPlanner.Source.Data;
 using UniPlanner.Source.Models;
 using UniPlanner.Source.MVVM;
@@ -8,16 +7,16 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class SettingsViewModel : ViewModelBase
 {
-	private readonly DataManager<SettingsModel> dataManager = ((App)Application.Current).SettingsManager;
+	private readonly DataManager<SettingsModel> dataManager = MainProgram.SettingsManager;
 	private SoundPlayer soundPlayer = new();
 
-	private bool startupMaximised;
-	private string username;
-	private bool scrollbarsEnabled;
-	private int alarmSound;
-	private int browser;
-	private bool privateBrowsing;
-	private int pdfSaveAction;
+	private bool startupMaximised = MainProgram.SettingsManager.Data.StartupMaximised;
+	private string username = MainProgram.SettingsManager.Data.Username;
+	private bool scrollbarsEnabled = MainProgram.SettingsManager.Data.ScrollbarsEnabled;
+	private int alarmSound = MainProgram.SettingsManager.Data.AlarmSound;
+	private int browser = MainProgram.SettingsManager.Data.Browser;
+	private bool privateBrowsing = MainProgram.SettingsManager.Data.PrivateBrowsing;
+	private int pdfSaveAction = MainProgram.SettingsManager.Data.PdfSaveAction;
 
 	public bool StartupMaximised
 	{
@@ -31,7 +30,7 @@ internal class SettingsViewModel : ViewModelBase
 		{
 			SetValue(ref username, value);
 			UpdateData();
-			((App)Application.Current).UpdateHomeView();
+			MainProgram.UpdateHomeView();
 		}
 	}
 	public bool ScrollbarsEnabled
@@ -69,20 +68,13 @@ internal class SettingsViewModel : ViewModelBase
 		UpdateDataCommand = new(UpdateData);
 		SetScrollbarsCommand = new(SetScrollbars);
 		PlayAudioCommand = new(PlayAudio);
-		startupMaximised = dataManager.Data.StartupMaximised;
-		username = dataManager.Data.Username;
-		scrollbarsEnabled = dataManager.Data.ScrollbarsEnabled;
-		alarmSound = dataManager.Data.AlarmSound;
-		browser = dataManager.Data.Browser;
-		privateBrowsing = dataManager.Data.PrivateBrowsing;
-		pdfSaveAction = dataManager.Data.PdfSaveAction;
 	}
 
 	private void UpdateData(object parameter) => UpdateData();
 	private void SetScrollbars(object parameter)
 	{
 		UpdateData();
-		((App)Application.Current).SetScrollbars();
+		MainProgram.SetScrollbars();
 	}
 	private void PlayAudio(object parameter)
 	{

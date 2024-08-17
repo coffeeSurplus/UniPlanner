@@ -8,25 +8,25 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class EventViewModel : ViewModelBase
 {
-	private readonly DataManager<List<EventModel>> dataManager = ((App)Application.Current).EventManager;
-	private readonly List<EventModel> eventList;
-	private bool newEvent;
+	private readonly DataManager<List<EventModel>> dataManager = MainProgram.EventManager;
+	private readonly List<EventModel> eventList = MainProgram.EventManager.Data;
+	private bool newEvent = false;
 	private EventModel currentEvent = new();
 
-	private int currentPageNumber;
-	private int monthEventCount;
-	private int weekEventCount;
-	private int dayEventCount;
-	private bool eventEditorVisible;
+	private int currentPageNumber = 0;
+	private int monthEventCount = 0;
+	private int weekEventCount = 0;
+	private int dayEventCount = 0;
+	private bool eventEditorVisible = false;
 	private DateOnly currentDate = DateOnly.FromDateTime(DateTime.Now);
 	private string currentEventTitle = string.Empty;
 	private string currentEventDetails = string.Empty;
 	private string currentEventLocation = string.Empty;
 	private string currentEventDate = string.Empty;
-	private bool currentEventAllDay;
+	private bool currentEventAllDay = false;
 	private string currentEventStartTime = string.Empty;
 	private string currentEventEndTime = string.Empty;
-	private int currentEventColour;
+	private int currentEventColour = 0;
 
 	public int CurrentPageNumber
 	{
@@ -112,9 +112,9 @@ internal class EventViewModel : ViewModelBase
 	public RelayCommand SaveEditEventCommand { get; }
 	public RelayCommand RemoveEventCommand { get; }
 
-	public EventMonthCollectionView MonthCollectionView { get; }
-	public EventWeekCollectionView WeekCollectionView { get; }
-	public EventDayCollectionView DayCollectionView { get; }
+	public EventMonthCollectionView MonthCollectionView { get; } = new(MainProgram.EventManager.Data, DateOnly.FromDateTime(DateTime.Now));
+	public EventWeekCollectionView WeekCollectionView { get; } = new(MainProgram.EventManager.Data, DateOnly.FromDateTime(DateTime.Now));
+	public EventDayCollectionView DayCollectionView { get; } = new(MainProgram.EventManager.Data, DateOnly.FromDateTime(DateTime.Now));
 
 	public EventViewModel()
 	{
@@ -130,10 +130,6 @@ internal class EventViewModel : ViewModelBase
 		CancelEditEventCommand = new(CancelEditEvent);
 		SaveEditEventCommand = new(SaveEditEvent);
 		RemoveEventCommand = new(RemoveEvent);
-		eventList = dataManager.Data;
-		MonthCollectionView = new(eventList, CurrentDate);
-		WeekCollectionView = new(eventList, CurrentDate);
-		DayCollectionView = new(eventList, CurrentDate);
 		UpdateView(false);
 	}
 
@@ -299,7 +295,7 @@ internal class EventViewModel : ViewModelBase
 		DayEventCount = eventList.Count(x => x.Date == currentDate);
 		if (updateHomeView)
 		{
-			((App)Application.Current).UpdateHomeView();
+			MainProgram.UpdateHomeView();
 		}
 	}
 }

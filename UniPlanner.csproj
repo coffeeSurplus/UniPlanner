@@ -10,8 +10,8 @@
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 	</PropertyGroup>
 	<ItemGroup>
-		<Page Remove="Source\App.xaml" />
-		<ApplicationDefinition Include="Source\App.xaml" />
+		<Page Remove="Source\Data\App.xaml" />
+		<ApplicationDefinition Include="Source\Data\App.xaml" />
 		<PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
 		<PackageReference Include="QuestPDF" Version="2024.7.2" />
 		<PackageReference Include="SkiaSharp" Version="2.88.8" />

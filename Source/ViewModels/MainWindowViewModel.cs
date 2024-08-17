@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using UniPlanner.Source.Data;
 using UniPlanner.Source.MVVM;
 using UniPlanner.Source.Views;
 
@@ -9,9 +10,9 @@ internal class MainWindowViewModel : ViewModelBase
 {
 	private readonly Page[] pages = [new HomeView(), new TimetableView(), new TaskView(), new EventView(), new LinkView(), new TimersView(), new SettingsView()];
 
-	private WindowState currentState = ((App)Application.Current).SettingsManager.Data.StartupMaximised ? WindowState.Maximized : WindowState.Normal;
-	private bool sidepanelCollapsed;
-	private int currentPageNumber;
+	private WindowState currentState = MainProgram.SettingsManager.Data.StartupMaximised ? WindowState.Maximized : WindowState.Normal;
+	private bool sidepanelCollapsed = false;
+	private int currentPageNumber = 0;
 	private Page currentPage;
 
 	public WindowState CurrentState

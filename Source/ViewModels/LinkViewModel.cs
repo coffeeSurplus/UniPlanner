@@ -10,22 +10,22 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class LinkViewModel : ViewModelBase
 {
-	private readonly DataManager<List<LinkModel>> dataManager = ((App)Application.Current).LinkManager;
-	private readonly SettingsModel settings = ((App)Application.Current).SettingsManager.Data;
-	private readonly List<LinkModel> linkList;
-	private bool newLink;
+	private readonly DataManager<List<LinkModel>> dataManager = MainProgram.LinkManager;
+	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
+	private readonly List<LinkModel> linkList = MainProgram.LinkManager.Data;
+	private bool newLink = false;
 	private LinkModel currentLink = new();
 
 	private bool expanderBindingEnabled = true;
 	private bool expanded = true;
 	private bool showAll = true;
-	private bool linkEditorVisible;
-	private bool defaultMessageVisible;
+	private bool linkEditorVisible = false;
+	private bool defaultMessageVisible = false;
 	private string currentLinkTitle = string.Empty;
 	private string currentLinkGroup = string.Empty;
 	private string currentLinkSubgroup = string.Empty;
 	private string currentLinkURL = string.Empty;
-	private bool currentLinkFavourite;
+	private bool currentLinkFavourite = false;
 
 	public bool ExpanderBindingEnabled
 	{
@@ -88,7 +88,7 @@ internal class LinkViewModel : ViewModelBase
 	public RelayCommand CancelEditLinkCommand { get; }
 	public RelayCommand SaveEditLinkCommand { get; }
 
-	public LinkCollectionView LinkCollectionView { get; }
+	public LinkCollectionView LinkCollectionView { get; } = new(MainProgram.LinkManager.Data);
 
 	public LinkViewModel()
 	{
@@ -101,8 +101,6 @@ internal class LinkViewModel : ViewModelBase
 		SelectFolderCommand = new(SelectFolder);
 		CancelEditLinkCommand = new(CancelEditLink);
 		SaveEditLinkCommand = new(SaveEditLink);
-		linkList = dataManager.Data;
-		LinkCollectionView = new(linkList);
 		UpdateView(false);
 	}
 
@@ -194,7 +192,7 @@ internal class LinkViewModel : ViewModelBase
 		DefaultMessageVisible = linkList.Count == 0 || !ShowAll && linkList.All(x => !x.Favourite);
 		if (updateHomeView)
 		{
-			((App)Application.Current).UpdateHomeView();
+			MainProgram.UpdateHomeView();
 		}
 	}
 }

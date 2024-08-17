@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Media;
-using System.Windows;
 using System.Windows.Threading;
+using UniPlanner.Source.Data;
 using UniPlanner.Source.Models;
 using UniPlanner.Source.MVVM;
 
@@ -9,7 +9,7 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class TimersViewModel : ViewModelBase
 {
-	private int currentPageNumber;
+	private int currentPageNumber = 0;
 
 	public int CurrentPageNumber
 	{
@@ -81,13 +81,13 @@ internal class StopwatchViewModel : ViewModelBase
 
 internal class TimerViewModel : ViewModelBase
 {
-	private readonly SettingsModel settings = ((App)Application.Current).SettingsManager.Data;
+	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
 	private readonly DispatcherTimer dispatcherTimer = new() { Interval = new(0, 0, 0, 0, 1) };
 	private readonly Stopwatch stopwatch = new();
 	private SoundPlayer soundPlayer = new();
 
-	private bool isRunning;
-	private bool isFinished;
+	private bool isRunning = false;
+	private bool isFinished = false;
 	private int timerLength = 600;
 	private string currentTime = "00:10:00";
 
@@ -215,14 +215,14 @@ internal class TimerViewModel : ViewModelBase
 
 internal class PomodoroViewModel : ViewModelBase
 {
-	private readonly SettingsModel settings = ((App)Application.Current).SettingsManager.Data;
+	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
 	private readonly DispatcherTimer dispatcherTimer = new() { Interval = new(0, 0, 0, 0, 1) };
 	private readonly Stopwatch stopwatch = new();
 	private SoundPlayer soundPlayer = new();
 
-	private bool onBreak;
-	private bool isRunning;
-	private bool isFinished;
+	private bool onBreak = false;
+	private bool isRunning = false;
+	private bool isFinished = false;
 	private int pomodoroLength = 25;
 	private int breakLength = 5;
 	private int repeatLength = 1;

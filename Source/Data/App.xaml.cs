@@ -2,11 +2,10 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using UniPlanner.Source.Data;
 using UniPlanner.Source.Models;
 using UniPlanner.Source.ViewModels;
 
-namespace UniPlanner.Source;
+namespace UniPlanner.Source.Data;
 
 public partial class App : Application
 {
@@ -18,15 +17,16 @@ public partial class App : Application
 
 	public App()
 	{
+		Directory.CreateDirectory(Environment.ExpandEnvironmentVariables($@"%AppData%\UniPlanner\"));
+		MainProgram.SetScrollbars();
 		if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
 		{
 			MessageBox.Show("Another instance of this application is already running.", "UniPlanner");
 			Shutdown();
 		}
-		Directory.CreateDirectory(Environment.ExpandEnvironmentVariables($@"%AppData%\UniPlanner\"));
-		SetScrollbars();
 	}
 
+	public void UpdateHomeView() => ((HomeViewModel)MainWindow.DataContext).UpdateView();
 	public void SetScrollbars() => Resources["ScrollBarVisibility"] = SettingsManager.Data.ScrollbarsEnabled ? ScrollBarVisibility.Auto : ScrollBarVisibility.Hidden;
-	public void UpdateHomeView() => ((MainWindowViewModel)MainWindow.DataContext).UpdateHomeView();
+
 }

@@ -8,24 +8,24 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class TimetableViewModel : ViewModelBase
 {
-	private readonly DataManager<List<TimetableModel>> dataManager = ((App)Application.Current).TimetableManager;
-	private readonly List<TimetableModel> timetableList;
-	private readonly TimetablePdfGenerator pdfGenerator;
+	private readonly DataManager<List<TimetableModel>> dataManager = MainProgram.TimetableManager;
+	private readonly List<TimetableModel> timetableList = MainProgram.TimetableManager.Data;
+	private readonly TimetablePdfGenerator pdfGenerator = new(MainProgram.TimetableManager.Data);
 	private bool newTimetable = true;
 	private TimetableModel currentTimetable = new();
 
-	private int currentPageNumber;
-	private bool timetableEditorVisible;
-	private bool horizontalDefaultMessageVisible;
-	private bool todayDefaultMessageVisible;
+	private int currentPageNumber = 0;
+	private bool timetableEditorVisible = false;
+	private bool horizontalDefaultMessageVisible = false;
+	private bool todayDefaultMessageVisible = false;
 	private string currentTimetableTitle = string.Empty;
 	private string currentTimetableDetails = string.Empty;
 	private string currentTimetableSubject = string.Empty;
 	private string currentTimetableLocation = string.Empty;
-	private int currentTimetableDay;
+	private int currentTimetableDay = 0;
 	private string currentTimetableStartTime = string.Empty;
 	private string currentTimetableEndTime = string.Empty;
-	private int currentTimetableColour;
+	private int currentTimetableColour = 0;
 
 	public int CurrentPageNumber
 	{
@@ -95,9 +95,9 @@ internal class TimetableViewModel : ViewModelBase
 	public RelayCommand CancelEditTimetableCommand { get; }
 	public RelayCommand SaveEditTimetableCommand { get; }
 
-	public TimetableVerticalCollectionView VerticalCollectionView { get; }
-	public TimetableHorizontalCollectionView HorizontalCollectionView { get; }
-	public TimetableTodayCollectionView TodayCollectionView { get; }
+	public TimetableVerticalCollectionView VerticalCollectionView { get; } = new(MainProgram.TimetableManager.Data);
+	public TimetableHorizontalCollectionView HorizontalCollectionView { get; } = new(MainProgram.TimetableManager.Data);
+	public TimetableTodayCollectionView TodayCollectionView { get; } = new(MainProgram.TimetableManager.Data);
 
 	public TimetableViewModel()
 	{
@@ -107,11 +107,6 @@ internal class TimetableViewModel : ViewModelBase
 		RemoveTimetableCommand = new(RemoveTimetable);
 		CancelEditTimetableCommand = new(CancelEditTimetable);
 		SaveEditTimetableCommand = new(SaveEditTimetable);
-		timetableList = dataManager.Data;
-		pdfGenerator = new(timetableList);
-		VerticalCollectionView = new(timetableList);
-		HorizontalCollectionView = new(timetableList);
-		TodayCollectionView = new(timetableList);
 		UpdateView(false);
 	}
 
@@ -238,7 +233,7 @@ internal class TimetableViewModel : ViewModelBase
 		TodayDefaultMessageVisible = timetableList.All(x => x.Day != DateOnly.FromDateTime(DateTime.Now).UKDayOfWeek());
 		if (updateHomeView)
 		{
-			((App)Application.Current).UpdateHomeView();
+			MainProgram.UpdateHomeView();
 		}
 	}
 }

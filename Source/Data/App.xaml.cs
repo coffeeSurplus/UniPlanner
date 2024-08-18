@@ -26,7 +26,7 @@ public partial class App : Application
 		}
 	}
 
-	public void UpdateHomeView() => ((HomeViewModel)MainWindow.DataContext).UpdateView();
+	public void UpdateHomeView() => ((MainWindowViewModel)MainWindow.DataContext).UpdateHomeView();
 	public void SetScrollbars() => Resources["ScrollBarVisibility"] = SettingsManager.Data.ScrollbarsEnabled ? ScrollBarVisibility.Auto : ScrollBarVisibility.Hidden;
 
 }

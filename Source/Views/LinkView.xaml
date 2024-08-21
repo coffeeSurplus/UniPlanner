@@ -1,187 +1,181 @@
-﻿<Page x:Class="UniPlanner.Source.Views.LinkView"
-	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	  xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels"
-	  xmlns:view="clr-namespace:UniPlanner.Source.Views"
-	  Title="links"
-	  mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000">
-	<Page.DataContext>
-		<viewModel:LinkViewModel/>
-	</Page.DataContext>
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="1*"/>
-			<ColumnDefinition Width="10"/>
-			<ColumnDefinition Width="200"/>
-		</Grid.ColumnDefinitions>
-		<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
-			<Grid>
-				<TextBlock Text="no links added." Style="{StaticResource ResourceKey=DefaultHeader}" Visibility="{Binding Path=DefaultMessageVisible, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}"/>
-				<ScrollViewer>
-					<ItemsControl ItemsSource="{Binding Path=LinkCollectionView.CollectionView}">
-						<ItemsControl.GroupStyle>
-							<GroupStyle>
-								<GroupStyle.ContainerStyle>
-									<Style TargetType="GroupItem">
-										<Setter Property="Template">
-											<Setter.Value>
-												<ControlTemplate TargetType="GroupItem">
-													<Expander Style="{StaticResource ResourceKey=PrimaryHeader}" Tag="{Binding Path=Name}">
-														<Expander.IsExpanded>
-															<MultiBinding Converter="{StaticResource ResourceKey=LinkExpanderBinding}">
-																<Binding Path="DataContext.ExpanderBindingEnabled" RelativeSource="{RelativeSource AncestorType=view:LinkView}"/>
-																<Binding Path="DataContext.Expanded" RelativeSource="{RelativeSource AncestorType=view:LinkView}"/>
-																<Binding Path="IsExpanded" RelativeSource="{RelativeSource Mode=Self}"/>
-																<Binding Path="Name" Mode="OneWay"/>
-															</MultiBinding>
-														</Expander.IsExpanded>
-														<Expander.Header>
-															<TextBlock Style="{StaticResource ResourceKey=Header}" Text="{Binding Path=Name}"/>
-														</Expander.Header>
-														<ItemsPresenter/>
-													</Expander>
-												</ControlTemplate>
-											</Setter.Value>
-										</Setter>
-									</Style>
-								</GroupStyle.ContainerStyle>
-							</GroupStyle>
-							<GroupStyle>
-								<GroupStyle.ContainerStyle>
-									<Style TargetType="GroupItem">
-										<Setter Property="Template">
-											<Setter.Value>
-												<ControlTemplate TargetType="GroupItem">
-													<Expander Style="{StaticResource ResourceKey=SecondaryHeader}" Tag="{Binding Path=Name}">
-														<Expander.IsExpanded>
-															<MultiBinding Converter="{StaticResource ResourceKey=LinkExpanderBinding}">
-																<Binding Path="DataContext.ExpanderBindingEnabled" RelativeSource="{RelativeSource AncestorType=view:LinkView}"/>
-																<Binding Path="DataContext.Expanded" RelativeSource="{RelativeSource AncestorType=view:LinkView}"/>
-																<Binding Path="IsExpanded" RelativeSource="{RelativeSource Mode=Self}"/>
-																<Binding Path="Name" Mode="OneWay"/>
-															</MultiBinding>
-														</Expander.IsExpanded>
-														<Expander.Header>
-															<TextBlock Style="{StaticResource ResourceKey=Title}" Text="{Binding Path=Name}"/>
-														</Expander.Header>
-														<ItemsPresenter/>
-													</Expander>
-												</ControlTemplate>
-											</Setter.Value>
-										</Setter>
-									</Style>
-								</GroupStyle.ContainerStyle>
-							</GroupStyle>
-						</ItemsControl.GroupStyle>
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<Border Style="{StaticResource ResourceKey=IndentPanel}">
-									<Border.Margin>
-										<MultiBinding Converter="{StaticResource ResourceKey=LinkMargin}">
-											<Binding Path="Group"/>
-											<Binding Path="Subgroup"/>
-										</MultiBinding>
-									</Border.Margin>
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="1*"/>
-											<ColumnDefinition Width="30"/>
-											<ColumnDefinition Width="30"/>
-										</Grid.ColumnDefinitions>
-										<Button Grid.Column="0" Style="{StaticResource ResourceKey=LinkButton}" Content="{Binding Path=Title}" Command="{Binding Path=DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=view:LinkView}}" CommandParameter="{Binding Path=URL}"/>
-										<Button Grid.Column="1" Style="{StaticResource ResourceKey=EditButtonSmall}" Command="{Binding Path=DataContext.EditLinkCommand, RelativeSource={RelativeSource AncestorType=view:LinkView}}" CommandParameter="{Binding}"/>
-										<Button Grid.Column="2" Style="{StaticResource ResourceKey=RemoveButtonSmall}" Command="{Binding Path=DataContext.RemoveLinkCommand, RelativeSource={RelativeSource AncestorType=view:LinkView}}" CommandParameter="{Binding}"/>
-									</Grid>
-								</Border>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-				</ScrollViewer>
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:view="clr-namespace:UniPlanner.Source.Views"
+					xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels">
+	<DataTemplate DataType="{x:Type viewModel:MainWindowViewModel}" x:Key="LinkView">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="10"/>
+				<ColumnDefinition Width="200"/>
+			</Grid.ColumnDefinitions>
+			<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+				<Grid>
+					<TextBlock Text="no links added." Style="{StaticResource ResourceKey=DefaultHeader}" Visibility="{Binding Path=Link.DefaultMessageVisible, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}"/>
+					<ScrollViewer>
+						<ItemsControl ItemsSource="{Binding Path=Link.LinkCollectionView.CollectionView}">
+							<ItemsControl.GroupStyle>
+								<GroupStyle>
+									<GroupStyle.ContainerStyle>
+										<Style TargetType="GroupItem">
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="GroupItem">
+														<Expander Style="{StaticResource ResourceKey=PrimaryHeader}" Tag="{Binding Path=Name}">
+															<Expander.IsExpanded>
+																<MultiBinding Converter="{StaticResource ResourceKey=LinkExpanderBinding}">
+																	<Binding Path="DataContext.Link.ExpanderBindingEnabled" RelativeSource="{RelativeSource AncestorType={x:Type view:MainWindowView}}"/>
+																	<Binding Path="DataContext.Link.Expanded" RelativeSource="{RelativeSource AncestorType={x:Type view:MainWindowView}}"/>
+																	<Binding Path="IsExpanded" RelativeSource="{RelativeSource Mode=Self}"/>
+																	<Binding Path="Name" Mode="OneWay"/>
+																</MultiBinding>
+															</Expander.IsExpanded>
+															<Expander.Header>
+																<TextBlock Style="{StaticResource ResourceKey=Header}" Text="{Binding Path=Name}"/>
+															</Expander.Header>
+															<ItemsPresenter/>
+														</Expander>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Style>
+									</GroupStyle.ContainerStyle>
+								</GroupStyle>
+								<GroupStyle>
+									<GroupStyle.ContainerStyle>
+										<Style TargetType="GroupItem">
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="GroupItem">
+														<Expander Style="{StaticResource ResourceKey=SecondaryHeader}" Tag="{Binding Path=Name}">
+															<Expander.IsExpanded>
+																<MultiBinding Converter="{StaticResource ResourceKey=LinkExpanderBinding}">
+																	<Binding Path="DataContext.Link.ExpanderBindingEnabled" RelativeSource="{RelativeSource AncestorType={x:Type view:MainWindowView}}"/>
+																	<Binding Path="DataContext.Link.Expanded" RelativeSource="{RelativeSource AncestorType={x:Type view:MainWindowView}}"/>
+																	<Binding Path="IsExpanded" RelativeSource="{RelativeSource Mode=Self}"/>
+																	<Binding Path="Name" Mode="OneWay"/>
+																</MultiBinding>
+															</Expander.IsExpanded>
+															<Expander.Header>
+																<TextBlock Style="{StaticResource ResourceKey=Title}" Text="{Binding Path=Name}"/>
+															</Expander.Header>
+															<ItemsPresenter/>
+														</Expander>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Style>
+									</GroupStyle.ContainerStyle>
+								</GroupStyle>
+							</ItemsControl.GroupStyle>
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Border Style="{StaticResource ResourceKey=IndentPanel}">
+										<Border.Margin>
+											<MultiBinding Converter="{StaticResource ResourceKey=LinkMargin}">
+												<Binding Path="Group"/>
+												<Binding Path="Subgroup"/>
+											</MultiBinding>
+										</Border.Margin>
+										<Grid>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="1*"/>
+												<ColumnDefinition Width="30"/>
+												<ColumnDefinition Width="30"/>
+											</Grid.ColumnDefinitions>
+											<Button Grid.Column="0" Style="{StaticResource ResourceKey=LinkButton}" Content="{Binding Path=Title}" Command="{Binding Path=DataContext.Link.OpenLinkCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding Path=URL}"/>
+											<Button Grid.Column="1" Style="{StaticResource ResourceKey=EditButtonSmall}" Command="{Binding Path=DataContext.Link.EditLinkCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding}"/>
+											<Button Grid.Column="2" Style="{StaticResource ResourceKey=RemoveButtonSmall}" Command="{Binding Path=DataContext.Link.RemoveLinkCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding}"/>
+										</Grid>
+									</Border>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</ScrollViewer>
+				</Grid>
+			</Border>
+			<Grid Grid.Column="2">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="145"/>
+					<RowDefinition Height="10"/>
+					<RowDefinition Height="145"/>
+					<RowDefinition Height="10"/>
+					<RowDefinition Height="50"/>
+				</Grid.RowDefinitions>
+				<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="groups"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+						<RadioButton Grid.Row="2" Content="expand all" IsChecked="{Binding Path=Link.Expanded}" Command="{Binding Path=Link.EnableExpanderBindingCommand}"/>
+						<RadioButton Grid.Row="3" Content="collapse all" IsChecked="{Binding Path=Link.Expanded, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=Link.EnableExpanderBindingCommand}"/>
+					</Grid>
+				</Border>
+				<Border Grid.Row="2" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="45"/>
+							<RowDefinition Height="10"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="view"/>
+						<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
+						<RadioButton Grid.Row="2" Content="show all" IsChecked="{Binding Path=Link.ShowAll}" Command="{Binding Path=Link.UpdateViewCommand}"/>
+						<RadioButton Grid.Row="3" Content="favourites only" IsChecked="{Binding Path=Link.ShowAll, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=Link.UpdateViewCommand}"/>
+					</Grid>
+				</Border>
+				<Border Grid.Row="4" Style="{StaticResource ResourceKey=Panel}">
+					<Button Content="new link" Command="{Binding Path=Link.NewLinkCommand}"/>
+				</Border>
 			</Grid>
-		</Border>
-		<Grid Grid.Column="2">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="145"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="145"/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="50"/>
-			</Grid.RowDefinitions>
-			<Border Grid.Row="0" Style="{StaticResource ResourceKey=Panel}">
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="45"/>
-						<RowDefinition Height="10"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-					</Grid.RowDefinitions>
-					<TextBlock Grid.Row="0" Text="groups"/>
-					<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
-					<RadioButton Grid.Row="2" Content="expand all" IsChecked="{Binding Path=Expanded}" Command="{Binding Path=EnableExpanderBindingCommand}"/>
-					<RadioButton Grid.Row="3" Content="collapse all" IsChecked="{Binding Path=Expanded, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=EnableExpanderBindingCommand}"/>
-				</Grid>
-			</Border>
-			<Border Grid.Row="2" Style="{StaticResource ResourceKey=Panel}">
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="45"/>
-						<RowDefinition Height="10"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-					</Grid.RowDefinitions>
-					<TextBlock Grid.Row="0" Text="view"/>
-					<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=Underline}"/>
-					<RadioButton Grid.Row="2" Content="show all" IsChecked="{Binding Path=ShowAll}" Command="{Binding Path=UpdateViewCommand}"/>
-					<RadioButton Grid.Row="3" Content="favourites only" Command="{Binding Path=UpdateViewCommand}"/>
-				</Grid>
-			</Border>
-			<Border Grid.Row="4" Style="{StaticResource ResourceKey=Panel}">
-				<Button Content="new link" Command="{Binding Path=NewLinkCommand}"/>
-			</Border>
+			<Popup IsOpen="{Binding Path=Link.LinkEditorVisible}">
+				<Border>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="70"/>
+							<ColumnDefinition Width="330"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Column="0" Grid.Row="0" Text="*title:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=Link.CurrentLinkTitle, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="1" Text="group:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Link.CurrentLinkGroup, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="2" Text="subgroup:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=Link.CurrentLinkSubgroup, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="3" Text="*url:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=Link.CurrentLinkURL, UpdateSourceTrigger=PropertyChanged}"/>
+						<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="0" Content="select folder" Command="{Binding Path=Link.SelectFolderCommand}"/>
+							<ToggleButton Grid.Column="1" Content="favourite" IsChecked="{Binding Path=Link.CurrentLinkFavourite}"/>
+						</Grid>
+						<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=Link.CancelEditLinkCommand}"/>
+							<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=Link.SaveEditLinkCommand}"/>
+						</Grid>
+					</Grid>
+				</Border>
+			</Popup>
 		</Grid>
-		<Popup IsOpen="{Binding Path=LinkEditorVisible}">
-			<Border>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="70"/>
-						<ColumnDefinition Width="330"/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-					</Grid.RowDefinitions>
-					<TextBlock Grid.Column="0" Grid.Row="0" Text="*title:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=CurrentLinkTitle, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="1" Text="group:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=CurrentLinkGroup, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="2" Text="subgroup:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=CurrentLinkSubgroup, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="3" Text="*url:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=CurrentLinkURL, UpdateSourceTrigger=PropertyChanged}"/>
-					<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-						</Grid.ColumnDefinitions>
-						<Button Grid.Column="0" Content="select folder" Command="{Binding Path=SelectFolderCommand}"/>
-						<ToggleButton Grid.Column="1" Content="favourite" IsChecked="{Binding Path=CurrentLinkFavourite}"/>
-					</Grid>
-					<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-						</Grid.ColumnDefinitions>
-						<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=CancelEditLinkCommand}"/>
-						<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=SaveEditLinkCommand}"/>
-					</Grid>
-				</Grid>
-			</Border>
-		</Popup>
-	</Grid>
-</Page>
+	</DataTemplate>
+</ResourceDictionary>

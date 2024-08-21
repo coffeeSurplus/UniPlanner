@@ -54,8 +54,8 @@ internal class GeneralRadioToStringConverter : IValueConverter
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? (string)parameter : Binding.DoNothing;
 }
 
-internal class GeneralTodayConverter : IValueConverter
+internal class GeneralTodayDateConverter : IValueConverter
 {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => DateTime.Now.ToString("dddd d MMMM").ToLower();
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => $"{DateTime.Now:dddd d MMMM}".ToLower();
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

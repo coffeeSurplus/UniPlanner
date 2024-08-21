@@ -2,10 +2,9 @@
 
 namespace UniPlanner.Source.MVVM;
 
-internal class RelayCommand(Action<object> execute, Func<object, bool>? canExecute = null) : ICommand
+internal class RelayCommand(Action execute) : ICommand
 {
-	private readonly Action<object> execute = execute;
-	private readonly Func<object, bool>? canExecute = canExecute;
+	private readonly Action execute = execute;
 
 	public event EventHandler? CanExecuteChanged
 	{
@@ -13,6 +12,22 @@ internal class RelayCommand(Action<object> execute, Func<object, bool>? canExecu
 		remove => CommandManager.RequerySuggested -= value;
 	}
 
-	public void Execute(object? parameter) => execute(parameter!);
-	public bool CanExecute(object? parameter) => canExecute == null || canExecute(parameter!);
+	public void Execute() => execute.Invoke();
+	public void Execute(object? parameter) => execute.Invoke();
+	public bool CanExecute(object? parameter) => true;
+}
+
+internal class RelayCommand<T>(Action<T> execute) : ICommand
+{
+	private readonly Action<T> execute = execute;
+
+	public event EventHandler? CanExecuteChanged
+	{
+		add => CommandManager.RequerySuggested += value;
+		remove => CommandManager.RequerySuggested -= value;
+	}
+
+	public void Execute(T parameter) => execute.Invoke(parameter);
+	public void Execute(object? parameter) => execute.Invoke((T)parameter!);
+	public bool CanExecute(object? parameter) => true;
 }

@@ -8,8 +8,9 @@ using UniPlanner.Source.Models;
 
 namespace UniPlanner.Source.Data;
 
-internal static class DateOnlyExtensionMethods
+internal static class ExtensionMethods
 {
+	public static string ToPageTitle(this int pageNumber) => pageNumber switch { 0 => "home", 1 => "timetable", 2 => "tasks", 3 => "events", 4 => "links", 5 => "timers", _ => "settings" };
 	public static int UKDayOfWeek(this DateOnly date) => (int)date.DayOfWeek switch { 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, _ => 6 };
 	public static DateOnly FirstDayOfWeek(this DateOnly date) => date.AddDays(date.UKDayOfWeek() * -1);
 }
@@ -267,4 +268,9 @@ internal static class PdfStyles
 			return Encoding.UTF8.GetString(stream.ToArray());
 		});
 	}
+}
+
+internal static class Popup
+{
+	public static void MessageBox(string message) => System.Windows.MessageBox.Show(message, "UniPlanner");
 }

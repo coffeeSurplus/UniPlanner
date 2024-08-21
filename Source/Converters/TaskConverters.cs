@@ -15,28 +15,6 @@ internal class TaskColourConverter : IValueConverter
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }
 
-internal class TaskGroupDateConverter : IValueConverter
-{
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-	{
-		DateOnly date = (DateOnly)value;
-		return date != DateOnly.MaxValue ? (date.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber) switch { < 0 => "overdue", 0 => "today", 1 => "tomorrow", < 7 => "this week", _ => "later" } : "no date";
-	}
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
-}
-
-internal class TaskGroupPriorityConverter : IValueConverter
-{
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (int)value switch { 1 => "high priority", 2 => "medium priority", 3 => "low priority", _ => "no priority" };
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
-}
-
-internal class TaskGroupSubjectConverter : IValueConverter
-{
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (string?)value ?? "other";
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
-}
-
 internal class TaskPriorityConverter : IValueConverter
 {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (int)value switch { 1 => "!!! ​", 2 => "!! ​", 3 => "! ​", _ => string.Empty };
@@ -45,7 +23,7 @@ internal class TaskPriorityConverter : IValueConverter
 
 internal class TaskStrikethroughConverter : IValueConverter
 {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? TextDecorations.Strikethrough : null!;
+	public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? TextDecorations.Strikethrough : null;
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }
 
@@ -104,7 +82,7 @@ internal class TaskSubtitleVisibilityConverter : IMultiValueConverter
 
 internal class SubtaskCollectionViewConverter : IMultiValueConverter
 {
-	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+	public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 	{
 		if (values[0] != null)
 		{
@@ -114,7 +92,7 @@ internal class SubtaskCollectionViewConverter : IMultiValueConverter
 			subtaskCollectionView.Filter = (bool)values[1] ? null : (object parameter) => !((SubtaskModel)parameter).Completed;
 			return subtaskCollectionView;
 		}
-		return null!;
+		return null;
 	}
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [Binding.DoNothing, Binding.DoNothing];
 }

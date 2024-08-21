@@ -1,22 +1,21 @@
 ﻿using System.Media;
 using UniPlanner.Source.Data;
-using UniPlanner.Source.Models;
 using UniPlanner.Source.MVVM;
 
 namespace UniPlanner.Source.ViewModels;
 
 internal class SettingsViewModel : ViewModelBase
 {
-	private readonly DataManager<SettingsModel> dataManager = MainProgram.SettingsManager;
+	private readonly DataAccess dataAccess;
 	private SoundPlayer soundPlayer = new();
 
-	private bool startupMaximised = MainProgram.SettingsManager.Data.StartupMaximised;
-	private string username = MainProgram.SettingsManager.Data.Username;
-	private bool scrollbarsEnabled = MainProgram.SettingsManager.Data.ScrollbarsEnabled;
-	private int alarmSound = MainProgram.SettingsManager.Data.AlarmSound;
-	private int browser = MainProgram.SettingsManager.Data.Browser;
-	private bool privateBrowsing = MainProgram.SettingsManager.Data.PrivateBrowsing;
-	private int pdfSaveAction = MainProgram.SettingsManager.Data.PdfSaveAction;
+	private bool startupMaximised;
+	private string username;
+	private bool scrollbarsEnabled;
+	private int alarmSound;
+	private int browser;
+	private bool privateBrowsing;
+	private int pdfSaveAction;
 
 	public bool StartupMaximised
 	{
@@ -29,8 +28,7 @@ internal class SettingsViewModel : ViewModelBase
 		set
 		{
 			SetValue(ref username, value);
-			UpdateData();
-			MainProgram.UpdateHomeView();
+			UpdateUsername();
 		}
 	}
 	public bool ScrollbarsEnabled
@@ -59,40 +57,53 @@ internal class SettingsViewModel : ViewModelBase
 		set => SetValue(ref pdfSaveAction, value);
 	}
 
-	public RelayCommand UpdateDataCommand { get; }
+	public RelayCommand UpdateSettingsCommand { get; }
 	public RelayCommand SetScrollbarsCommand { get; }
 	public RelayCommand PlayAudioCommand { get; }
 
-	public SettingsViewModel()
+	public SettingsViewModel(DataAccess data)
 	{
-		UpdateDataCommand = new(UpdateData);
+		dataAccess = data;
+		startupMaximised = dataAccess.Settings.StartupMaximised;
+		username = dataAccess.Settings.Username;
+		scrollbarsEnabled = dataAccess.Settings.ScrollbarsEnabled;
+		alarmSound = dataAccess.Settings.AlarmSound;
+		browser = dataAccess.Settings.Browser;
+		privateBrowsing = dataAccess.Settings.PrivateBrowsing;
+		pdfSaveAction = dataAccess.Settings.PdfSaveAction;
+		UpdateSettingsCommand = new(UpdateSettings);
 		SetScrollbarsCommand = new(SetScrollbars);
 		PlayAudioCommand = new(PlayAudio);
 	}
 
-	private void UpdateData(object parameter) => UpdateData();
-	private void SetScrollbars(object parameter)
+	private void UpdateSettings() => UpdateData();
+	private void SetScrollbars()
 	{
-		UpdateData();
-		MainProgram.SetScrollbars();
+		UpdateSettings();
+		DataAccess.MainWindow.SetScrollbars();
 	}
-	private void PlayAudio(object parameter)
+	private void PlayAudio()
 	{
-		UpdateData();
+		UpdateSettings();
 		soundPlayer.Stop();
-		soundPlayer = dataManager.Data.ReturnAlarm();
+		soundPlayer = dataAccess.Settings.ReturnAlarm();
 		soundPlayer.Play();
 	}
 
+	private void UpdateUsername()
+	{
+		UpdateSettings();
+		DataAccess.MainWindow.UpdateHomeView();
+	}
 	private void UpdateData()
 	{
-		dataManager.Data.StartupMaximised = StartupMaximised;
-		dataManager.Data.Username = Username.Trim().ToLower();
-		dataManager.Data.ScrollbarsEnabled = ScrollbarsEnabled;
-		dataManager.Data.AlarmSound = AlarmSound;
-		dataManager.Data.Browser = Browser;
-		dataManager.Data.PrivateBrowsing = PrivateBrowsing;
-		dataManager.Data.PdfSaveAction = PdfSaveAction;
-		dataManager.UpdateData();
+		dataAccess.Settings.StartupMaximised = StartupMaximised;
+		dataAccess.Settings.Username = Username.Trim().ToLower();
+		dataAccess.Settings.ScrollbarsEnabled = ScrollbarsEnabled;
+		dataAccess.Settings.AlarmSound = AlarmSound;
+		dataAccess.Settings.Browser = Browser;
+		dataAccess.Settings.PrivateBrowsing = PrivateBrowsing;
+		dataAccess.Settings.PdfSaveAction = PdfSaveAction;
+		dataAccess.UpdateSettings();
 	}
 }

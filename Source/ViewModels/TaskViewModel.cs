@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using UniPlanner.Source.CollectionViews;
+﻿using UniPlanner.Source.CollectionViews;
 using UniPlanner.Source.Data;
 using UniPlanner.Source.Models;
 using UniPlanner.Source.MVVM;
@@ -8,9 +7,9 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class TaskViewModel : ViewModelBase
 {
-	private readonly DataManager<List<TaskModel>> dataManager = MainProgram.TaskManager;
-	private readonly List<TaskModel> taskList = MainProgram.TaskManager.Data;
-	private readonly TaskPdfGenerator pdfGenerator = new(MainProgram.TaskManager.Data);
+	private readonly DataAccess dataAccess;
+	private readonly List<TaskModel> taskList;
+	private readonly TaskPdfGenerator pdfGenerator;
 	private bool newTask = true;
 	private bool newSubtask = true;
 	private TaskModel currentTask = new();
@@ -120,46 +119,50 @@ internal class TaskViewModel : ViewModelBase
 	public RelayCommand RemoveOverdueCommand { get; }
 	public RelayCommand SaveAsPdfCommand { get; }
 	public RelayCommand TaskCompletedCommand { get; }
-	public RelayCommand AddSubtaskCommand { get; }
-	public RelayCommand EditTaskCommand { get; }
-	public RelayCommand RemoveTaskCommand { get; }
 	public RelayCommand CancelEditTaskCommand { get; }
 	public RelayCommand SaveEditTaskCommand { get; }
 	public RelayCommand SubtaskCompletedCommand { get; }
-	public RelayCommand EditSubtaskCommand { get; }
-	public RelayCommand RemoveSubtaskCommand { get; }
 	public RelayCommand CancelEditSubtaskCommand { get; }
 	public RelayCommand SaveEditSubtaskCommand { get; }
 	public RelayCommand CancelEditPdfCommand { get; }
 	public RelayCommand SaveEditPdfCommand { get; }
+	public RelayCommand<TaskModel> AddSubtaskCommand { get; }
+	public RelayCommand<TaskModel> EditTaskCommand { get; }
+	public RelayCommand<TaskModel> RemoveTaskCommand { get; }
+	public RelayCommand<SubtaskModel> EditSubtaskCommand { get; }
+	public RelayCommand<Tuple<TaskModel, SubtaskModel>> RemoveSubtaskCommand { get; }
 
-	public TaskCollectionView TaskCollectionView { get; } = new(MainProgram.TaskManager.Data);
+	public TaskCollectionView TaskCollectionView { get; }
 
-	public TaskViewModel()
+	public TaskViewModel(DataAccess data)
 	{
+		dataAccess = data;
+		taskList = dataAccess.TaskList;
+		pdfGenerator = new(taskList, "tasks", dataAccess.Settings);
+		TaskCollectionView = new(taskList);
 		UpdateViewCommand = new(UpdateView);
 		NewTaskCommand = new(NewTask);
 		RemoveCompletedCommand = new(RemoveCompleted);
 		RemoveOverdueCommand = new(RemoveOverdue);
 		SaveAsPdfCommand = new(SaveAsPdf);
 		TaskCompletedCommand = new(TaskCompleted);
-		AddSubtaskCommand = new(AddSubtask);
-		EditTaskCommand = new(EditTask);
-		RemoveTaskCommand = new(RemoveTask);
 		CancelEditTaskCommand = new(CancelEditTask);
 		SaveEditTaskCommand = new(SaveEditTask);
 		SubtaskCompletedCommand = new(SubtaskCompleted);
-		EditSubtaskCommand = new(EditSubtask);
-		RemoveSubtaskCommand = new(RemoveSubtask);
 		CancelEditSubtaskCommand = new(CancelEditSubtask);
 		SaveEditSubtaskCommand = new(SaveEditSubtask);
 		CancelEditPdfCommand = new(CancelEditPdf);
 		SaveEditPdfCommand = new(SaveEditPdf);
+		AddSubtaskCommand = new(AddSubtask);
+		EditTaskCommand = new(EditTask);
+		RemoveTaskCommand = new(RemoveTask);
+		EditSubtaskCommand = new(EditSubtask);
+		RemoveSubtaskCommand = new(RemoveSubtask);
 		UpdateView(false);
 	}
 
-	private void UpdateView(object parameter) => UpdateView();
-	private void NewTask(object parameter)
+	private void UpdateView() => UpdateView(true);
+	private void NewTask()
 	{
 		newTask = true;
 		currentTask = new();
@@ -170,7 +173,7 @@ internal class TaskViewModel : ViewModelBase
 		CurrentTaskPriority = 4;
 		TaskEditorVisible = true;
 	}
-	private void RemoveCompleted(object parameter)
+	private void RemoveCompleted()
 	{
 		int taskRemovedCount = taskList.RemoveAll(x => x.Completed && x.Subtasks.All(x => x.Completed));
 		int subtaskRemovedCount = 0;
@@ -181,7 +184,7 @@ internal class TaskViewModel : ViewModelBase
 		if (taskRemovedCount > 0 || subtaskRemovedCount > 0)
 		{
 			UpdateData();
-			UpdateView();
+			UpdateView(true);
 			List<string> message = [];
 			if (taskRemovedCount > 0)
 			{
@@ -191,52 +194,27 @@ internal class TaskViewModel : ViewModelBase
 			{
 				message.Add($"{subtaskRemovedCount} {(subtaskRemovedCount != 1 ? "subtasks" : "subtask")}");
 			}
-			MessageBox.Show($"{string.Join(" and ", message)} removed.", "UniPlanner");
+			Popup.MessageBox($"{string.Join(" and ", message)} removed.");
 		}
 	}
-	private void RemoveOverdue(object parameter)
+	private void RemoveOverdue()
 	{
 		int removedCount = taskList.RemoveAll(x => x.Date.CompareTo(DateOnly.FromDateTime(DateTime.Now)) < 0);
 		if (removedCount > 0)
 		{
 			UpdateData();
-			UpdateView();
-			MessageBox.Show($"{removedCount} {(removedCount != 1 ? "tasks" : "task")} removed.", "UniPlanner");
+			UpdateView(true);
+			Popup.MessageBox($"{removedCount} {(removedCount != 1 ? "tasks" : "task")} removed.");
 		}
 	}
-	private void SaveAsPdf(object parameter) => PdfEditorVisible = true;
-	private void TaskCompleted(object parameter)
+	private void SaveAsPdf() => PdfEditorVisible = true;
+	private void TaskCompleted()
 	{
 		UpdateData();
-		UpdateView();
+		UpdateView(true);
 	}
-	private void AddSubtask(object parameter)
-	{
-		newSubtask = true;
-		currentTask = (TaskModel)parameter;
-		currentSubtask = new();
-		CurrentSubtaskTitle = string.Empty;
-		SubtaskEditorVisible = true;
-	}
-	private void EditTask(object parameter)
-	{
-		newTask = false;
-		currentTask = (TaskModel)parameter;
-		CurrentTaskTitle = currentTask.Title;
-		CurrentTaskDetails = currentTask.Details ?? string.Empty;
-		CurrentTaskSubject = currentTask.Subject ?? string.Empty;
-		CurrentTaskDate = currentTask.Date != DateOnly.MaxValue ? currentTask.Date.ToString("d/M") : string.Empty;
-		CurrentTaskPriority = currentTask.Priority;
-		TaskEditorVisible = true;
-	}
-	private void RemoveTask(object parameter)
-	{
-		taskList.Remove((TaskModel)parameter);
-		UpdateData();
-		UpdateView();
-	}
-	private void CancelEditTask(object parameter) => TaskEditorVisible = false;
-	private void SaveEditTask(object parameter)
+	private void CancelEditTask() => TaskEditorVisible = false;
+	private void SaveEditTask()
 	{
 		if (CheckTaskValues())
 		{
@@ -251,29 +229,16 @@ internal class TaskViewModel : ViewModelBase
 			}
 			TaskEditorVisible = false;
 			UpdateData();
-			UpdateView();
+			UpdateView(true);
 		}
 	}
-	private void SubtaskCompleted(object parameter)
+	private void SubtaskCompleted()
 	{
 		UpdateData();
-		UpdateView();
+		UpdateView(true);
 	}
-	private void EditSubtask(object parameter)
-	{
-		newSubtask = false;
-		currentSubtask = (SubtaskModel)parameter;
-		CurrentSubtaskTitle = currentSubtask.Title;
-		SubtaskEditorVisible = true;
-	}
-	private void RemoveSubtask(object parameter)
-	{
-		((Tuple<TaskModel, SubtaskModel>)parameter).Item1.Subtasks.Remove(((Tuple<TaskModel, SubtaskModel>)parameter).Item2);
-		UpdateData();
-		UpdateView();
-	}
-	private void CancelEditSubtask(object parameter) => SubtaskEditorVisible = false;
-	private void SaveEditSubtask(object parameter)
+	private void CancelEditSubtask() => SubtaskEditorVisible = false;
+	private void SaveEditSubtask()
 	{
 		if (CheckSubtaskValues())
 		{
@@ -284,15 +249,53 @@ internal class TaskViewModel : ViewModelBase
 			}
 			SubtaskEditorVisible = false;
 			UpdateData();
-			UpdateView();
+			UpdateView(true);
 		}
 	}
-	private void CancelEditPdf(object parameter) => PdfEditorVisible = false;
-	private void SaveEditPdf(object parameter)
+	private void CancelEditPdf() => PdfEditorVisible = false;
+	private void SaveEditPdf()
 	{
-		pdfGenerator.UpdateValues(new(PdfGroup, PdfOrderByAscending, PdfShowCompleted));
+		pdfGenerator.UpdateValues(PdfGroup, PdfOrderByAscending, PdfShowCompleted);
 		pdfGenerator.SavePdf();
 		PdfEditorVisible = false;
+	}
+	private void AddSubtask(TaskModel parameter)
+	{
+		newSubtask = true;
+		currentTask = parameter;
+		currentSubtask = new();
+		CurrentSubtaskTitle = string.Empty;
+		SubtaskEditorVisible = true;
+	}
+	private void EditTask(TaskModel parameter)
+	{
+		newTask = false;
+		currentTask = parameter;
+		CurrentTaskTitle = currentTask.Title;
+		CurrentTaskDetails = currentTask.Details ?? string.Empty;
+		CurrentTaskSubject = currentTask.Subject ?? string.Empty;
+		CurrentTaskDate = currentTask.Date != DateOnly.MaxValue ? currentTask.Date.ToString("d/M") : string.Empty;
+		CurrentTaskPriority = currentTask.Priority;
+		TaskEditorVisible = true;
+	}
+	private void RemoveTask(TaskModel parameter)
+	{
+		taskList.Remove(parameter);
+		UpdateData();
+		UpdateView(true);
+	}
+	private void EditSubtask(SubtaskModel parameter)
+	{
+		newSubtask = false;
+		currentSubtask = parameter;
+		CurrentSubtaskTitle = currentSubtask.Title;
+		SubtaskEditorVisible = true;
+	}
+	private void RemoveSubtask(Tuple<TaskModel, SubtaskModel> parameter)
+	{
+		parameter.Item1.Subtasks.Remove(parameter.Item2);
+		UpdateData();
+		UpdateView(true);
 	}
 
 	private bool CheckTaskValues()
@@ -305,12 +308,12 @@ internal class TaskViewModel : ViewModelBase
 			}
 			else
 			{
-				MessageBox.Show("Invalid date.", "UniPlanner");
+				Popup.MessageBox("Invalid date.");
 			}
 		}
 		else
 		{
-			MessageBox.Show("Invalid title.", "UniPlanner");
+			Popup.MessageBox("Invalid title.");
 		}
 		TaskEditorVisible = true;
 		return false;
@@ -323,19 +326,19 @@ internal class TaskViewModel : ViewModelBase
 		}
 		else
 		{
-			MessageBox.Show("Invalid title.", "UniPlanner");
+			Popup.MessageBox("Invalid title.");
 			SubtaskEditorVisible = true;
 			return false;
 		}
 	}
-	private void UpdateData() => dataManager.UpdateData();
-	private void UpdateView(bool updateHomeView = true)
+	private void UpdateData() => dataAccess.UpdateTaskList();
+	private void UpdateView(bool updateHomeView)
 	{
 		TaskCollectionView.UpdateView(Group, OrderByAscending, ShowCompleted);
 		DefaultMessageVisible = taskList.Count == 0 || !ShowCompleted && taskList.All(x => x.Completed && x.Subtasks.All(x => x.Completed));
 		if (updateHomeView)
 		{
-			MainProgram.UpdateHomeView();
+			DataAccess.MainWindow.UpdateHomeView();
 		}
 	}
 }

@@ -1,104 +1,67 @@
-﻿<Page x:Class="UniPlanner.Source.Views.SettingsView"
-	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	  xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels"
-	  Title="settings"
-	  mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000">
-	<Page.DataContext>
-		<viewModel:SettingsViewModel/>
-	</Page.DataContext>
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="90"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="90"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="50"/>
-		</Grid.RowDefinitions>
-		<Grid Grid.Row="0">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="2*"/>
-				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="1*"/>
-			</Grid.ColumnDefinitions>
-			<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels">
+	<DataTemplate DataType="{x:Type viewModel:MainWindowViewModel}" x:Key="SettingsView">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="90"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="90"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="50"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="10"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="100"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="startup:"/>
+						<RadioButton Grid.Column="1" Content="normal" IsChecked="{Binding Path=Settings.StartupMaximised, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+						<RadioButton Grid.Column="2" Content="maximised" IsChecked="{Binding Path=Settings.StartupMaximised}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+					</Grid>
+				</Border>
+				<Border Grid.Column="2" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="100"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="username:"/>
+						<TextBox Grid.Column="1" Text="{Binding Path=Settings.Username, UpdateSourceTrigger=PropertyChanged}"/>
+					</Grid>
+				</Border>
+			</Grid>
+			<Border Grid.Row="2" Style="{StaticResource ResourceKey=Panel}">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="100"/>
 						<ColumnDefinition Width="1*"/>
 						<ColumnDefinition Width="1*"/>
 					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Text="startup:"/>
-					<RadioButton Grid.Column="1" Content="normal" IsChecked="{Binding Path=StartupMaximised, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=UpdateDataCommand}"/>
-					<RadioButton Grid.Column="2" Content="maximised" IsChecked="{Binding Path=StartupMaximised}" Command="{Binding Path=UpdateDataCommand}"/>
+					<TextBlock Grid.Column="0" Text="scroll bars:"/>
+					<RadioButton Grid.Column="1" Content="visible" IsChecked="{Binding Path=Settings.ScrollbarsEnabled}" Command="{Binding Path=Settings.SetScrollbarsCommand}"/>
+					<RadioButton Grid.Column="2" Content="hidden" IsChecked="{Binding Path=Settings.ScrollbarsEnabled, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=Settings.SetScrollbarsCommand}"/>
 				</Grid>
 			</Border>
-			<Border Grid.Column="2" Style="{StaticResource ResourceKey=Panel}">
+			<Border Grid.Row="4" Style="{StaticResource ResourceKey=Panel}">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="100"/>
 						<ColumnDefinition Width="1*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Text="username:"/>
-					<TextBox Grid.Column="1" Text="{Binding Path=Username, UpdateSourceTrigger=PropertyChanged}"/>
-				</Grid>
-			</Border>
-		</Grid>
-		<Border Grid.Row="2" Style="{StaticResource ResourceKey=Panel}">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="100"/>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="1*"/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Column="0" Text="scroll bars:"/>
-				<RadioButton Grid.Column="1" Content="visible" IsChecked="{Binding Path=ScrollbarsEnabled}" Command="{Binding Path=SetScrollbarsCommand}"/>
-				<RadioButton Grid.Column="2" Content="hidden" IsChecked="{Binding Path=ScrollbarsEnabled, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=SetScrollbarsCommand}"/>
-			</Grid>
-		</Border>
-		<Border Grid.Row="4" Style="{StaticResource ResourceKey=Panel}">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="100"/>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="1*"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="1*"/>
-					<RowDefinition Height="1*"/>
-				</Grid.RowDefinitions>
-				<TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Text="alarm sound:"/>
-				<RadioButton Grid.Column="1" Grid.Row="0" Content="ascending" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="2" Grid.Row="0" Content="bounce" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="3" Grid.Row="0" Content="chimes" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="4" Grid.Row="0" Content="chords" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="5" Grid.Row="0" Content="descending" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=4}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="1" Grid.Row="1" Content="echo" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=5}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="2" Grid.Row="2" Content="jingle" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=6}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="3" Grid.Row="3" Content="tap" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=7}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="4" Grid.Row="4" Content="transition" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=8}" Command="{Binding Path=PlayAudioCommand}"/>
-				<RadioButton Grid.Column="5" Grid.Row="5" Content="xylophone" IsChecked="{Binding Path=AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=9}" Command="{Binding Path=PlayAudioCommand}"/>
-			</Grid>
-		</Border>
-		<Grid Grid.Row="6">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="2*"/>
-				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="1*"/>
-			</Grid.ColumnDefinitions>
-			<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="100"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
 						<ColumnDefinition Width="1*"/>
 						<ColumnDefinition Width="1*"/>
 					</Grid.ColumnDefinitions>
@@ -106,44 +69,75 @@
 						<RowDefinition Height="1*"/>
 						<RowDefinition Height="1*"/>
 					</Grid.RowDefinitions>
-					<TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Text="browser:"/>
-					<RadioButton Grid.Column="1" Grid.Row="0" Content="edge" IsChecked="{Binding Path=Browser, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}" Command="{Binding Path=UpdateDataCommand}"/>
-					<RadioButton Grid.Column="2" Grid.Row="0" Content="chrome" IsChecked="{Binding Path=Browser, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}" Command="{Binding Path=UpdateDataCommand}"/>
-					<RadioButton Grid.Column="1" Grid.Row="1" Content="firefox" IsChecked="{Binding Path=Browser, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}" Command="{Binding Path=UpdateDataCommand}"/>
-					<RadioButton Grid.Column="2" Grid.Row="2" Content="opera" IsChecked="{Binding Path=Browser, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}" Command="{Binding Path=UpdateDataCommand}"/>
+					<TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Text="alarm sound:"/>
+					<RadioButton Grid.Column="1" Grid.Row="0" Content="ascending" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="2" Grid.Row="0" Content="bounce" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="3" Grid.Row="0" Content="chimes" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="4" Grid.Row="0" Content="chords" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="5" Grid.Row="0" Content="descending" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=4}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="1" Grid.Row="1" Content="echo" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=5}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="2" Grid.Row="2" Content="jingle" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=6}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="3" Grid.Row="3" Content="tap" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=7}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="4" Grid.Row="4" Content="transition" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=8}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
+					<RadioButton Grid.Column="5" Grid.Row="5" Content="xylophone" IsChecked="{Binding Path=Settings.AlarmSound, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=9}" Command="{Binding Path=Settings.PlayAudioCommand}"/>
 				</Grid>
 			</Border>
-			<Border Grid.Column="2" Style="{StaticResource ResourceKey=Panel}">
+			<Grid Grid.Row="6">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="10"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="100"/>
+							<ColumnDefinition Width="1*"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Text="browser:"/>
+						<RadioButton Grid.Column="1" Grid.Row="0" Content="edge" IsChecked="{Binding Path=Settings.Browser, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+						<RadioButton Grid.Column="2" Grid.Row="0" Content="chrome" IsChecked="{Binding Path=Settings.Browser, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+						<RadioButton Grid.Column="1" Grid.Row="1" Content="firefox" IsChecked="{Binding Path=Settings.Browser, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+						<RadioButton Grid.Column="2" Grid.Row="2" Content="opera" IsChecked="{Binding Path=Settings.Browser, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+					</Grid>
+				</Border>
+				<Border Grid.Column="2" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="100"/>
+							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*"/>
+							<RowDefinition Height="1*"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Text="mode:"/>
+						<RadioButton Grid.Column="1" Grid.Row="0" Content="normal" IsChecked="{Binding Path=Settings.PrivateBrowsing, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+						<RadioButton Grid.Column="1" Grid.Row="1" Content="private" IsChecked="{Binding Path=Settings.PrivateBrowsing}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+					</Grid>
+				</Border>
+			</Grid>
+			<Border Grid.Row="8" Style="{StaticResource ResourceKey=Panel}">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="100"/>
 						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="1*"/>
 					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="1*"/>
-						<RowDefinition Height="1*"/>
-					</Grid.RowDefinitions>
-					<TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Text="mode:"/>
-					<RadioButton Grid.Column="1" Grid.Row="0" Content="normal" IsChecked="{Binding Path=PrivateBrowsing, Converter={StaticResource ResourceKey=GeneralBoolToBoolInverted}}" Command="{Binding Path=UpdateDataCommand}"/>
-					<RadioButton Grid.Column="1" Grid.Row="1" Content="private" IsChecked="{Binding Path=PrivateBrowsing}" Command="{Binding Path=UpdateDataCommand}"/>
+					<TextBlock Grid.Column="0" Text="pdf save:"/>
+					<RadioButton Grid.Column="1" Content="open default" IsChecked="{Binding Path=Settings.PdfSaveAction, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+					<RadioButton Grid.Column="2" Content="open browser" IsChecked="{Binding Path=Settings.PdfSaveAction, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+					<RadioButton Grid.Column="3" Content="open explorer" IsChecked="{Binding Path=Settings.PdfSaveAction, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
+					<RadioButton Grid.Column="4" Content="no action" IsChecked="{Binding Path=Settings.PdfSaveAction, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}" Command="{Binding Path=Settings.UpdateSettingsCommand}"/>
 				</Grid>
 			</Border>
 		</Grid>
-		<Border Grid.Row="8" Style="{StaticResource ResourceKey=Panel}">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="100"/>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="1*"/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Column="0" Text="pdf save:"/>
-				<RadioButton Grid.Column="1" Content="open default" IsChecked="{Binding Path=PdfSaveAction, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}" Command="{Binding Path=UpdateDataCommand}"/>
-				<RadioButton Grid.Column="2" Content="open browser" IsChecked="{Binding Path=PdfSaveAction, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}" Command="{Binding Path=UpdateDataCommand}"/>
-				<RadioButton Grid.Column="3" Content="open explorer" IsChecked="{Binding Path=PdfSaveAction, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}" Command="{Binding Path=UpdateDataCommand}"/>
-				<RadioButton Grid.Column="4" Content="no action" IsChecked="{Binding Path=PdfSaveAction, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}" Command="{Binding Path=UpdateDataCommand}"/>
-			</Grid>
-		</Border>
-	</Grid>
-</Page>
+	</DataTemplate>
+</ResourceDictionary>

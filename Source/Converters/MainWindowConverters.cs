@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using UniPlanner.Source.Data;
 
 namespace UniPlanner.Source.Converters;
 
@@ -13,6 +14,12 @@ internal class MainWindowBorderWidthConverter : IValueConverter
 internal class MainWindowMaximisedConverter : IValueConverter
 {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (WindowState)value == WindowState.Maximized;
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+}
+
+internal class MainWindowPageTitleConverter : IValueConverter
+{
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((int)value).ToPageTitle();
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }
 
@@ -36,6 +43,6 @@ internal class MainWindowSidepanelWidthConverter : IValueConverter
 
 internal class MainWindowTitleConverter : IValueConverter
 {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => $"UniPlanner - {value}";
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => $"UniPlanner - {((int)value).ToPageTitle()}";
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

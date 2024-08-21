@@ -2,13 +2,14 @@
 using System.Media;
 using System.Windows.Threading;
 using UniPlanner.Source.Data;
-using UniPlanner.Source.Models;
 using UniPlanner.Source.MVVM;
 
 namespace UniPlanner.Source.ViewModels;
 
 internal class TimersViewModel : ViewModelBase
 {
+	private readonly DataAccess dataAccess;
+
 	private int currentPageNumber = 0;
 
 	public int CurrentPageNumber
@@ -17,9 +18,16 @@ internal class TimersViewModel : ViewModelBase
 		set => SetValue(ref currentPageNumber, value);
 	}
 
+	public TimersViewModel(DataAccess data)
+	{
+		dataAccess = data;
+		TimerViewModel = new(dataAccess);
+		PomodoroViewModel = new(dataAccess);
+	}
+
 	public StopwatchViewModel StopwatchViewModel { get; } = new();
-	public TimerViewModel TimerViewModel { get; } = new();
-	public PomodoroViewModel PomodoroViewModel { get; } = new();
+	public TimerViewModel TimerViewModel { get; }
+	public PomodoroViewModel PomodoroViewModel { get; }
 }
 
 internal class StopwatchViewModel : ViewModelBase
@@ -27,15 +35,15 @@ internal class StopwatchViewModel : ViewModelBase
 	private readonly DispatcherTimer dispatcherTimer = new() { Interval = new(0, 0, 0, 0, 1) };
 	private readonly Stopwatch stopwatch = new();
 
-	private bool isRunning;
-	private string currentTime = "00:00.00";
+	private bool isRunning = false;
+	private TimeSpan currentTime = TimeSpan.Zero;
 
 	public bool IsRunning
 	{
 		get => isRunning;
 		set => SetValue(ref isRunning, value);
 	}
-	public string CurrentTime
+	public TimeSpan CurrentTime
 	{
 		get => currentTime;
 		set => SetValue(ref currentTime, value);
@@ -48,11 +56,12 @@ internal class StopwatchViewModel : ViewModelBase
 	{
 		StartStopwatchCommand = new(StartStopwatch);
 		ResetStopwatchCommand = new(ResetStopwatch);
-		dispatcherTimer.Tick += UpdateTime;
+		dispatcherTimer.Tick += TimerElapsed;
 	}
 
-	private void UpdateTime(object? sender, EventArgs e) => CurrentTime = $"{(stopwatch.Elapsed.Hours > 0 ? $"{stopwatch.Elapsed.Hours:00}:" : string.Empty)}{stopwatch.Elapsed.Minutes:00}:{stopwatch.Elapsed.Seconds:00}.{stopwatch.Elapsed.Milliseconds / 10:00}";
-	private void StartStopwatch(object parameter)
+	private void TimerElapsed(object? sender, EventArgs e) => CurrentTime = stopwatch.Elapsed;
+
+	private void StartStopwatch()
 	{
 		if (IsRunning)
 		{
@@ -65,7 +74,7 @@ internal class StopwatchViewModel : ViewModelBase
 			stopwatch.Stop();
 		}
 	}
-	private void ResetStopwatch(object parameter)
+	private void ResetStopwatch()
 	{
 		if (IsRunning)
 		{
@@ -74,14 +83,14 @@ internal class StopwatchViewModel : ViewModelBase
 		else
 		{
 			stopwatch.Reset();
-			CurrentTime = "00:00.00";
+			CurrentTime = TimeSpan.Zero;
 		}
 	}
 }
 
 internal class TimerViewModel : ViewModelBase
 {
-	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
+	private readonly DataAccess dataAccess;
 	private readonly DispatcherTimer dispatcherTimer = new() { Interval = new(0, 0, 0, 0, 1) };
 	private readonly Stopwatch stopwatch = new();
 	private SoundPlayer soundPlayer = new();
@@ -89,7 +98,7 @@ internal class TimerViewModel : ViewModelBase
 	private bool isRunning = false;
 	private bool isFinished = false;
 	private int timerLength = 600;
-	private string currentTime = "00:10:00";
+	private TimeSpan currentTime = TimeSpan.FromMinutes(10);
 
 	public bool IsRunning
 	{
@@ -106,12 +115,13 @@ internal class TimerViewModel : ViewModelBase
 		get => timerLength;
 		set => SetValue(ref timerLength, value);
 	}
-	public string CurrentTime
+	public TimeSpan CurrentTime
 	{
 		get => currentTime;
 		set => SetValue(ref currentTime, value);
 	}
 
+	public RelayCommand UpdateStartTimeCommand { get; }
 	public RelayCommand IncreaseHourCommand { get; }
 	public RelayCommand DecreaseHourCommand { get; }
 	public RelayCommand IncreaseMinuteCommand { get; }
@@ -121,10 +131,12 @@ internal class TimerViewModel : ViewModelBase
 	public RelayCommand StartTimerCommand { get; }
 	public RelayCommand ResetTimerCommand { get; }
 	public RelayCommand EndTimerCommand { get; }
-	public RelayCommand UpdateStartTimeCommand { get; }
 
-	public TimerViewModel()
+	public TimerViewModel(DataAccess data)
 	{
+		dataAccess = data;
+		dispatcherTimer.Tick += TimerElapsed;
+		UpdateStartTimeCommand = new(UpdateStartTime);
 		IncreaseHourCommand = new(IncreaseHour);
 		DecreaseHourCommand = new(DecreaseHour);
 		IncreaseMinuteCommand = new(IncreaseMinute);
@@ -134,34 +146,33 @@ internal class TimerViewModel : ViewModelBase
 		StartTimerCommand = new(StartTimer);
 		ResetTimerCommand = new(ResetTimer);
 		EndTimerCommand = new(EndTimer);
-		UpdateStartTimeCommand = new(UpdateStartTime);
-		dispatcherTimer.Tick += UpdateTime;
 	}
 
-	private void UpdateTime(object? sender, EventArgs e)
+	private void TimerElapsed(object? sender, EventArgs e)
 	{
-		TimeSpan timeSpan = TimeSpan.FromSeconds(TimerLength + 1) - stopwatch.Elapsed;
-		if (timeSpan.TotalMilliseconds <= 1000)
+		if (stopwatch.Elapsed.TotalSeconds >= TimerLength)
 		{
 			IsFinished = true;
 			dispatcherTimer.Stop();
 			stopwatch.Reset();
-			soundPlayer = settings.ReturnAlarm();
+			soundPlayer = dataAccess.Settings.ReturnAlarm();
 			soundPlayer.PlayLooping();
-			CurrentTime = "00:00:00";
+			CurrentTime = TimeSpan.Zero;
 		}
 		else
 		{
-			CurrentTime = $"{timeSpan.Hours:00}:{timeSpan.Minutes:00}:{timeSpan.Seconds:00}";
+			CurrentTime = TimeSpan.FromSeconds(TimerLength + 1) - stopwatch.Elapsed;
 		}
 	}
-	private void IncreaseHour(object parameter) => UpdateStartTime(3600);
-	private void DecreaseHour(object parameter) => UpdateStartTime(-3600);
-	private void IncreaseMinute(object parameter) => UpdateStartTime(60);
-	private void DecreaseMinute(object parameter) => UpdateStartTime(-60);
-	private void IncreaseSecond(object parameter) => UpdateStartTime(1);
-	private void DecreaseSecond(object parameter) => UpdateStartTime(-1);
-	private void StartTimer(object parameter)
+
+	private void UpdateStartTime() => UpdateStartTime(0);
+	private void IncreaseHour() => UpdateStartTime(3600);
+	private void DecreaseHour() => UpdateStartTime(-3600);
+	private void IncreaseMinute() => UpdateStartTime(60);
+	private void DecreaseMinute() => UpdateStartTime(-60);
+	private void IncreaseSecond() => UpdateStartTime(1);
+	private void DecreaseSecond() => UpdateStartTime(-1);
+	private void StartTimer()
 	{
 		if (IsRunning)
 		{
@@ -174,7 +185,7 @@ internal class TimerViewModel : ViewModelBase
 			stopwatch.Stop();
 		}
 	}
-	private void ResetTimer(object parameter)
+	private void ResetTimer()
 	{
 		if (IsRunning)
 		{
@@ -183,10 +194,10 @@ internal class TimerViewModel : ViewModelBase
 		else
 		{
 			stopwatch.Reset();
-			UpdateStartTime();
+			UpdateStartTime(0);
 		}
 	}
-	private void EndTimer(object parameter)
+	private void EndTimer()
 	{
 		IsFinished = false;
 		IsRunning = false;
@@ -194,13 +205,8 @@ internal class TimerViewModel : ViewModelBase
 		soundPlayer.Dispose();
 		UpdateStartTime(0);
 	}
-	private void UpdateStartTime(object parameter)
-	{
-		stopwatch.Reset();
-		UpdateStartTime();
-	}
 
-	private void UpdateStartTime(int timerChange = 0)
+	private void UpdateStartTime(int timerChange)
 	{
 		TimerLength -= (int)stopwatch.Elapsed.TotalSeconds;
 		stopwatch.Reset();
@@ -208,14 +214,13 @@ internal class TimerViewModel : ViewModelBase
 		{
 			TimerLength += timerChange;
 		}
-		TimeSpan timeSpan = TimeSpan.FromSeconds(TimerLength);
-		CurrentTime = $"{timeSpan.Hours:00}:{timeSpan.Minutes:00}:{timeSpan.Seconds:00}";
+		CurrentTime = TimeSpan.FromSeconds(TimerLength);
 	}
 }
 
 internal class PomodoroViewModel : ViewModelBase
 {
-	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
+	private readonly DataAccess dataAccess;
 	private readonly DispatcherTimer dispatcherTimer = new() { Interval = new(0, 0, 0, 0, 1) };
 	private readonly Stopwatch stopwatch = new();
 	private SoundPlayer soundPlayer = new();
@@ -227,7 +232,7 @@ internal class PomodoroViewModel : ViewModelBase
 	private int breakLength = 5;
 	private int repeatLength = 1;
 	private int currentRepeat = 1;
-	private string currentTime = "25:00";
+	private TimeSpan currentTime = TimeSpan.FromMinutes(25);
 
 	public bool OnBreak
 	{
@@ -264,7 +269,7 @@ internal class PomodoroViewModel : ViewModelBase
 		get => currentRepeat;
 		set => SetValue(ref currentRepeat, value);
 	}
-	public string CurrentTime
+	public TimeSpan CurrentTime
 	{
 		get => currentTime;
 		set => SetValue(ref currentTime, value);
@@ -281,8 +286,10 @@ internal class PomodoroViewModel : ViewModelBase
 	public RelayCommand ResetTimerCommand { get; }
 	public RelayCommand EndTimerCommand { get; }
 
-	public PomodoroViewModel()
+	public PomodoroViewModel(DataAccess data)
 	{
+		dataAccess = data;
+		dispatcherTimer.Tick += TimerElapsed;
 		IncreasePomodoroCommand = new(IncreasePomodoro);
 		DecreasePomodoroCommand = new(DecreasePomodoro);
 		IncreaseBreakCommand = new(IncreaseBreak);
@@ -293,58 +300,57 @@ internal class PomodoroViewModel : ViewModelBase
 		StartTimerCommand = new(StartTimer);
 		ResetTimerCommand = new(ResetTimer);
 		EndTimerCommand = new(EndTimer);
-		dispatcherTimer.Tick += UpdateTime;
 	}
 
-	private void UpdateTime(object? sender, EventArgs e)
+	private void TimerElapsed(object? sender, EventArgs e)
 	{
-		TimeSpan timeSpan = TimeSpan.FromSeconds((OnBreak ? BreakLength : PomodoroLength) * 60 + 1) - stopwatch.Elapsed;
-		if (timeSpan.TotalMilliseconds < 1000)
+		if (stopwatch.Elapsed.TotalMinutes >= (OnBreak ? BreakLength : PomodoroLength))
 		{
 			IsFinished = true;
 			dispatcherTimer.Stop();
 			stopwatch.Reset();
-			soundPlayer = settings.ReturnAlarm();
+			soundPlayer = dataAccess.Settings.ReturnAlarm();
 			soundPlayer.PlayLooping();
-			CurrentTime = "00:00";
+			CurrentTime = TimeSpan.Zero;
 		}
 		else
 		{
-			CurrentTime = $"{(timeSpan.Hours > 0 ? $"{timeSpan.Hours}:" : string.Empty)}{timeSpan.Minutes:00}:{timeSpan.Seconds:00}";
+			CurrentTime = TimeSpan.FromSeconds((OnBreak ? BreakLength : PomodoroLength) * 60 + 1) - stopwatch.Elapsed;
 		}
 	}
-	private void IncreasePomodoro(object parameter)
+
+	private void IncreasePomodoro()
 	{
 		PomodoroLength = PomodoroLength switch { 5 => 10, 10 => 15, 15 => 20, 20 => 25, 25 => 30, 30 => 45, 45 => 60, _ => 120 };
 		UpdateStartTime(!OnBreak);
 	}
-	private void DecreasePomodoro(object parameter)
+	private void DecreasePomodoro()
 	{
 		PomodoroLength = PomodoroLength switch { 120 => 60, 60 => 45, 45 => 30, 30 => 25, 25 => 20, 20 => 15, 15 => 10, _ => 5 };
 		UpdateStartTime(!OnBreak);
 	}
-	private void IncreaseBreak(object parameter)
+	private void IncreaseBreak()
 	{
 		BreakLength = BreakLength switch { 1 => 2, 2 => 3, 3 => 4, 4 => 5, 5 => 10, _ => 15 };
 		UpdateStartTime(OnBreak);
 	}
-	private void DecreaseBreak(object parameter)
+	private void DecreaseBreak()
 	{
 		BreakLength = BreakLength switch { 15 => 10, 10 => 5, 5 => 4, 4 => 3, 3 => 2, _ => 1 };
 		UpdateStartTime(OnBreak);
 	}
-	private void IncreaseRepeat(object parameter)
+	private void IncreaseRepeat()
 	{
 		RepeatLength += repeatLength < 10 ? 1 : 0;
-		UpdateStartTime();
+		UpdateStartTime(false);
 	}
-	private void DecreaseRepeat(object parameter)
+	private void DecreaseRepeat()
 	{
 		RepeatLength -= RepeatLength > 1 ? 1 : 0;
-		UpdateStartTime();
+		UpdateStartTime(false);
 	}
-	private void ResetAll(object parameter) => (OnBreak, PomodoroLength, BreakLength, RepeatLength, CurrentRepeat) = (false, 25, 5, 1, 1);
-	private void StartTimer(object parameter)
+	private void ResetAll() => (OnBreak, PomodoroLength, BreakLength, RepeatLength, CurrentRepeat, CurrentTime) = (false, 25, 5, 1, 1, TimeSpan.FromMinutes(25));
+	private void StartTimer()
 	{
 		if (IsRunning)
 		{
@@ -357,7 +363,7 @@ internal class PomodoroViewModel : ViewModelBase
 			stopwatch.Stop();
 		}
 	}
-	private void ResetTimer(object parameter)
+	private void ResetTimer()
 	{
 		if (IsRunning)
 		{
@@ -369,7 +375,7 @@ internal class PomodoroViewModel : ViewModelBase
 			UpdateStartTime(true);
 		}
 	}
-	private void EndTimer(object parameter)
+	private void EndTimer()
 	{
 		OnBreak ^= true;
 		if (CurrentRepeat == RepeatLength && !OnBreak)
@@ -392,13 +398,12 @@ internal class PomodoroViewModel : ViewModelBase
 		soundPlayer.Dispose();
 	}
 
-	private void UpdateStartTime(bool resetStopwatch = false)
+	private void UpdateStartTime(bool resetStopwatch)
 	{
 		if (resetStopwatch)
 		{
 			stopwatch.Reset();
-			TimeSpan timeSpan = TimeSpan.FromSeconds((OnBreak ? BreakLength : PomodoroLength) * 60);
-			CurrentTime = $"{(timeSpan.Hours > 0 ? $"{timeSpan.Hours}:" : string.Empty)}{timeSpan.Minutes:00}:{timeSpan.Seconds:00}";
+			CurrentTime = TimeSpan.FromMinutes(OnBreak ? BreakLength : PomodoroLength);
 		}
 		if (RepeatLength < CurrentRepeat)
 		{

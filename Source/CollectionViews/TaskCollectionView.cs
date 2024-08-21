@@ -10,7 +10,7 @@ internal class TaskCollectionView(List<TaskModel> list) : CollectionViewBase<Tas
 	public void UpdateView(string group, bool orderByAscending, bool showCompleted)
 	{
 		CollectionView.GroupDescriptions.Clear();
-		CollectionView.GroupDescriptions.Add(new PropertyGroupDescription(group, group switch { "Subject" => new TaskGroupSubjectConverter(), "Date" => new TaskGroupDateConverter(), _ => new TaskGroupPriorityConverter() }));
+		CollectionView.GroupDescriptions.Add(new PropertyGroupDescription(group, group switch { "Subject" => new CollectionViewTaskGroupSubjectConverter(), "Date" => new CollectionViewTaskGroupDateConverter(), _ => new CollectionViewTaskGroupPriorityConverter() }));
 		CollectionView.SortDescriptions.Clear();
 		CollectionView.SortDescriptions.Add(new(group, orderByAscending ? ListSortDirection.Ascending : ListSortDirection.Descending));
 		CollectionView.SortDescriptions.Add(new("Completed", ListSortDirection.Ascending));

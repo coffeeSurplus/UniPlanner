@@ -7,10 +7,7 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class HomeViewModel : ViewModelBase
 {
-	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
-	private readonly List<TaskModel> taskList = MainProgram.TaskManager.Data;
-	private readonly List<TimetableModel> timetableList = MainProgram.TimetableManager.Data;
-	private readonly List<EventModel> eventList = MainProgram.EventManager.Data;
+	private readonly DataAccess dataAccess;
 
 	private string username = string.Empty;
 	private int taskCount = 0;
@@ -38,30 +35,35 @@ internal class HomeViewModel : ViewModelBase
 		set => SetValue(ref eventCount, value);
 	}
 
-	public RelayCommand OpenLinkCommand { get; }
+	public RelayCommand<string> OpenLinkCommand { get; }
 
-	public HomeTaskCollectionView TaskCollectionView { get; } = new(MainProgram.TaskManager.Data);
-	public HomeTimetableCollectionView TimetableCollectionView { get; } = new(MainProgram.TimetableManager.Data);
-	public HomeEventCollectionView EventCollectionView { get; } = new(MainProgram.EventManager.Data);
-	public HomeLinkCollectionView LinkCollectionView { get; } = new(MainProgram.LinkManager.Data);
+	public HomeTaskCollectionView TaskCollectionView { get; }
+	public HomeTimetableCollectionView TimetableCollectionView { get; }
+	public HomeEventCollectionView EventCollectionView { get; }
+	public HomeLinkCollectionView LinkCollectionView { get; }
 
-	public HomeViewModel()
+	public HomeViewModel(DataAccess data)
 	{
+		dataAccess = data;
+		TaskCollectionView = new(dataAccess.TaskList);
+		TimetableCollectionView = new(dataAccess.TimetableList);
+		EventCollectionView = new(dataAccess.EventList);
+		LinkCollectionView = new(dataAccess.LinkList);
 		OpenLinkCommand = new(OpenLink);
 		UpdateView();
 	}
 
 	public void UpdateView()
 	{
-		Username = settings.Username;
+		Username = dataAccess.Settings.Username;
 		TaskCollectionView.UpdateView();
 		TimetableCollectionView.UpdateView();
 		EventCollectionView.UpdateView();
 		LinkCollectionView.UpdateView();
-		TaskCount = taskList.Count(x => !x.Completed);
-		TimetableCount = timetableList.Count(x => x.Day == DateOnly.FromDateTime(DateTime.Now).UKDayOfWeek());
-		EventCount = eventList.Count(x => x.Date.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber is >= 0 and < 7);
+		TaskCount = dataAccess.TaskList.Count(x => !x.Completed);
+		TimetableCount = dataAccess.TimetableList.Count(x => x.Day == DateOnly.FromDateTime(DateTime.Now).UKDayOfWeek());
+		EventCount = dataAccess.EventList.Count(x => x.Date.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber is >= 0 and < 7);
 	}
 
-	private void OpenLink(object parameter) => LinkModel.OpenUrl((string)parameter, settings.ReturnBrowser(), settings.ReturnArguments());
+	private void OpenLink(string parameter) => LinkModel.OpenUrl(parameter, dataAccess.Settings.ReturnBrowser(), dataAccess.Settings.ReturnArguments());
 }

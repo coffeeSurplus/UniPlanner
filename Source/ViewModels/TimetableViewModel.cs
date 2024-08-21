@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using UniPlanner.Source.CollectionViews;
+﻿using UniPlanner.Source.CollectionViews;
 using UniPlanner.Source.Data;
 using UniPlanner.Source.Models;
 using UniPlanner.Source.MVVM;
@@ -8,9 +7,9 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class TimetableViewModel : ViewModelBase
 {
-	private readonly DataManager<List<TimetableModel>> dataManager = MainProgram.TimetableManager;
-	private readonly List<TimetableModel> timetableList = MainProgram.TimetableManager.Data;
-	private readonly TimetablePdfGenerator pdfGenerator = new(MainProgram.TimetableManager.Data);
+	private readonly DataAccess dataAccess;
+	private readonly List<TimetableModel> timetableList;
+	private readonly TimetablePdfGenerator pdfGenerator;
 	private bool newTimetable = true;
 	private TimetableModel currentTimetable = new();
 
@@ -90,27 +89,33 @@ internal class TimetableViewModel : ViewModelBase
 
 	public RelayCommand NewTimetableCommand { get; }
 	public RelayCommand SaveAsPdfCommand { get; }
-	public RelayCommand EditTimetableCommand { get; }
-	public RelayCommand RemoveTimetableCommand { get; }
 	public RelayCommand CancelEditTimetableCommand { get; }
 	public RelayCommand SaveEditTimetableCommand { get; }
+	public RelayCommand<TimetableModel> EditTimetableCommand { get; }
+	public RelayCommand<TimetableModel> RemoveTimetableCommand { get; }
 
-	public TimetableVerticalCollectionView VerticalCollectionView { get; } = new(MainProgram.TimetableManager.Data);
-	public TimetableHorizontalCollectionView HorizontalCollectionView { get; } = new(MainProgram.TimetableManager.Data);
-	public TimetableTodayCollectionView TodayCollectionView { get; } = new(MainProgram.TimetableManager.Data);
+	public TimetableVerticalCollectionView VerticalCollectionView { get; }
+	public TimetableHorizontalCollectionView HorizontalCollectionView { get; }
+	public TimetableTodayCollectionView TodayCollectionView { get; }
 
-	public TimetableViewModel()
+	public TimetableViewModel(DataAccess data)
 	{
+		dataAccess = data;
+		timetableList = dataAccess.TimetableList;
+		pdfGenerator = new(timetableList, "timetable", dataAccess.Settings);
+		VerticalCollectionView = new(timetableList);
+		HorizontalCollectionView = new(timetableList);
+		TodayCollectionView = new(timetableList);
 		NewTimetableCommand = new(NewTimetable);
 		SaveAsPdfCommand = new(SaveAsPdf);
-		EditTimetableCommand = new(EditTimetable);
-		RemoveTimetableCommand = new(RemoveTimetable);
 		CancelEditTimetableCommand = new(CancelEditTimetable);
 		SaveEditTimetableCommand = new(SaveEditTimetable);
+		EditTimetableCommand = new(EditTimetable);
+		RemoveTimetableCommand = new(RemoveTimetable);
 		UpdateView(false);
 	}
 
-	private void NewTimetable(object parameter)
+	private void NewTimetable()
 	{
 		newTimetable = true;
 		currentTimetable = new();
@@ -124,29 +129,9 @@ internal class TimetableViewModel : ViewModelBase
 		CurrentTimetableColour = 0;
 		TimetableEditorVisible = true;
 	}
-	private void SaveAsPdf(object parameter) => pdfGenerator.SavePdf();
-	private void EditTimetable(object parameter)
-	{
-		newTimetable = false;
-		currentTimetable = (TimetableModel)parameter;
-		CurrentTimetableTitle = currentTimetable.Title;
-		CurrentTimetableDetails = currentTimetable.Details ?? string.Empty;
-		CurrentTimetableSubject = currentTimetable.Subject ?? string.Empty;
-		CurrentTimetableLocation = currentTimetable.Location ?? string.Empty;
-		CurrentTimetableDay = currentTimetable.Day;
-		CurrentTimetableStartTime = currentTimetable.StartTime.ToString("H:mm");
-		CurrentTimetableEndTime = currentTimetable.EndTime.ToString("H:mm");
-		CurrentTimetableColour = currentTimetable.Colour;
-		TimetableEditorVisible = true;
-	}
-	private void RemoveTimetable(object parameter)
-	{
-		timetableList.Remove((TimetableModel)parameter);
-		UpdateData();
-		UpdateView();
-	}
-	private void CancelEditTimetable(object parameter) => TimetableEditorVisible = false;
-	private void SaveEditTimetable(object parameter)
+	private void SaveAsPdf() => pdfGenerator.SavePdf();
+	private void CancelEditTimetable() => TimetableEditorVisible = false;
+	private void SaveEditTimetable()
 	{
 		if (CheckTimetableValues())
 		{
@@ -164,8 +149,28 @@ internal class TimetableViewModel : ViewModelBase
 			}
 			TimetableEditorVisible = false;
 			UpdateData();
-			UpdateView();
+			UpdateView(true);
 		}
+	}
+	private void EditTimetable(TimetableModel parameter)
+	{
+		newTimetable = false;
+		currentTimetable = parameter;
+		CurrentTimetableTitle = currentTimetable.Title;
+		CurrentTimetableDetails = currentTimetable.Details ?? string.Empty;
+		CurrentTimetableSubject = currentTimetable.Subject ?? string.Empty;
+		CurrentTimetableLocation = currentTimetable.Location ?? string.Empty;
+		CurrentTimetableDay = currentTimetable.Day;
+		CurrentTimetableStartTime = currentTimetable.StartTime.ToString("H:mm");
+		CurrentTimetableEndTime = currentTimetable.EndTime.ToString("H:mm");
+		CurrentTimetableColour = currentTimetable.Colour;
+		TimetableEditorVisible = true;
+	}
+	private void RemoveTimetable(TimetableModel parameter)
+	{
+		timetableList.Remove(parameter);
+		UpdateData();
+		UpdateView(true);
 	}
 
 	private bool CheckTimetableValues()
@@ -188,43 +193,43 @@ internal class TimetableViewModel : ViewModelBase
 								}
 								else
 								{
-									MessageBox.Show("Event must not overlap with other events.", "UniPlanner");
+									Popup.MessageBox("Event must not overlap with other events.");
 								}
 							}
 							else
 							{
-								MessageBox.Show("Event must be at least 15 minutes long.", "UniPlanner");
+								Popup.MessageBox("Event must be at least 15 minutes long.");
 							}
 						}
 						else
 						{
-							MessageBox.Show("End time must be before 16:00.", "UniPlanner");
+							Popup.MessageBox("End time must be before 16:00.");
 						}
 					}
 					else
 					{
-						MessageBox.Show("Invalid end time.", "UniPlanner");
+						Popup.MessageBox("Invalid end time.");
 					}
 				}
 				else
 				{
-					MessageBox.Show("Start time must be after 09:00.", "UniPlanner");
+					Popup.MessageBox("Start time must be after 09:00.");
 				}
 			}
 			else
 			{
-				MessageBox.Show("Invalid start time.", "UniPlanner");
+				Popup.MessageBox("Invalid start time.");
 			}
 		}
 		else
 		{
-			MessageBox.Show("Invalid title.", "UniPlanner");
+			Popup.MessageBox("Invalid title.");
 		}
 		TimetableEditorVisible = true;
 		return false;
 	}
-	private void UpdateData() => dataManager.UpdateData();
-	private void UpdateView(bool updateHomeView = true)
+	private void UpdateData() => dataAccess.UpdateTimetableList();
+	private void UpdateView(bool updateHomeView)
 	{
 		VerticalCollectionView.UpdateView();
 		HorizontalCollectionView.UpdateView();
@@ -233,7 +238,7 @@ internal class TimetableViewModel : ViewModelBase
 		TodayDefaultMessageVisible = timetableList.All(x => x.Day != DateOnly.FromDateTime(DateTime.Now).UKDayOfWeek());
 		if (updateHomeView)
 		{
-			MainProgram.UpdateHomeView();
+			DataAccess.MainWindow.UpdateHomeView();
 		}
 	}
 }

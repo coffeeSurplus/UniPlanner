@@ -8,6 +8,7 @@ internal class HomeEventCollectionView : CollectionViewBase<EventModel>
 {
 	public HomeEventCollectionView(List<EventModel> list) : base(list)
 	{
+		CollectionView.SortDescriptions.Add(new("Date", ListSortDirection.Descending));
 		CollectionView.SortDescriptions.Add(new("AllDay", ListSortDirection.Descending));
 		CollectionView.SortDescriptions.Add(new("StartTime", ListSortDirection.Ascending));
 		CollectionView.SortDescriptions.Add(new("Title", ListSortDirection.Ascending));
@@ -31,6 +32,7 @@ internal class HomeTaskCollectionView : CollectionViewBase<TaskModel>
 	public HomeTaskCollectionView(List<TaskModel> list) : base(list)
 	{
 		CollectionView.SortDescriptions.Add(new("Subject", ListSortDirection.Ascending));
+		CollectionView.SortDescriptions.Add(new("Completed", ListSortDirection.Ascending));
 		CollectionView.SortDescriptions.Add(new("Title", ListSortDirection.Ascending));
 		CollectionView.Filter = (object parameter) => !((TaskModel)parameter).Completed;
 	}
@@ -40,6 +42,7 @@ internal class HomeTimetableCollectionView : CollectionViewBase<TimetableModel>
 {
 	public HomeTimetableCollectionView(List<TimetableModel> list) : base(list)
 	{
+		CollectionView.SortDescriptions.Add(new("Day", ListSortDirection.Ascending));
 		CollectionView.SortDescriptions.Add(new("StartTime", ListSortDirection.Ascending));
 		CollectionView.Filter = (object parameter) => ((TimetableModel)parameter).Day == DateOnly.FromDateTime(DateTime.Now).UKDayOfWeek();
 	}

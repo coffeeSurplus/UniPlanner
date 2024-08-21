@@ -1,19 +1,19 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using UniPlanner.Source.Data;
 using UniPlanner.Source.MVVM;
-using UniPlanner.Source.Views;
 
 namespace UniPlanner.Source.ViewModels;
 
 internal class MainWindowViewModel : ViewModelBase
 {
-	private readonly Page[] pages = [new HomeView(), new TimetableView(), new TaskView(), new EventView(), new LinkView(), new TimersView(), new SettingsView()];
+	private readonly DataAccess dataAccess = new();
 
-	private WindowState currentState = MainProgram.SettingsManager.Data.StartupMaximised ? WindowState.Maximized : WindowState.Normal;
+	private WindowState currentState;
 	private bool sidepanelCollapsed = false;
 	private int currentPageNumber = 0;
-	private Page currentPage;
 
 	public WindowState CurrentState
 	{
@@ -30,30 +30,45 @@ internal class MainWindowViewModel : ViewModelBase
 		get => currentPageNumber;
 		set => SetValue(ref currentPageNumber, value);
 	}
-	public Page CurrentPage
-	{
-		get => currentPage;
-		set => SetValue(ref currentPage, value);
-	}
 
-	public RelayCommand SetPageCommand { get; }
+	public HomeViewModel Home { get; }
+	public TimetableViewModel Timetable { get; }
+	public TaskViewModel Task { get; }
+	public EventViewModel Event { get; }
+	public LinkViewModel Link { get; }
+	public TimersViewModel Timers { get; }
+	public SettingsViewModel Settings { get; }
+
 	public RelayCommand MinimiseWindowCommand { get; }
 	public RelayCommand MaximiseWindowCommand { get; }
 	public RelayCommand CloseWindowCommand { get; }
 
 	public MainWindowViewModel()
 	{
-		SetPageCommand = new(SetPage);
+		if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
+		{
+			Popup.MessageBox("Another instance of this application is already running.");
+			Application.Current.Shutdown();
+		}
+		Directory.CreateDirectory(Environment.ExpandEnvironmentVariables($@"%AppData%\UniPlanner\"));
+		SetScrollbars();
+		currentState = dataAccess.Settings.StartupMaximised ? WindowState.Maximized : WindowState.Normal;
+		Home = new(dataAccess);
+		Timetable = new(dataAccess);
+		Task = new(dataAccess);
+		Event = new(dataAccess);
+		Link = new(dataAccess);
+		Timers = new(dataAccess);
+		Settings = new(dataAccess);
 		MinimiseWindowCommand = new(MinimiseWindow);
 		MaximiseWindowCommand = new(MaximiseWindow);
 		CloseWindowCommand = new(CloseWindow);
-		currentPage = pages[0];
 	}
 
-	public void UpdateHomeView() => ((HomeViewModel)pages[0].DataContext).UpdateView();
+	public void SetScrollbars() => Application.Current.Resources["ScrollBarVisibility"] = dataAccess.Settings.ScrollbarsEnabled ? ScrollBarVisibility.Auto : ScrollBarVisibility.Hidden;
+	public void UpdateHomeView() => Home.UpdateView();
 
-	private void SetPage(object parameer) => CurrentPage = pages[CurrentPageNumber];
-	private void MinimiseWindow(object parameter) => CurrentState = WindowState.Minimized;
-	private void MaximiseWindow(object parameter) => CurrentState = CurrentState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
-	private void CloseWindow(object parameter) => Application.Current.Shutdown();
+	private void MinimiseWindow() => CurrentState = WindowState.Minimized;
+	private void MaximiseWindow() => CurrentState = CurrentState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
+	private void CloseWindow() => Application.Current.Shutdown();
 }

@@ -1,396 +1,400 @@
-﻿<Page x:Class="UniPlanner.Source.Views.TimetableView"
-	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	  xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels"
-	  xmlns:view="clr-namespace:UniPlanner.Source.Views"
-	  Title="timetable"
-	  mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="1000">
-	<Page.DataContext>
-		<viewModel:TimetableViewModel/>
-	</Page.DataContext>
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="10"/>
-			<RowDefinition Height="1*"/>
-		</Grid.RowDefinitions>
-		<Grid Grid.Row="0">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="50"/>
-				<ColumnDefinition Width="3*"/>
-				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="2*"/>
-			</Grid.ColumnDefinitions>
-			<Border Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ResourceKey=Panel}">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="50"/>
-						<ColumnDefinition Width="1*"/>
-						<ColumnDefinition Width="1*"/>
-						<ColumnDefinition Width="1*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Text="view:"/>
-					<RadioButton Grid.Column="1" Content="vertical" IsChecked="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}"/>
-					<RadioButton Grid.Column="2" Content="horizontal" IsChecked="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}"/>
-					<RadioButton Grid.Column="3" Content="today" IsChecked="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}"/>
-				</Grid>
-			</Border>
-			<Border Grid.Column="3" Style="{StaticResource ResourceKey=Panel}">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="1*"/>
-						<ColumnDefinition Width="1*"/>
-					</Grid.ColumnDefinitions>
-					<Button Grid.Column="0" Content="new event" Command="{Binding Path=NewTimetableCommand}"/>
-					<Button Grid.Column="1" Content="save as pdf" Command="{Binding Path=SaveAsPdfCommand}"/>
-				</Grid>
-			</Border>
-		</Grid>
-		<Grid Grid.Row="2">
-			<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=0}">
-				<ScrollViewer>
-					<Grid Height="465" VerticalAlignment="Top">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:viewModel="clr-namespace:UniPlanner.Source.ViewModels"
+					xmlns:view="clr-namespace:UniPlanner.Source.Views">
+	<DataTemplate DataType="{x:Type viewModel:MainWindowViewModel}" x:Key="TimetableView">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="50"/>
+					<ColumnDefinition Width="3*"/>
+					<ColumnDefinition Width="10"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="50"/>
 							<ColumnDefinition Width="1*"/>
 							<ColumnDefinition Width="1*"/>
 							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="view:"/>
+						<RadioButton Grid.Column="1" Content="vertical" IsChecked="{Binding Path=Timetable.CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}"/>
+						<RadioButton Grid.Column="2" Content="horizontal" IsChecked="{Binding Path=Timetable.CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}"/>
+						<RadioButton Grid.Column="3" Content="today" IsChecked="{Binding Path=Timetable.CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}"/>
+					</Grid>
+				</Border>
+				<Border Grid.Column="3" Style="{StaticResource ResourceKey=Panel}">
+					<Grid>
+						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="1*"/>
 							<ColumnDefinition Width="1*"/>
+						</Grid.ColumnDefinitions>
+						<Button Grid.Column="0" Content="new event" Command="{Binding Path=Timetable.NewTimetableCommand}"/>
+						<Button Grid.Column="1" Content="save as pdf" Command="{Binding Path=Timetable.SaveAsPdfCommand}"/>
+					</Grid>
+				</Border>
+			</Grid>
+			<Grid Grid.Row="2">
+				<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=Timetable.CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=0}">
+					<ScrollViewer>
+						<Grid Height="465" VerticalAlignment="Top">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="50"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="25"/>
+								<RowDefinition Height="1*"/>
+							</Grid.RowDefinitions>
+							<TextBlock Grid.Column="1" Grid.Row="0" Text="monday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=0}"/>
+							<TextBlock Grid.Column="2" Grid.Row="0" Text="tuesday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=1}"/>
+							<TextBlock Grid.Column="3" Grid.Row="0" Text="wednesday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=2}"/>
+							<TextBlock Grid.Column="4" Grid.Row="0" Text="thursday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=3}"/>
+							<TextBlock Grid.Column="5" Grid.Row="0" Text="friday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=4}"/>
+							<Grid Grid.Column="0" Grid.Row="1">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+								</Grid.RowDefinitions>
+								<TextBlock Grid.Row="0" Text="09:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="1" Text="10:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="2" Text="11:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="3" Text="12:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="4" Text="13:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="5" Text="14:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="6" Text="15:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="7" Text="16:00" Style="{StaticResource ResourceKey=TimeText}"/>
+							</Grid>
+							<ItemsControl Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="1" ItemsSource="{Binding Path=Timetable.VerticalCollectionView.CollectionView}">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<Grid>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="1*"/>
+												<ColumnDefinition Width="1*"/>
+												<ColumnDefinition Width="1*"/>
+												<ColumnDefinition Width="1*"/>
+												<ColumnDefinition Width="1*"/>
+											</Grid.ColumnDefinitions>
+										</Grid>
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
+								<ItemsControl.ItemContainerStyle>
+									<Style>
+										<Setter Property="Grid.Column" Value="{Binding Path=Day}"/>
+									</Style>
+								</ItemsControl.ItemContainerStyle>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Button Style="{StaticResource ResourceKey=StaticButton}" Margin="{Binding Path=StartTime, Converter={StaticResource ResourceKey=TimetableMargin}}" Background="{Binding Path=Colour, Converter={StaticResource ResourceKey=GeneralIntToColour}}" Command="{Binding Path=DataContext.Timetable.EditTimetableCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding}">
+											<Button.InputBindings>
+												<MouseBinding Gesture="RightClick" Command="{Binding Path=DataContext.Timetable.RemoveTimetableCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding}"/>
+											</Button.InputBindings>
+											<Button.Height>
+												<MultiBinding Converter="{StaticResource ResourceKey=TimetableLength}">
+													<Binding Path="StartTime"/>
+													<Binding Path="EndTime"/>
+												</MultiBinding>
+											</Button.Height>
+											<StackPanel Style="{StaticResource ResourceKey=VerticalPanel}">
+												<TextBlock Style="{StaticResource ResourceKey=TitleCentred}" Text="{Binding Path=Title}"/>
+												<TextBlock Style="{StaticResource ResourceKey=SubtitleCentred}">
+													<TextBlock.Text>
+														<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitle}">
+															<Binding Path="Details"/>
+															<Binding Path="Subject"/>
+															<Binding Path="Location"/>
+														</MultiBinding>
+													</TextBlock.Text>
+													<TextBlock.Visibility>
+														<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitleVisibility}">
+															<Binding Path="Details"/>
+															<Binding Path="Subject"/>
+															<Binding Path="Location"/>
+														</MultiBinding>
+													</TextBlock.Visibility>
+												</TextBlock>
+											</StackPanel>
+										</Button>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+							<Rectangle Grid.Column="0" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
+							<Rectangle Grid.Column="1" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
+							<Rectangle Grid.Column="2" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
+							<Rectangle Grid.Column="3" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
+							<Rectangle Grid.Column="4" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
+							<Rectangle Grid.Column="5" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
+							<Grid Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="1">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="10"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
+								</Grid.RowDefinitions>
+								<Rectangle Grid.Row="0" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="2" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="3" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="4" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="5" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="6" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="7" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="8" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+							</Grid>
+						</Grid>
+					</ScrollViewer>
+				</Border>
+				<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=Timetable.CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=1}">
+					<Grid>
+						<TextBlock Text="no timetabled events added." Style="{StaticResource ResourceKey=DefaultHeader}" Visibility="{Binding Path=Timetable.HorizontalDefaultMessageVisible, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}"/>
+						<ScrollViewer>
+							<ItemsControl ItemsSource="{Binding Path=Timetable.HorizontalCollectionView.CollectionView}">
+								<ItemsControl.GroupStyle>
+									<GroupStyle>
+										<GroupStyle.ContainerStyle>
+											<Style TargetType="GroupItem">
+												<Setter Property="Template">
+													<Setter.Value>
+														<ControlTemplate>
+															<Expander>
+																<Expander.Header>
+																	<StackPanel>
+																		<TextBlock Style="{StaticResource ResourceKey=Header}" Text="{Binding Path=Name}"/>
+																		<TextBlock Style="{StaticResource ResourceKey=Subheader}" Text="{Binding Path=Items, Converter={StaticResource ResourceKey=TimetableSubheader}}"/>
+																	</StackPanel>
+																</Expander.Header>
+																<ItemsPresenter/>
+															</Expander>
+														</ControlTemplate>
+													</Setter.Value>
+												</Setter>
+											</Style>
+										</GroupStyle.ContainerStyle>
+									</GroupStyle>
+								</ItemsControl.GroupStyle>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Border Style="{StaticResource ResourceKey=ItemPanel}" Background="{Binding Path=Colour, Converter={StaticResource ResourceKey=GeneralIntToColour}}">
+											<Grid>
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="1*"/>
+													<ColumnDefinition Width="40"/>
+													<ColumnDefinition Width="40"/>
+												</Grid.ColumnDefinitions>
+												<StackPanel Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource ResourceKey=VerticalPanel}">
+													<TextBlock Style="{StaticResource ResourceKey=Title}">
+														<TextBlock.Text>
+															<MultiBinding Converter="{StaticResource ResourceKey=TimetableTitle}">
+																<Binding Path="StartTime"/>
+																<Binding Path="EndTime"/>
+																<Binding Path="Title"/>
+															</MultiBinding>
+														</TextBlock.Text>
+													</TextBlock>
+													<TextBlock Style="{StaticResource ResourceKey=Subtitle}">
+														<TextBlock.Text>
+															<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitle}">
+																<Binding Path="Details"/>
+																<Binding Path="Subject"/>
+																<Binding Path="Location"/>
+															</MultiBinding>
+														</TextBlock.Text>
+														<TextBlock.Visibility>
+															<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitleVisibility}">
+																<Binding Path="Details"/>
+																<Binding Path="Subject"/>
+																<Binding Path="Location"/>
+															</MultiBinding>
+														</TextBlock.Visibility>
+													</TextBlock>
+												</StackPanel>
+												<Button Grid.Column="1" Style="{StaticResource ResourceKey=EditButton}" Command="{Binding Path=DataContext.Timetable.EditTimetableCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding}"/>
+												<Button Grid.Column="2" Style="{StaticResource ResourceKey=RemoveButton}" Command="{Binding Path=DataContext.Timetable.RemoveTimetableCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding}"/>
+											</Grid>
+										</Border>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</ScrollViewer>
+					</Grid>
+				</Border>
+				<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=Timetable.CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=2}">
+					<Grid>
+						<TextBlock Text="hooray!&#x0a;&#x0a;you have no timetabled events today." Style="{StaticResource ResourceKey=DefaultHeader}" Visibility="{Binding Path=Timetable.TodayDefaultMessageVisible, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}"/>
+						<ScrollViewer>
+							<ItemsControl ItemsSource="{Binding Path=Timetable.TodayCollectionView.CollectionView}">
+								<ItemsControl.GroupStyle>
+									<GroupStyle>
+										<GroupStyle.ContainerStyle>
+											<Style TargetType="GroupItem">
+												<Setter Property="Template">
+													<Setter.Value>
+														<ControlTemplate>
+															<Expander>
+																<Expander.Header>
+																	<StackPanel>
+																		<TextBlock Style="{StaticResource ResourceKey=Header}" Text="{Binding Converter={StaticResource ResourceKey=GeneralTodayDate}}"/>
+																		<TextBlock Style="{StaticResource ResourceKey=Subheader}" Text="{Binding Path=Items, Converter={StaticResource ResourceKey=TimetableSubheader}}"/>
+																	</StackPanel>
+																</Expander.Header>
+																<ItemsPresenter/>
+															</Expander>
+														</ControlTemplate>
+													</Setter.Value>
+												</Setter>
+											</Style>
+										</GroupStyle.ContainerStyle>
+									</GroupStyle>
+								</ItemsControl.GroupStyle>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Border Style="{StaticResource ResourceKey=ItemPanel}" Background="{Binding Path=Colour, Converter={StaticResource ResourceKey=GeneralIntToColour}}">
+											<Grid>
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="1*"/>
+													<ColumnDefinition Width="40"/>
+													<ColumnDefinition Width="40"/>
+												</Grid.ColumnDefinitions>
+												<StackPanel Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource ResourceKey=VerticalPanel}">
+													<TextBlock Style="{StaticResource ResourceKey=Title}">
+														<TextBlock.Text>
+															<MultiBinding Converter="{StaticResource ResourceKey=TimetableTitle}">
+																<Binding Path="StartTime"/>
+																<Binding Path="EndTime"/>
+																<Binding Path="Title"/>
+															</MultiBinding>
+														</TextBlock.Text>
+													</TextBlock>
+													<TextBlock Style="{StaticResource ResourceKey=Subtitle}">
+														<TextBlock.Text>
+															<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitle}">
+																<Binding Path="Details"/>
+																<Binding Path="Subject"/>
+																<Binding Path="Location"/>
+															</MultiBinding>
+														</TextBlock.Text>
+														<TextBlock.Visibility>
+															<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitleVisibility}">
+																<Binding Path="Details"/>
+																<Binding Path="Subject"/>
+																<Binding Path="Location"/>
+															</MultiBinding>
+														</TextBlock.Visibility>
+													</TextBlock>
+												</StackPanel>
+												<Button Grid.Column="1" Style="{StaticResource ResourceKey=EditButton}" Command="{Binding Path=DataContext.Timetable.EditTimetableCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding}"/>
+												<Button Grid.Column="2" Style="{StaticResource ResourceKey=RemoveButton}" Command="{Binding Path=DataContext.Timetable.RemoveTimetableCommand, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindowView}}}" CommandParameter="{Binding}"/>
+											</Grid>
+										</Border>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</ScrollViewer>
+					</Grid>
+				</Border>
+			</Grid>
+			<Popup IsOpen="{Binding Path=Timetable.TimetableEditorVisible}">
+				<Border>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="80"/>
+							<ColumnDefinition Width="320"/>
 						</Grid.ColumnDefinitions>
 						<Grid.RowDefinitions>
-							<RowDefinition Height="25"/>
-							<RowDefinition Height="1*"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
 						</Grid.RowDefinitions>
-						<TextBlock Grid.Column="1" Grid.Row="0" Text="monday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=0}"/>
-						<TextBlock Grid.Column="2" Grid.Row="0" Text="tuesday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=1}"/>
-						<TextBlock Grid.Column="3" Grid.Row="0" Text="wednesday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=2}"/>
-						<TextBlock Grid.Column="4" Grid.Row="0" Text="thursday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=3}"/>
-						<TextBlock Grid.Column="5" Grid.Row="0" Text="friday" FontWeight="{Binding Converter={StaticResource ResourceKey=TimetableCurrentDay}, ConverterParameter=4}"/>
-						<Grid Grid.Column="0" Grid.Row="1">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-							</Grid.RowDefinitions>
-							<TextBlock Grid.Row="0" Text="09:00" Style="{StaticResource ResourceKey=TimeText}"/>
-							<TextBlock Grid.Row="1" Text="10:00" Style="{StaticResource ResourceKey=TimeText}"/>
-							<TextBlock Grid.Row="2" Text="11:00" Style="{StaticResource ResourceKey=TimeText}"/>
-							<TextBlock Grid.Row="3" Text="12:00" Style="{StaticResource ResourceKey=TimeText}"/>
-							<TextBlock Grid.Row="4" Text="13:00" Style="{StaticResource ResourceKey=TimeText}"/>
-							<TextBlock Grid.Row="5" Text="14:00" Style="{StaticResource ResourceKey=TimeText}"/>
-							<TextBlock Grid.Row="6" Text="15:00" Style="{StaticResource ResourceKey=TimeText}"/>
-							<TextBlock Grid.Row="7" Text="16:00" Style="{StaticResource ResourceKey=TimeText}"/>
+						<TextBlock Grid.Column="0" Grid.Row="0" Text="*title:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=Timetable.CurrentTimetableTitle, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="1" Text="details:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Timetable.CurrentTimetableDetails, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="2" Text="subject:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=Timetable.CurrentTimetableSubject, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="3" Text="location:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=Timetable.CurrentTimetableLocation, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="4" Text="*day:" Style="{StaticResource ResourceKey=Title}"/>
+						<Grid Grid.Column="1" Grid.Row="4">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<RadioButton Grid.Column="0" Content="mon" IsChecked="{Binding Path=Timetable.CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}"/>
+							<RadioButton Grid.Column="1" Content="tue" IsChecked="{Binding Path=Timetable.CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}"/>
+							<RadioButton Grid.Column="2" Content="wed" IsChecked="{Binding Path=Timetable.CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}"/>
+							<RadioButton Grid.Column="3" Content="thu" IsChecked="{Binding Path=Timetable.CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}"/>
+							<RadioButton Grid.Column="4" Content="fri" IsChecked="{Binding Path=Timetable.CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=4}"/>
 						</Grid>
-						<ItemsControl Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="1" ItemsSource="{Binding Path=VerticalCollectionView.CollectionView}">
-							<ItemsControl.ItemsPanel>
-								<ItemsPanelTemplate>
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="1*"/>
-											<ColumnDefinition Width="1*"/>
-											<ColumnDefinition Width="1*"/>
-											<ColumnDefinition Width="1*"/>
-											<ColumnDefinition Width="1*"/>
-										</Grid.ColumnDefinitions>
-									</Grid>
-								</ItemsPanelTemplate>
-							</ItemsControl.ItemsPanel>
-							<ItemsControl.ItemContainerStyle>
-								<Style>
-									<Setter Property="Grid.Column" Value="{Binding Path=Day}"/>
-								</Style>
-							</ItemsControl.ItemContainerStyle>
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Button Style="{StaticResource ResourceKey=StaticButton}" Margin="{Binding Path=StartTime, Converter={StaticResource ResourceKey=TimetableMargin}}" Background="{Binding Path=Colour, Converter={StaticResource ResourceKey=GeneralIntToColour}}" Command="{Binding Path=DataContext.EditTimetableCommand, RelativeSource={RelativeSource AncestorType=view:TimetableView}}" CommandParameter="{Binding}">
-										<Button.InputBindings>
-											<MouseBinding Gesture="RightClick" Command="{Binding Path=DataContext.RemoveTimetableCommand, RelativeSource={RelativeSource AncestorType=view:TimetableView}}" CommandParameter="{Binding}"/>
-										</Button.InputBindings>
-										<Button.Height>
-											<MultiBinding Converter="{StaticResource ResourceKey=TimetableLength}">
-												<Binding Path="StartTime"/>
-												<Binding Path="EndTime"/>
-											</MultiBinding>
-										</Button.Height>
-										<StackPanel Style="{StaticResource ResourceKey=VerticalPanel}">
-											<TextBlock Style="{StaticResource ResourceKey=TitleCentred}" Text="{Binding Path=Title}"/>
-											<TextBlock Style="{StaticResource ResourceKey=SubtitleCentred}">
-												<TextBlock.Text>
-													<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitle}">
-														<Binding Path="Details"/>
-														<Binding Path="Subject"/>
-														<Binding Path="Location"/>
-													</MultiBinding>
-												</TextBlock.Text>
-												<TextBlock.Visibility>
-													<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitleVisibility}">
-														<Binding Path="Details"/>
-														<Binding Path="Subject"/>
-														<Binding Path="Location"/>
-													</MultiBinding>
-												</TextBlock.Visibility>
-											</TextBlock>
-										</StackPanel>
-									</Button>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-						<Rectangle Grid.Column="0" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
-						<Rectangle Grid.Column="1" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
-						<Rectangle Grid.Column="2" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
-						<Rectangle Grid.Column="3" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
-						<Rectangle Grid.Column="4" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
-						<Rectangle Grid.Column="5" Grid.Row="1" Style="{StaticResource ResourceKey=VerticalGridline}"/>
-						<Grid Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="1">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="10"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-								<RowDefinition Height="60"/>
-							</Grid.RowDefinitions>
-							<Rectangle Grid.Row="0" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
-							<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
-							<Rectangle Grid.Row="2" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
-							<Rectangle Grid.Row="3" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
-							<Rectangle Grid.Row="4" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
-							<Rectangle Grid.Row="5" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
-							<Rectangle Grid.Row="6" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
-							<Rectangle Grid.Row="7" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
-							<Rectangle Grid.Row="8" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+						<TextBlock Grid.Column="0" Grid.Row="5" Text="*start time:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Path=Timetable.CurrentTimetableStartTime, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="6" Text="*end time:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Path=Timetable.CurrentTimetableEndTime, UpdateSourceTrigger=PropertyChanged}"/>
+						<TextBlock Grid.Column="0" Grid.Row="7" Text="*colour:" Style="{StaticResource ResourceKey=Title}"/>
+						<Grid Grid.Column="1" Grid.Row="7">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<RadioButton Grid.Column="0" Background="#F2F2F2" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}"/>
+							<RadioButton Grid.Column="1" Background="#FFADAD" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}"/>
+							<RadioButton Grid.Column="2" Background="#FFD6A5" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}"/>
+							<RadioButton Grid.Column="3" Background="#FDFFB6" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}"/>
+							<RadioButton Grid.Column="4" Background="#CAFFBF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=4}"/>
+							<RadioButton Grid.Column="5" Background="#9BF6FF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=5}"/>
+							<RadioButton Grid.Column="6" Background="#A0C4FF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=6}"/>
+							<RadioButton Grid.Column="7" Background="#BDB2FF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=7}"/>
+							<RadioButton Grid.Column="8" Background="#FFC6FF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=Timetable.CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=8}"/>
+						</Grid>
+						<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=Timetable.CancelEditTimetableCommand}"/>
+							<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=Timetable.SaveEditTimetableCommand}"/>
 						</Grid>
 					</Grid>
-				</ScrollViewer>
-			</Border>
-			<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=1}">
-				<Grid>
-					<TextBlock Text="no timetabled events added." Style="{StaticResource ResourceKey=DefaultHeader}" Visibility="{Binding Path=HorizontalDefaultMessageVisible, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}"/>
-					<ScrollViewer>
-						<ItemsControl ItemsSource="{Binding Path=HorizontalCollectionView.CollectionView}">
-							<ItemsControl.GroupStyle>
-								<GroupStyle>
-									<GroupStyle.ContainerStyle>
-										<Style TargetType="GroupItem">
-											<Setter Property="Template">
-												<Setter.Value>
-													<ControlTemplate>
-														<Expander>
-															<Expander.Header>
-																<StackPanel>
-																	<TextBlock Style="{StaticResource ResourceKey=Header}" Text="{Binding Path=Name}"/>
-																	<TextBlock Style="{StaticResource ResourceKey=Subheader}" Text="{Binding Path=Items, Converter={StaticResource ResourceKey=TimetableSubheader}}"/>
-																</StackPanel>
-															</Expander.Header>
-															<ItemsPresenter/>
-														</Expander>
-													</ControlTemplate>
-												</Setter.Value>
-											</Setter>
-										</Style>
-									</GroupStyle.ContainerStyle>
-								</GroupStyle>
-							</ItemsControl.GroupStyle>
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Border Margin="5" Padding="5" Background="{Binding Path=Colour, Converter={StaticResource ResourceKey=GeneralIntToColour}}">
-										<Grid>
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="1*"/>
-												<ColumnDefinition Width="40"/>
-												<ColumnDefinition Width="40"/>
-											</Grid.ColumnDefinitions>
-											<StackPanel Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource ResourceKey=VerticalPanel}">
-												<TextBlock Style="{StaticResource ResourceKey=Title}">
-													<TextBlock.Text>
-														<MultiBinding Converter="{StaticResource ResourceKey=TimetableTitle}">
-															<Binding Path="StartTime"/>
-															<Binding Path="EndTime"/>
-															<Binding Path="Title"/>
-														</MultiBinding>
-													</TextBlock.Text>
-												</TextBlock>
-												<TextBlock Style="{StaticResource ResourceKey=Subtitle}">
-													<TextBlock.Text>
-														<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitle}">
-															<Binding Path="Details"/>
-															<Binding Path="Subject"/>
-															<Binding Path="Location"/>
-														</MultiBinding>
-													</TextBlock.Text>
-													<TextBlock.Visibility>
-														<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitleVisibility}">
-															<Binding Path="Details"/>
-															<Binding Path="Subject"/>
-															<Binding Path="Location"/>
-														</MultiBinding>
-													</TextBlock.Visibility>
-												</TextBlock>
-											</StackPanel>
-											<Button Grid.Column="1" Style="{StaticResource ResourceKey=EditButton}" Command="{Binding Path=DataContext.EditTimetableCommand, RelativeSource={RelativeSource AncestorType=view:TimetableView}}" CommandParameter="{Binding}"/>
-											<Button Grid.Column="2" Style="{StaticResource ResourceKey=RemoveButton}" Command="{Binding Path=DataContext.RemoveTimetableCommand, RelativeSource={RelativeSource AncestorType=view:TimetableView}}" CommandParameter="{Binding}"/>
-										</Grid>
-									</Border>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</ScrollViewer>
-				</Grid>
-			</Border>
-			<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=2}">
-				<Grid>
-					<TextBlock Text="hooray!&#x0a;&#x0a;you have no timetabled events today." Style="{StaticResource ResourceKey=DefaultHeader}" Visibility="{Binding Path=TodayDefaultMessageVisible, Converter={StaticResource ResourceKey=GeneralBoolToVisibility}}"/>
-					<ScrollViewer>
-						<ItemsControl ItemsSource="{Binding Path=TodayCollectionView.CollectionView}">
-							<ItemsControl.GroupStyle>
-								<GroupStyle>
-									<GroupStyle.HeaderTemplate>
-										<DataTemplate>
-											<StackPanel Height="40">
-												<TextBlock Style="{StaticResource ResourceKey=Header}" Text="{Binding Converter={StaticResource ResourceKey=GeneralToday}}"/>
-												<TextBlock Style="{StaticResource ResourceKey=Subheader}" Text="{Binding Path=Items, Converter={StaticResource ResourceKey=TimetableSubheader}}"/>
-												<ItemsPresenter/>
-											</StackPanel>
-										</DataTemplate>
-									</GroupStyle.HeaderTemplate>
-								</GroupStyle>
-							</ItemsControl.GroupStyle>
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Border Margin="0,5,5,5" Padding="5" Background="{Binding Path=Colour, Converter={StaticResource ResourceKey=GeneralIntToColour}}">
-										<Grid>
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="1*"/>
-												<ColumnDefinition Width="40"/>
-												<ColumnDefinition Width="40"/>
-											</Grid.ColumnDefinitions>
-											<StackPanel Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource ResourceKey=VerticalPanel}">
-												<TextBlock Style="{StaticResource ResourceKey=Title}">
-													<TextBlock.Text>
-														<MultiBinding Converter="{StaticResource ResourceKey=TimetableTitle}">
-															<Binding Path="StartTime"/>
-															<Binding Path="EndTime"/>
-															<Binding Path="Title"/>
-														</MultiBinding>
-													</TextBlock.Text>
-												</TextBlock>
-												<TextBlock Style="{StaticResource ResourceKey=Subtitle}">
-													<TextBlock.Text>
-														<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitle}">
-															<Binding Path="Details"/>
-															<Binding Path="Subject"/>
-															<Binding Path="Location"/>
-														</MultiBinding>
-													</TextBlock.Text>
-													<TextBlock.Visibility>
-														<MultiBinding Converter="{StaticResource ResourceKey=TimetableSubtitleVisibility}">
-															<Binding Path="Details"/>
-															<Binding Path="Subject"/>
-															<Binding Path="Location"/>
-														</MultiBinding>
-													</TextBlock.Visibility>
-												</TextBlock>
-											</StackPanel>
-											<Button Grid.Column="1" Style="{StaticResource ResourceKey=EditButton}" Command="{Binding Path=DataContext.EditTimetableCommand, RelativeSource={RelativeSource AncestorType=view:TimetableView}}" CommandParameter="{Binding}"/>
-											<Button Grid.Column="2" Style="{StaticResource ResourceKey=RemoveButton}" Command="{Binding Path=DataContext.RemoveTimetableCommand, RelativeSource={RelativeSource AncestorType=view:TimetableView}}" CommandParameter="{Binding}"/>
-										</Grid>
-									</Border>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</ScrollViewer>
-				</Grid>
-			</Border>
+				</Border>
+			</Popup>
 		</Grid>
-		<Popup IsOpen="{Binding Path=TimetableEditorVisible}">
-			<Border>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="80"/>
-						<ColumnDefinition Width="320"/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-						<RowDefinition Height="40"/>
-					</Grid.RowDefinitions>
-					<TextBlock Grid.Column="0" Grid.Row="0" Text="*title:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=CurrentTimetableTitle, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="1" Text="details:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=CurrentTimetableDetails, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="2" Text="subject:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=CurrentTimetableSubject, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="3" Text="location:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=CurrentTimetableLocation, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="4" Text="*day:" Style="{StaticResource ResourceKey=Title}"/>
-					<Grid Grid.Column="1" Grid.Row="4">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-						</Grid.ColumnDefinitions>
-						<RadioButton Grid.Column="0" Content="mon" IsChecked="{Binding Path=CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}"/>
-						<RadioButton Grid.Column="1" Content="tue" IsChecked="{Binding Path=CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}"/>
-						<RadioButton Grid.Column="2" Content="wed" IsChecked="{Binding Path=CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}"/>
-						<RadioButton Grid.Column="3" Content="thu" IsChecked="{Binding Path=CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}"/>
-						<RadioButton Grid.Column="4" Content="fri" IsChecked="{Binding Path=CurrentTimetableDay, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=4}"/>
-					</Grid>
-					<TextBlock Grid.Column="0" Grid.Row="5" Text="*start time:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Path=CurrentTimetableStartTime, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="6" Text="*end time:" Style="{StaticResource ResourceKey=Title}"/>
-					<TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Path=CurrentTimetableEndTime, UpdateSourceTrigger=PropertyChanged}"/>
-					<TextBlock Grid.Column="0" Grid.Row="7" Text="*colour:" Style="{StaticResource ResourceKey=Title}"/>
-					<Grid Grid.Column="1" Grid.Row="7">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-						</Grid.ColumnDefinitions>
-						<RadioButton Grid.Column="0" Background="#F2F2F2" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=0}"/>
-						<RadioButton Grid.Column="1" Background="#FFADAD" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=1}"/>
-						<RadioButton Grid.Column="2" Background="#FFD6A5" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=2}"/>
-						<RadioButton Grid.Column="3" Background="#FDFFB6" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=3}"/>
-						<RadioButton Grid.Column="4" Background="#CAFFBF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=4}"/>
-						<RadioButton Grid.Column="5" Background="#9BF6FF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=5}"/>
-						<RadioButton Grid.Column="6" Background="#A0C4FF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=6}"/>
-						<RadioButton Grid.Column="7" Background="#BDB2FF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=7}"/>
-						<RadioButton Grid.Column="8" Background="#FFC6FF" Style="{StaticResource ResourceKey=ColourButton}" IsChecked="{Binding Path=CurrentTimetableColour, Converter={StaticResource ResourceKey=GeneralRadioToInt}, ConverterParameter=8}"/>
-					</Grid>
-					<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="1*"/>
-							<ColumnDefinition Width="1*"/>
-						</Grid.ColumnDefinitions>
-						<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=CancelEditTimetableCommand}"/>
-						<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=SaveEditTimetableCommand}"/>
-					</Grid>
-				</Grid>
-			</Border>
-		</Popup>
-	</Grid>
-</Page>
+	</DataTemplate>
+</ResourceDictionary>

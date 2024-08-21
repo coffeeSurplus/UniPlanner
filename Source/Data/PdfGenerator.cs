@@ -11,11 +11,12 @@ namespace UniPlanner.Source.Data;
 internal abstract class PdfGenerator
 {
 	private readonly string fileName;
-	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
+	private readonly SettingsModel settings;
 	protected readonly SaveFileDialog saveFileDialog = new() { DefaultExt = ".pdf", Filter = "Pdf File (*.pdf)|*.pdf|All files (*.*)|*.*", FilterIndex = 1 };
 
-	public PdfGenerator(string fileName)
+	public PdfGenerator(string fileName, SettingsModel settingsModel)
 	{
+		settings = settingsModel;
 		Settings.License = LicenseType.Community;
 		this.fileName = $"UniPlanner - {fileName}";
 	}
@@ -36,13 +37,13 @@ internal abstract class PdfGenerator
 	protected abstract byte[] GeneratePdf();
 }
 
-internal class TaskPdfGenerator(List<TaskModel> taskList, string fileName = "tasks") : PdfGenerator(fileName)
+internal class TaskPdfGenerator(List<TaskModel> taskList, string fileName, SettingsModel settingsModel) : PdfGenerator(fileName, settingsModel)
 {
 	private readonly List<TaskModel> pdfTaskList = [];
 	private readonly List<TaskModel> taskList = taskList;
 	private (string Group, bool OrderByAscending, bool ShowCompleted) settings = ("Subject", true, true);
 
-	public void UpdateValues((string, bool, bool) settings) => this.settings = settings;
+	public void UpdateValues(string group, bool orderByAscending, bool showCompleted) => settings = new(group, orderByAscending, showCompleted);
 
 	protected override byte[] GeneratePdf()
 	{
@@ -68,6 +69,7 @@ internal class TaskPdfGenerator(List<TaskModel> taskList, string fileName = "tas
 			});
 		}).GeneratePdf();
 	}
+
 	private void SortTasklist()
 	{
 		pdfTaskList.Clear();
@@ -91,7 +93,7 @@ internal class TaskPdfGenerator(List<TaskModel> taskList, string fileName = "tas
 	private int ReturnSubtaskCount(int index) => pdfTaskList.Where(x => settings.Group switch { "Subject" => x.Subject == pdfTaskList[index].Subject, "Date" => x.Date == pdfTaskList[index].Date, _ => x.Priority == pdfTaskList[index].Priority }).Sum(x => x.Subtasks.Count(x => !x.Completed));
 }
 
-internal class TimetablePdfGenerator(List<TimetableModel> timetableList, string fileName = "timetable") : PdfGenerator(fileName)
+internal class TimetablePdfGenerator(List<TimetableModel> timetableList, string fileName, SettingsModel settingsModel) : PdfGenerator(fileName, settingsModel)
 {
 	private readonly List<TimetableModel> timetableList = timetableList;
 

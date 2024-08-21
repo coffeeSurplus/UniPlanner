@@ -3,12 +3,6 @@ using System.Windows.Data;
 
 namespace UniPlanner.Source.Converters;
 
-internal class HomeDateConverter : IValueConverter
-{
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => $"{DateTime.Now:dddd d MMMM}".ToLower();
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
-}
-
 internal class HomeEventCountConverter : IValueConverter
 {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => $"{value} {((int)value != 1 ? "events" : "event")} this week";

@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using UniPlanner.Source.CollectionViews;
+﻿using UniPlanner.Source.CollectionViews;
 using UniPlanner.Source.Data;
 using UniPlanner.Source.Models;
 using UniPlanner.Source.MVVM;
@@ -8,9 +7,9 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class EventViewModel : ViewModelBase
 {
-	private readonly DataManager<List<EventModel>> dataManager = MainProgram.EventManager;
-	private readonly List<EventModel> eventList = MainProgram.EventManager.Data;
-	private bool newEvent = false;
+	private readonly DataAccess dataAccess;
+	private readonly List<EventModel> eventList;
+	private bool newEvent = true;
 	private EventModel currentEvent = new();
 
 	private int currentPageNumber = 0;
@@ -107,17 +106,22 @@ internal class EventViewModel : ViewModelBase
 	public RelayCommand IncreaseDayCommand { get; }
 	public RelayCommand DecreaseDayCommand { get; }
 	public RelayCommand NewEventCommand { get; }
-	public RelayCommand EditEventCommand { get; }
 	public RelayCommand CancelEditEventCommand { get; }
 	public RelayCommand SaveEditEventCommand { get; }
-	public RelayCommand RemoveEventCommand { get; }
+	public RelayCommand<EventModel> EditEventCommand { get; }
+	public RelayCommand<EventModel> RemoveEventCommand { get; }
 
-	public EventMonthCollectionView MonthCollectionView { get; } = new(MainProgram.EventManager.Data, DateOnly.FromDateTime(DateTime.Now));
-	public EventWeekCollectionView WeekCollectionView { get; } = new(MainProgram.EventManager.Data, DateOnly.FromDateTime(DateTime.Now));
-	public EventDayCollectionView DayCollectionView { get; } = new(MainProgram.EventManager.Data, DateOnly.FromDateTime(DateTime.Now));
+	public EventMonthCollectionView MonthCollectionView { get; }
+	public EventWeekCollectionView WeekCollectionView { get; }
+	public EventDayCollectionView DayCollectionView { get; }
 
-	public EventViewModel()
+	public EventViewModel(DataAccess data)
 	{
+		dataAccess = data;
+		eventList = dataAccess.EventList;
+		MonthCollectionView = new(eventList);
+		WeekCollectionView = new(eventList);
+		DayCollectionView = new(eventList);
 		SetTodayCommand = new(SetToday);
 		IncreaseMonthCommand = new(IncreaseMonth);
 		DecreaseMonthCommand = new(DecreaseMonth);
@@ -126,49 +130,49 @@ internal class EventViewModel : ViewModelBase
 		IncreaseDayCommand = new(IncreaseDay);
 		DecreaseDayCommand = new(DecreaseDay);
 		NewEventCommand = new(NewEvent);
-		EditEventCommand = new(EditEvent);
 		CancelEditEventCommand = new(CancelEditEvent);
 		SaveEditEventCommand = new(SaveEditEvent);
+		EditEventCommand = new(EditEvent);
 		RemoveEventCommand = new(RemoveEvent);
 		UpdateView(false);
 	}
 
-	private void SetToday(object parameter)
+	private void SetToday()
 	{
 		CurrentDate = DateOnly.FromDateTime(DateTime.Now);
-		UpdateView();
+		UpdateView(true);
 	}
-	private void IncreaseMonth(object parameter)
+	private void IncreaseMonth()
 	{
 		CurrentDate = CurrentDate.AddMonths(1);
-		UpdateView();
+		UpdateView(true);
 	}
-	private void DecreaseMonth(object parameter)
+	private void DecreaseMonth()
 	{
 		CurrentDate = CurrentDate.AddMonths(-1);
-		UpdateView();
+		UpdateView(true);
 	}
-	private void IncreaseWeek(object parameter)
+	private void IncreaseWeek()
 	{
 		CurrentDate = CurrentDate.AddDays(7);
-		UpdateView();
+		UpdateView(true);
 	}
-	private void DecreaseWeek(object parameter)
+	private void DecreaseWeek()
 	{
 		CurrentDate = CurrentDate.AddDays(-7);
-		UpdateView();
+		UpdateView(true);
 	}
-	private void IncreaseDay(object parameter)
+	private void IncreaseDay()
 	{
 		CurrentDate = CurrentDate.AddDays(1);
-		UpdateView();
+		UpdateView(true);
 	}
-	private void DecreaseDay(object parameter)
+	private void DecreaseDay()
 	{
 		CurrentDate = CurrentDate.AddDays(-1);
-		UpdateView();
+		UpdateView(true);
 	}
-	private void NewEvent(object parameter)
+	private void NewEvent()
 	{
 		newEvent = true;
 		currentEvent = new();
@@ -182,22 +186,8 @@ internal class EventViewModel : ViewModelBase
 		CurrentEventColour = 0;
 		EventEditorVisible = true;
 	}
-	private void EditEvent(object parameter)
-	{
-		newEvent = false;
-		currentEvent = (EventModel)parameter;
-		CurrentEventTitle = currentEvent.Title;
-		CurrentEventDetails = currentEvent.Details ?? string.Empty;
-		CurrentEventLocation = currentEvent.Location ?? string.Empty;
-		CurrentEventDate = currentEvent.Date.ToString("d/M");
-		CurrentEventAllDay = currentEvent.AllDay;
-		CurrentEventStartTime = !currentEvent.AllDay ? currentEvent.StartTime.ToString("H:mm") : string.Empty;
-		CurrentEventEndTime = !currentEvent.AllDay ? currentEvent.EndTime.ToString("H:mm") : string.Empty;
-		CurrentEventColour = currentEvent.Colour;
-		EventEditorVisible = true;
-	}
-	private void CancelEditEvent(object parameter) => EventEditorVisible = false;
-	private void SaveEditEvent(object parameter)
+	private void CancelEditEvent() => EventEditorVisible = false;
+	private void SaveEditEvent()
 	{
 		if (CheckEventValues())
 		{
@@ -215,14 +205,28 @@ internal class EventViewModel : ViewModelBase
 			}
 			EventEditorVisible = false;
 			UpdateData();
-			UpdateView();
+			UpdateView(true);
 		}
 	}
-	private void RemoveEvent(object parameter)
+	private void EditEvent(EventModel parameter)
 	{
-		eventList.Remove((EventModel)parameter);
+		newEvent = false;
+		currentEvent = parameter;
+		CurrentEventTitle = currentEvent.Title;
+		CurrentEventDetails = currentEvent.Details ?? string.Empty;
+		CurrentEventLocation = currentEvent.Location ?? string.Empty;
+		CurrentEventDate = currentEvent.Date.ToString("d/M");
+		CurrentEventAllDay = currentEvent.AllDay;
+		CurrentEventStartTime = !currentEvent.AllDay ? currentEvent.StartTime.ToString("H:mm") : string.Empty;
+		CurrentEventEndTime = !currentEvent.AllDay ? currentEvent.EndTime.ToString("H:mm") : string.Empty;
+		CurrentEventColour = currentEvent.Colour;
+		EventEditorVisible = true;
+	}
+	private void RemoveEvent(EventModel parameter)
+	{
+		eventList.Remove(parameter);
 		UpdateData();
-		UpdateView();
+		UpdateView(true);
 	}
 
 	private bool CheckEventValues()
@@ -239,12 +243,12 @@ internal class EventViewModel : ViewModelBase
 					}
 					else
 					{
-						MessageBox.Show("Cannot have multiple all-day events on the same day.", "UniPlanner");
+						Popup.MessageBox("Cannot have multiple all-day events on the same day.");
 					}
 				}
-				else if (TimeOnly.TryParse(currentEventStartTime, out TimeOnly newStartTime))
+				else if (TimeOnly.TryParse(CurrentEventStartTime, out TimeOnly newStartTime))
 				{
-					if (TimeOnly.TryParse(currentEventEndTime, out TimeOnly newEndTime))
+					if (TimeOnly.TryParse(CurrentEventEndTime, out TimeOnly newEndTime))
 					{
 						if (newEndTime.CompareTo(newStartTime) == 1 && (newEndTime - newStartTime).TotalMinutes >= 15)
 						{
@@ -254,48 +258,48 @@ internal class EventViewModel : ViewModelBase
 							}
 							else
 							{
-								MessageBox.Show("Event must not overlap with other events.", "UniPlanner");
+								Popup.MessageBox("Event must not overlap with other events.");
 							}
 						}
 						else
 						{
-							MessageBox.Show("Event must be at least 15 minutes long.", "UniPlanner");
+							Popup.MessageBox("Event must be at least 15 minutes long.");
 						}
 					}
 					else
 					{
-						MessageBox.Show("Invalid end time.", "UniPlanner");
+						Popup.MessageBox("Invalid end time.");
 					}
 				}
 				else
 				{
-					MessageBox.Show("Invalid start time.", "UniPlanner");
+					Popup.MessageBox("Invalid start time.");
 				}
 			}
 			else
 			{
-				MessageBox.Show("Invalid date.", "UniPlanner");
+				Popup.MessageBox("Invalid date.");
 			}
 		}
 		else
 		{
-			MessageBox.Show("Invalid title.", "UniPlanner");
+			Popup.MessageBox("Invalid title.");
 		}
 		EventEditorVisible = true;
 		return false;
 	}
-	private void UpdateData() => dataManager.UpdateData();
-	private void UpdateView(bool updateHomeView = true)
+	private void UpdateData() => dataAccess.UpdateEventList();
+	private void UpdateView(bool updateHomeView)
 	{
-		MonthCollectionView.UpdateView(eventList, CurrentDate);
+		MonthCollectionView.UpdateView(CurrentDate);
 		WeekCollectionView.UpdateView(CurrentDate);
 		DayCollectionView.UpdateView(CurrentDate);
-		MonthEventCount = eventList.Count(x => (x.Date.Year, x.Date.Month) == (currentDate.Year, CurrentDate.Month));
-		WeekEventCount = eventList.Count(x => x.Date.FirstDayOfWeek() == currentDate.FirstDayOfWeek());
-		DayEventCount = eventList.Count(x => x.Date == currentDate);
+		MonthEventCount = eventList.Count(x => (x.Date.Year, x.Date.Month) == (CurrentDate.Year, CurrentDate.Month));
+		WeekEventCount = eventList.Count(x => x.Date.FirstDayOfWeek() == CurrentDate.FirstDayOfWeek());
+		DayEventCount = eventList.Count(x => x.Date == CurrentDate);
 		if (updateHomeView)
 		{
-			MainProgram.UpdateHomeView();
+			DataAccess.MainWindow.UpdateHomeView();
 		}
 	}
 }

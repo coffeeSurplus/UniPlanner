@@ -13,12 +13,6 @@ internal class TimetableCurrentDayConverter : IValueConverter
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }
 
-internal class TimetableDayConverter : IValueConverter
-{
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (int)value switch { 0 => "monday", 1 => "tuesday", 2 => "wednesday", 3 => "thursday", _ => "friday" };
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
-}
-
 internal class TimetableLengthConverter : IMultiValueConverter
 {
 	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => ((TimeOnly)values[1] - (TimeOnly)values[0]).TotalMinutes;

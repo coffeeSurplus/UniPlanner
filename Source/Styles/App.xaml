@@ -1,0 +1,22 @@
+﻿<Application x:Class="UniPlanner.Source.Styles.App"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 StartupUri="/UniPlanner;component/Source/Views/MainWindowView.xaml">
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Styles/Buttons.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Styles/Converters.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Styles/Fonts.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Styles/Panels.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Views/EventView.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Views/HomeView.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Views/LinkView.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Views/SettingsView.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Views/TaskView.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Views/TimersView.xaml"/>
+				<ResourceDictionary Source="/UniPlanner;component/Source/Views/TimetableView.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
+</Application>

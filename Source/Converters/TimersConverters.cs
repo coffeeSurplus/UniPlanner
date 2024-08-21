@@ -3,6 +3,16 @@ using System.Windows.Data;
 
 namespace UniPlanner.Source.Converters;
 
+internal class TimersPomodoroElapsedConverter : IValueConverter
+{
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+	{
+		TimeSpan time = (TimeSpan)value;
+		return $"{(time.Hours > 0 ? $"{time.Hours:00}:" : string.Empty)}{time.Minutes:00}:{time.Seconds:00}";
+	}
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+}
+
 internal class TimersResetRestartTextConverter : IValueConverter
 {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? "restart" : "reset";
@@ -25,4 +35,24 @@ internal class TimersStatusConverter : IMultiValueConverter
 {
 	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => $"{((bool)values[0] ? "break" : "pomodoro")} ({(int)values[1]} of {(int)values[2]})";
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [Binding.DoNothing, Binding.DoNothing, Binding.DoNothing];
+}
+
+internal class TimersStopwatchElapsedConverter : IValueConverter
+{
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+	{
+		TimeSpan time = (TimeSpan)value;
+		return $"{(time.Hours > 0 ? $"{time.Hours:00}:" : string.Empty)}{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds / 10:00}";
+	}
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+}
+
+internal class TimersTimerElapsedConverter : IValueConverter
+{
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+	{
+		TimeSpan timeSpan = (TimeSpan)value;
+		return $"{timeSpan.Hours:00}:{timeSpan.Minutes:00}:{timeSpan.Seconds:00}";
+	}
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using System.IO;
-using System.Windows;
 using UniPlanner.Source.CollectionViews;
 using UniPlanner.Source.Data;
 using UniPlanner.Source.Models;
@@ -10,10 +9,9 @@ namespace UniPlanner.Source.ViewModels;
 
 internal class LinkViewModel : ViewModelBase
 {
-	private readonly DataManager<List<LinkModel>> dataManager = MainProgram.LinkManager;
-	private readonly SettingsModel settings = MainProgram.SettingsManager.Data;
-	private readonly List<LinkModel> linkList = MainProgram.LinkManager.Data;
-	private bool newLink = false;
+	private readonly DataAccess dataAccess;
+	private readonly List<LinkModel> linkList;
+	private bool newLink = true;
 	private LinkModel currentLink = new();
 
 	private bool expanderBindingEnabled = true;
@@ -25,7 +23,7 @@ internal class LinkViewModel : ViewModelBase
 	private string currentLinkGroup = string.Empty;
 	private string currentLinkSubgroup = string.Empty;
 	private string currentLinkURL = string.Empty;
-	private bool currentLinkFavourite = false;
+	private bool currentLinkFavourite;
 
 	public bool ExpanderBindingEnabled
 	{
@@ -81,32 +79,35 @@ internal class LinkViewModel : ViewModelBase
 	public RelayCommand EnableExpanderBindingCommand { get; }
 	public RelayCommand UpdateViewCommand { get; }
 	public RelayCommand NewLinkCommand { get; }
-	public RelayCommand OpenLinkCommand { get; }
-	public RelayCommand EditLinkCommand { get; }
-	public RelayCommand RemoveLinkCommand { get; }
 	public RelayCommand SelectFolderCommand { get; }
 	public RelayCommand CancelEditLinkCommand { get; }
 	public RelayCommand SaveEditLinkCommand { get; }
+	public RelayCommand<string> OpenLinkCommand { get; }
+	public RelayCommand<LinkModel> EditLinkCommand { get; }
+	public RelayCommand<LinkModel> RemoveLinkCommand { get; }
 
-	public LinkCollectionView LinkCollectionView { get; } = new(MainProgram.LinkManager.Data);
+	public LinkCollectionView LinkCollectionView { get; }
 
-	public LinkViewModel()
+	public LinkViewModel(DataAccess data)
 	{
+		dataAccess = data;
+		linkList = dataAccess.LinkList;
+		LinkCollectionView = new(linkList);
 		EnableExpanderBindingCommand = new(EnableExpanderBinding);
 		UpdateViewCommand = new(UpdateView);
 		NewLinkCommand = new(NewLink);
-		OpenLinkCommand = new(OpenLink);
-		EditLinkCommand = new(EditLink);
-		RemoveLinkCommand = new(RemoveLink);
 		SelectFolderCommand = new(SelectFolder);
 		CancelEditLinkCommand = new(CancelEditLink);
 		SaveEditLinkCommand = new(SaveEditLink);
+		OpenLinkCommand = new(OpenLink);
+		EditLinkCommand = new(EditLink);
+		RemoveLinkCommand = new(RemoveLink);
 		UpdateView(false);
 	}
 
-	private void EnableExpanderBinding(object parameter) => ExpanderBindingEnabled = true;
-	private void UpdateView(object parameter) => UpdateView();
-	private void NewLink(object parameter)
+	private void EnableExpanderBinding() => ExpanderBindingEnabled = true;
+	private void UpdateView() => UpdateView(true);
+	private void NewLink()
 	{
 		newLink = true;
 		currentLink = new();
@@ -117,8 +118,37 @@ internal class LinkViewModel : ViewModelBase
 		CurrentLinkFavourite = false;
 		LinkEditorVisible = true;
 	}
-	private void OpenLink(object parameter) => LinkModel.OpenUrl((string)parameter, settings.ReturnBrowser(), settings.ReturnArguments());
-	private void EditLink(object parameter)
+	private void SelectFolder()
+	{
+		OpenFolderDialog folderDialog = new();
+		bool folderSelected = folderDialog.ShowDialog() == true;
+		LinkEditorVisible = true;
+		if (folderSelected)
+		{
+			CurrentLinkURL = folderDialog.FolderName;
+		}
+	}
+	private void CancelEditLink() => LinkEditorVisible = false;
+	private void SaveEditLink()
+	{
+		if (CheckLinkValues())
+		{
+			currentLink.Title = CurrentLinkTitle.Trim().ToLower();
+			currentLink.Group = !string.IsNullOrWhiteSpace(CurrentLinkGroup) ? CurrentLinkGroup.Trim().ToLower() : null;
+			currentLink.Subgroup = !string.IsNullOrWhiteSpace(CurrentLinkGroup) && !string.IsNullOrWhiteSpace(CurrentLinkSubgroup) ? CurrentLinkSubgroup.Trim().ToLower() : null;
+			currentLink.URL = LinkModel.FormUrl(CurrentLinkURL.Trim());
+			currentLink.Favourite = CurrentLinkFavourite;
+			if (newLink)
+			{
+				linkList.Add(currentLink);
+			}
+			LinkEditorVisible = false;
+			UpdateData();
+			UpdateView(true);
+		}
+	}
+	private void OpenLink(string parameter) => LinkModel.OpenUrl(parameter, dataAccess.Settings.ReturnBrowser(), dataAccess.Settings.ReturnArguments());
+	private void EditLink(LinkModel parameter)
 	{
 		newLink = false;
 		currentLink = (LinkModel)parameter;
@@ -129,40 +159,11 @@ internal class LinkViewModel : ViewModelBase
 		CurrentLinkFavourite = currentLink.Favourite;
 		LinkEditorVisible = true;
 	}
-	private void RemoveLink(object parameter)
+	private void RemoveLink(LinkModel parameter)
 	{
 		linkList.Remove((LinkModel)parameter);
 		UpdateData();
-		UpdateView();
-	}
-	private void SelectFolder(object parameter)
-	{
-		OpenFolderDialog folderDialog = new();
-		bool folderSelected = folderDialog.ShowDialog() == true;
-		LinkEditorVisible = true;
-		if (folderSelected)
-		{
-			CurrentLinkURL = folderDialog.FolderName;
-		}
-	}
-	private void CancelEditLink(object parameter) => LinkEditorVisible = false;
-	private void SaveEditLink(object parameter)
-	{
-		if (CheckLinkValues())
-		{
-			currentLink.Title = CurrentLinkTitle.Trim().ToLower();
-			currentLink.Group = !string.IsNullOrWhiteSpace(CurrentLinkGroup) ? CurrentLinkGroup.Trim().ToLower() : null;
-			currentLink.Subgroup = !string.IsNullOrWhiteSpace(CurrentLinkGroup) && !string.IsNullOrWhiteSpace(CurrentLinkSubgroup) ? currentLinkSubgroup.Trim().ToLower() : null;
-			currentLink.URL = LinkModel.FormUrl(CurrentLinkURL.Trim());
-			currentLink.Favourite = CurrentLinkFavourite;
-			if (newLink)
-			{
-				linkList.Add(currentLink);
-			}
-			LinkEditorVisible = false;
-			UpdateData();
-			UpdateView();
-		}
+		UpdateView(true);
 	}
 
 	private bool CheckLinkValues()
@@ -175,24 +176,24 @@ internal class LinkViewModel : ViewModelBase
 			}
 			else
 			{
-				MessageBox.Show("Invalid URL.", "UniPlanner");
+				Popup.MessageBox("Invalid URL.");
 			}
 		}
 		else
 		{
-			MessageBox.Show("Invalid title.", "UniPlanner");
+			Popup.MessageBox("Invalid title.");
 		}
 		LinkEditorVisible = true;
 		return false;
 	}
-	private void UpdateData() => dataManager.UpdateData();
-	private void UpdateView(bool updateHomeView = true)
+	private void UpdateData() => dataAccess.UpdateLinkList();
+	private void UpdateView(bool updateHomeView)
 	{
 		LinkCollectionView.UpdateView(ShowAll);
 		DefaultMessageVisible = linkList.Count == 0 || !ShowAll && linkList.All(x => !x.Favourite);
 		if (updateHomeView)
 		{
-			MainProgram.UpdateHomeView();
+			DataAccess.MainWindow.UpdateHomeView();
 		}
 	}
 }

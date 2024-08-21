@@ -291,7 +291,7 @@ internal class EventViewModel : ViewModelBase
 	private void UpdateData() => dataAccess.UpdateEventList();
 	private void UpdateView(bool updateHomeView)
 	{
-		MonthCollectionView.UpdateView(CurrentDate);
+		MonthCollectionView.UpdateView(eventList, CurrentDate);
 		WeekCollectionView.UpdateView(CurrentDate);
 		DayCollectionView.UpdateView(CurrentDate);
 		MonthEventCount = eventList.Count(x => (x.Date.Year, x.Date.Month) == (CurrentDate.Year, CurrentDate.Month));

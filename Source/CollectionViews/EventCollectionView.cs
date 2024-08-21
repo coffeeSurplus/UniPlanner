@@ -18,18 +18,17 @@ internal class EventDayCollectionView : CollectionViewBase<EventModel>
 	public void UpdateView(DateOnly currentDate) => CollectionView.Filter = (object parameter) => ((EventModel)parameter).Date == currentDate;
 }
 
-internal class EventMonthCollectionView : CollectionViewBase<EventModel>
+internal class EventMonthCollectionView(List<EventModel> list) : CollectionViewBase<EventModel>(list)
 {
-	public EventMonthCollectionView(List<EventModel> list) : base(list)
+	public void UpdateView(List<EventModel> list, DateOnly currentDate)
 	{
 		CollectionView = new CollectionViewSource() { Source = list.GroupBy(x => x.Date).Select(x => new EventModelGroup(x.Key, new(x))) }.View;
 		CollectionView.SortDescriptions.Add(new("Date", ListSortDirection.Descending));
 		CollectionView.SortDescriptions.Add(new("AllDay", ListSortDirection.Descending));
 		CollectionView.SortDescriptions.Add(new("StartTime", ListSortDirection.Ascending));
 		CollectionView.SortDescriptions.Add(new("Title", ListSortDirection.Ascending));
+		CollectionView.Filter = (object parameter) => (((EventModelGroup)parameter).Date.Year, ((EventModelGroup)parameter).Date.Month) == (currentDate.Year, currentDate.Month);
 	}
-
-	public void UpdateView(DateOnly currentDate) => CollectionView.Filter = (object parameter) => (((EventModelGroup)parameter).Date.Year, ((EventModelGroup)parameter).Date.Month) == (currentDate.Year, currentDate.Month);
 }
 
 internal class EventWeekCollectionView : CollectionViewBase<EventModel>

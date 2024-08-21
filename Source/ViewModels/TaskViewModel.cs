@@ -175,12 +175,12 @@ internal class TaskViewModel : ViewModelBase
 	}
 	private void RemoveCompleted()
 	{
-		int taskRemovedCount = taskList.RemoveAll(x => x.Completed && x.Subtasks.All(x => x.Completed));
 		int subtaskRemovedCount = 0;
 		foreach (TaskModel taskModel in taskList)
 		{
 			subtaskRemovedCount += taskModel.Subtasks.RemoveAll(x => x.Completed);
 		}
+		int taskRemovedCount = taskList.RemoveAll(x => x.Completed && x.Subtasks.Count == 0);
 		if (taskRemovedCount > 0 || subtaskRemovedCount > 0)
 		{
 			UpdateData();

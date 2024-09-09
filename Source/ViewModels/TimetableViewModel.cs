@@ -15,6 +15,7 @@ internal class TimetableViewModel : ViewModelBase
 
 	private int currentPageNumber = 0;
 	private bool timetableEditorVisible = false;
+	private bool pdfEditorVisible = false;
 	private bool horizontalDefaultMessageVisible = false;
 	private bool todayDefaultMessageVisible = false;
 	private string currentTimetableTitle = string.Empty;
@@ -25,6 +26,7 @@ internal class TimetableViewModel : ViewModelBase
 	private string currentTimetableStartTime = string.Empty;
 	private string currentTimetableEndTime = string.Empty;
 	private int currentTimetableColour = 0;
+	private string currentPdfTitle = "timetable";
 
 	public int CurrentPageNumber
 	{
@@ -35,6 +37,11 @@ internal class TimetableViewModel : ViewModelBase
 	{
 		get => timetableEditorVisible;
 		set => SetValue(ref timetableEditorVisible, value);
+	}
+	public bool PdfEditorVisible
+	{
+		get => pdfEditorVisible;
+		set => SetValue(ref pdfEditorVisible, value);
 	}
 	public bool HorizontalDefaultMessageVisible
 	{
@@ -86,9 +93,16 @@ internal class TimetableViewModel : ViewModelBase
 		get => currentTimetableColour;
 		set => SetValue(ref currentTimetableColour, value);
 	}
+	public string CurrentPdfTitle
+	{
+		get => currentPdfTitle;
+		set => SetValue(ref currentPdfTitle, value);
+	}
 
 	public RelayCommand NewTimetableCommand { get; }
-	public RelayCommand SaveAsPdfCommand { get; }
+	public RelayCommand NewPdfCommand { get; }
+	public RelayCommand CancelEditPdfCommand { get; }
+	public RelayCommand SaveEditPdfCommand { get; }
 	public RelayCommand CancelEditTimetableCommand { get; }
 	public RelayCommand SaveEditTimetableCommand { get; }
 	public RelayCommand<TimetableModel> EditTimetableCommand { get; }
@@ -107,7 +121,9 @@ internal class TimetableViewModel : ViewModelBase
 		HorizontalCollectionView = new(timetableList);
 		TodayCollectionView = new(timetableList);
 		NewTimetableCommand = new(NewTimetable);
-		SaveAsPdfCommand = new(SaveAsPdf);
+		NewPdfCommand = new(NewPdf);
+		CancelEditPdfCommand = new(CancelEditPdf);
+		SaveEditPdfCommand = new(SaveEditPdf);
 		CancelEditTimetableCommand = new(CancelEditTimetable);
 		SaveEditTimetableCommand = new(SaveEditTimetable);
 		EditTimetableCommand = new(EditTimetable);
@@ -129,7 +145,17 @@ internal class TimetableViewModel : ViewModelBase
 		CurrentTimetableColour = 0;
 		TimetableEditorVisible = true;
 	}
-	private void SaveAsPdf() => pdfGenerator.SavePdf();
+	private void NewPdf()
+	{
+		CurrentPdfTitle = "timetable";
+		PdfEditorVisible = true;
+	}
+	private void CancelEditPdf() => PdfEditorVisible = false;
+	private void SaveEditPdf()
+	{
+		pdfGenerator.UpdateValues(CurrentPdfTitle);
+		pdfGenerator.SavePdf();
+	}
 	private void CancelEditTimetable() => TimetableEditorVisible = false;
 	private void SaveEditTimetable()
 	{
@@ -183,7 +209,7 @@ internal class TimetableViewModel : ViewModelBase
 				{
 					if (TimeOnly.TryParse(CurrentTimetableEndTime, out TimeOnly newEndTime))
 					{
-						if (newEndTime.ToTimeSpan().TotalMinutes <= 960)
+						if (newEndTime.ToTimeSpan().TotalMinutes <= 1020)
 						{
 							if (newEndTime.CompareTo(newStartTime) == 1 && (newEndTime - newStartTime).TotalMinutes >= 15)
 							{
@@ -203,7 +229,7 @@ internal class TimetableViewModel : ViewModelBase
 						}
 						else
 						{
-							Popup.MessageBox("End time must be before 16:00.");
+							Popup.MessageBox("End time must be before 17:00.");
 						}
 					}
 					else

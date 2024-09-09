@@ -329,7 +329,7 @@
 	</Style>
 	<Style TargetType="{x:Type view:MainWindowView}">
 		<Setter Property="Background" Value="#E5E5E5"/>
-		<Setter Property="Height" Value="600"/>
+		<Setter Property="Height" Value="635"/>
 		<Setter Property="MinHeight" Value="475"/>
 		<Setter Property="MinWidth" Value="750"/>
 		<Setter Property="Width" Value="1000"/>

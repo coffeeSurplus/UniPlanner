@@ -35,14 +35,14 @@ internal static class TaskPdfExtensionMethods
 			List<string> subtitle = [];
 			if (taskCount > 0)
 			{
-				subtitle.Add($"{taskCount} {(taskCount != 1 ? "tasks" : "task")}");
+				subtitle.Add($"{taskCount} {(taskCount is not 1 ? "tasks" : "task")}");
 			}
 			if (subtaskCount > 0)
 			{
-				subtitle.Add($"{subtaskCount} {(subtaskCount != 1 ? "subtasks" : "subtask")}");
+				subtitle.Add($"{subtaskCount} {(subtaskCount is not 1 ? "subtasks" : "subtask")}");
 			}
 			x.Line(header).Style(PdfStyles.Header);
-			x.Span(subtitle.Count != 0 ? string.Join(" • ", subtitle) : "completed").Style(PdfStyles.Subtitle);
+			x.Span(subtitle.Count is not 0 ? string.Join(" • ", subtitle) : "completed").Style(PdfStyles.Subtitle);
 		});
 	}
 	public static void AddTaskTask(this ColumnDescriptor x, TaskModel taskModel)
@@ -60,11 +60,11 @@ internal static class TaskPdfExtensionMethods
 			x.RelativeItem(1).Text(x =>
 			{
 				List<string> subtitle = [];
-				if (taskModel.Details != null)
+				if (taskModel.Details is not null)
 				{
 					subtitle.Add(taskModel.Details);
 				}
-				if (taskModel.Subject != null)
+				if (taskModel.Subject is not null)
 				{
 					subtitle.Add(taskModel.Subject);
 				}
@@ -72,7 +72,7 @@ internal static class TaskPdfExtensionMethods
 				{
 					subtitle.Add(taskModel.Date.ToString("dddd d MMMM"));
 				}
-				if (subtitle.Count != 0)
+				if (subtitle.Count is not 0)
 				{
 					if (taskModel.Completed)
 					{
@@ -140,7 +140,7 @@ internal static class TimetablePdfExtensionMethods
 		x.MarginHorizontal(36);
 		x.DefaultTextStyle(x => x.FontColor("#19223F").FontFamily("Roboto").FontSize(10));
 	}
-	public static void AddTimetableTitle(this ColumnDescriptor x) => x.Item().AlignCenter().Text("timetable").Style(PdfStyles.Title);
+	public static void AddTimetableTitle(this ColumnDescriptor x, string title) => x.Item().AlignCenter().Text(title).Style(PdfStyles.Title);
 	public static void AddTimetableColumns(this TableDescriptor x)
 	{
 		x.ColumnsDefinition(x =>
@@ -168,7 +168,7 @@ internal static class TimetablePdfExtensionMethods
 			x.Cell().Row(2).Column(column).Height(10).BorderVertical(1).BorderColor("#19223F");
 		}
 
-		for (uint row = 3; row <= 9; row++)
+		for (uint row = 3; row <= 10; row++)
 		{
 			for (uint column = 2; column <= 6; column++)
 			{
@@ -183,29 +183,29 @@ internal static class TimetablePdfExtensionMethods
 	}
 	public static void AddTimetableTimes(this TableDescriptor x)
 	{
-		for (uint row = 2; row <= 9; row++)
+		for (uint row = 2; row <= 10; row++)
 		{
-			x.Cell().Column(0).Row(row).RowSpan(2).AlignCenter().AlignMiddle().PaddingBottom(row == 2 ? 50 : row == 9 ? -50 : 0).Text($"{row + 7:00}:00");
+			x.Cell().Column(0).Row(row).RowSpan(2).AlignCenter().AlignMiddle().PaddingBottom(row is 2 ? 50 : row is 10 ? -50 : 0).Text($"{row + 7:00}:00");
 		}
 	}
 	public static void AddTimetableModel(this TableDescriptor x, TimetableModel timetableModel)
 	{
-		x.Cell().Column((uint)timetableModel.Day + 2).Row((uint)(Math.Floor(timetableModel.StartTime.ToTimeSpan().TotalHours) - 6)).RowSpan((uint)(Math.Ceiling(timetableModel.EndTime.ToTimeSpan().TotalHours) - Math.Floor(timetableModel.StartTime.ToTimeSpan().TotalHours))).PaddingTop((uint)(timetableModel.StartTime.ToTimeSpan().TotalMinutes % 60)).PaddingBottom((uint)(60 - (timetableModel.EndTime.ToTimeSpan().TotalMinutes % 60 == 0 ? 60 : timetableModel.EndTime.ToTimeSpan().TotalMinutes % 60))).Background(PdfStyles.BackgroundColour(timetableModel.Colour)).BorderTop(timetableModel.StartTime.ToTimeSpan().TotalMinutes % 60 == 0 ? 1 : 0).BorderBottom(timetableModel.EndTime.ToTimeSpan().TotalMinutes % 60 == 0 ? 1 : 0).BorderVertical(1).BorderColor("#19223F").AlignCenter().AlignMiddle().Text(x =>
+		x.Cell().Column((uint)timetableModel.Day + 2).Row((uint)(Math.Floor(timetableModel.StartTime.ToTimeSpan().TotalHours) - 6)).RowSpan((uint)(Math.Ceiling(timetableModel.EndTime.ToTimeSpan().TotalHours) - Math.Floor(timetableModel.StartTime.ToTimeSpan().TotalHours))).PaddingTop((uint)(timetableModel.StartTime.ToTimeSpan().TotalMinutes % 60)).PaddingBottom((uint)(60 - (timetableModel.EndTime.ToTimeSpan().TotalMinutes % 60 is 0 ? 60 : timetableModel.EndTime.ToTimeSpan().TotalMinutes % 60))).Background(PdfStyles.BackgroundColour(timetableModel.Colour)).BorderTop(timetableModel.StartTime.ToTimeSpan().TotalMinutes % 60 is 0 ? 1 : 0).BorderBottom(timetableModel.EndTime.ToTimeSpan().TotalMinutes % 60 is 0 ? 1 : 0).BorderVertical(1).BorderColor("#19223F").AlignCenter().AlignMiddle().Text(x =>
 		{
 			List<string> subtitleText = [];
-			if (timetableModel.Details != null)
+			if (timetableModel.Details is not null)
 			{
 				subtitleText.Add(timetableModel.Details);
 			}
-			if (timetableModel.Subject != null)
+			if (timetableModel.Subject is not null)
 			{
 				subtitleText.Add(timetableModel.Subject);
 			}
-			if (timetableModel.Location != null)
+			if (timetableModel.Location is not null)
 			{
 				subtitleText.Add(timetableModel.Location);
 			}
-			if (subtitleText.Count != 0 && (timetableModel.EndTime - timetableModel.StartTime).TotalMinutes >= 30)
+			if (subtitleText.Count is not 0 && (timetableModel.EndTime - timetableModel.StartTime).TotalMinutes >= 30)
 			{
 				x.Line(timetableModel.Title).Style(PdfStyles.Task);
 				x.Span(string.Join(" • ", subtitleText)).Style(PdfStyles.Subtitle);

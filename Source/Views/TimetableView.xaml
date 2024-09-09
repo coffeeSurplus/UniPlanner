@@ -37,14 +37,14 @@
 							<ColumnDefinition Width="1*"/>
 						</Grid.ColumnDefinitions>
 						<Button Grid.Column="0" Content="new event" Command="{Binding Path=Timetable.NewTimetableCommand}"/>
-						<Button Grid.Column="1" Content="save as pdf" Command="{Binding Path=Timetable.SaveAsPdfCommand}"/>
+						<Button Grid.Column="1" Content="save as pdf" Command="{Binding Path=Timetable.NewPdfCommand}"/>
 					</Grid>
 				</Border>
 			</Grid>
 			<Grid Grid.Row="2">
 				<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=Timetable.CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=0}">
 					<ScrollViewer>
-						<Grid Height="465" VerticalAlignment="Top">
+						<Grid Height="525" VerticalAlignment="Top">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="50"/>
 								<ColumnDefinition Width="1*"/>
@@ -72,6 +72,7 @@
 									<RowDefinition Height="60"/>
 									<RowDefinition Height="60"/>
 									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
 								</Grid.RowDefinitions>
 								<TextBlock Grid.Row="0" Text="09:00" Style="{StaticResource ResourceKey=TimeText}"/>
 								<TextBlock Grid.Row="1" Text="10:00" Style="{StaticResource ResourceKey=TimeText}"/>
@@ -81,6 +82,7 @@
 								<TextBlock Grid.Row="5" Text="14:00" Style="{StaticResource ResourceKey=TimeText}"/>
 								<TextBlock Grid.Row="6" Text="15:00" Style="{StaticResource ResourceKey=TimeText}"/>
 								<TextBlock Grid.Row="7" Text="16:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="8" Text="17:00" Style="{StaticResource ResourceKey=TimeText}"/>
 							</Grid>
 							<ItemsControl Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="1" ItemsSource="{Binding Path=Timetable.VerticalCollectionView.CollectionView}">
 								<ItemsControl.ItemsPanel>
@@ -153,6 +155,7 @@
 									<RowDefinition Height="60"/>
 									<RowDefinition Height="60"/>
 									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
 								</Grid.RowDefinitions>
 								<Rectangle Grid.Row="0" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
 								<Rectangle Grid.Row="1" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
@@ -163,6 +166,7 @@
 								<Rectangle Grid.Row="6" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
 								<Rectangle Grid.Row="7" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
 								<Rectangle Grid.Row="8" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
+								<Rectangle Grid.Row="9" Style="{StaticResource ResourceKey=HorizontalGridline}"/>
 							</Grid>
 						</Grid>
 					</ScrollViewer>
@@ -391,6 +395,30 @@
 							</Grid.ColumnDefinitions>
 							<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=Timetable.CancelEditTimetableCommand}"/>
 							<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=Timetable.SaveEditTimetableCommand}"/>
+						</Grid>
+					</Grid>
+				</Border>
+			</Popup>
+			<Popup IsOpen="{Binding Path=Timetable.PdfEditorVisible}">
+				<Border>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="80"/>
+							<ColumnDefinition Width="320"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Column="0" Grid.Row="0" Text="*title:" Style="{StaticResource ResourceKey=Title}"/>
+						<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=Timetable.CurrentPdfTitle, UpdateSourceTrigger=PropertyChanged}"/>
+						<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="0" Content="cancel" Style="{StaticResource ResourceKey=StopButton}" Command="{Binding Path=Timetable.CancelEditPdfCommand}"/>
+							<Button Grid.Column="1" Content="save" Style="{StaticResource ResourceKey=StartButton}" Command="{Binding Path=Timetable.SaveEditPdfCommand}"/>
 						</Grid>
 					</Grid>
 				</Border>

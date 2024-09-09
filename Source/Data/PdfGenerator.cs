@@ -97,6 +97,10 @@ internal class TimetablePdfGenerator(List<TimetableModel> timetableList, string 
 {
 	private readonly List<TimetableModel> timetableList = timetableList;
 
+	private string title = "timetable";
+
+	public void UpdateValues(string title) => this.title = title;
+
 	protected override byte[] GeneratePdf()
 	{
 		return Document.Create(x =>
@@ -106,7 +110,7 @@ internal class TimetablePdfGenerator(List<TimetableModel> timetableList, string 
 				x.SetTimetablePage();
 				x.Content().Column(x =>
 				{
-					x.AddTimetableTitle();
+					x.AddTimetableTitle(title);
 					x.Item().Table(x =>
 					{
 						x.AddTimetableColumns();

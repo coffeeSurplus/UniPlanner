@@ -178,7 +178,7 @@ internal static class TimetablePdfExtensionMethods
 
 		for (uint column = 2; column <= 6; column++)
 		{
-			x.Cell().Row(10).Column(column).Height(10).BorderVertical(1).BorderColor("#19223F");
+			x.Cell().Row(11).Column(column).Height(10).BorderVertical(1).BorderColor("#19223F");
 		}
 	}
 	public static void AddTimetableTimes(this TableDescriptor x)

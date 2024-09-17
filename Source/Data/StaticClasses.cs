@@ -168,7 +168,7 @@ internal static class TimetablePdfExtensionMethods
 			x.Cell().Row(2).Column(column).Height(10).BorderVertical(1).BorderColor("#19223F");
 		}
 
-		for (uint row = 3; row <= 10; row++)
+		for (uint row = 3; row <= 11; row++)
 		{
 			for (uint column = 2; column <= 6; column++)
 			{
@@ -183,9 +183,9 @@ internal static class TimetablePdfExtensionMethods
 	}
 	public static void AddTimetableTimes(this TableDescriptor x)
 	{
-		for (uint row = 2; row <= 10; row++)
+		for (uint row = 2; row <= 11; row++)
 		{
-			x.Cell().Column(0).Row(row).RowSpan(2).AlignCenter().AlignMiddle().PaddingBottom(row is 2 ? 50 : row is 10 ? -50 : 0).Text($"{row + 7:00}:00");
+			x.Cell().Column(0).Row(row).RowSpan(2).AlignCenter().AlignMiddle().PaddingBottom(row is 2 ? 50 : row is 11 ? -50 : 0).Text($"{row + 7:00}:00");
 		}
 	}
 	public static void AddTimetableModel(this TableDescriptor x, TimetableModel timetableModel)

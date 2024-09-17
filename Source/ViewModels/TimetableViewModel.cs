@@ -209,7 +209,7 @@ internal class TimetableViewModel : ViewModelBase
 				{
 					if (TimeOnly.TryParse(CurrentTimetableEndTime, out TimeOnly newEndTime))
 					{
-						if (newEndTime.ToTimeSpan().TotalMinutes <= 1020)
+						if (newEndTime.ToTimeSpan().TotalMinutes <= 1080)
 						{
 							if (newEndTime.CompareTo(newStartTime) == 1 && (newEndTime - newStartTime).TotalMinutes >= 15)
 							{

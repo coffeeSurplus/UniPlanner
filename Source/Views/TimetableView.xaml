@@ -44,7 +44,7 @@
 			<Grid Grid.Row="2">
 				<Border Style="{StaticResource ResourceKey=Panel}" Visibility="{Binding Path=Timetable.CurrentPageNumber, Converter={StaticResource ResourceKey=GeneralIntToVisibility}, ConverterParameter=0}">
 					<ScrollViewer>
-						<Grid Height="525" VerticalAlignment="Top">
+						<Grid Height="585" VerticalAlignment="Top">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="50"/>
 								<ColumnDefinition Width="1*"/>
@@ -73,6 +73,7 @@
 									<RowDefinition Height="60"/>
 									<RowDefinition Height="60"/>
 									<RowDefinition Height="60"/>
+									<RowDefinition Height="60"/>
 								</Grid.RowDefinitions>
 								<TextBlock Grid.Row="0" Text="09:00" Style="{StaticResource ResourceKey=TimeText}"/>
 								<TextBlock Grid.Row="1" Text="10:00" Style="{StaticResource ResourceKey=TimeText}"/>
@@ -83,6 +84,7 @@
 								<TextBlock Grid.Row="6" Text="15:00" Style="{StaticResource ResourceKey=TimeText}"/>
 								<TextBlock Grid.Row="7" Text="16:00" Style="{StaticResource ResourceKey=TimeText}"/>
 								<TextBlock Grid.Row="8" Text="17:00" Style="{StaticResource ResourceKey=TimeText}"/>
+								<TextBlock Grid.Row="9" Text="18:00" Style="{StaticResource ResourceKey=TimeText}"/>
 							</Grid>
 							<ItemsControl Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="1" ItemsSource="{Binding Path=Timetable.VerticalCollectionView.CollectionView}">
 								<ItemsControl.ItemsPanel>

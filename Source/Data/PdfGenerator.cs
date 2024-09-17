@@ -110,17 +110,20 @@ internal class TimetablePdfGenerator(List<TimetableModel> timetableList, string 
 				x.SetTimetablePage();
 				x.Content().Column(x =>
 				{
-					x.AddTimetableTitle(title);
 					x.Item().Table(x =>
 					{
-						x.AddTimetableColumns();
-						x.AddTimetableDays();
-						x.AddTimetableCells();
-						x.AddTimetableTimes();
-						foreach (TimetableModel timetableModel in timetableList)
+						x.AddTimetableTitle(title);
+						x.Cell().Column(2).Table(x =>
 						{
-							x.AddTimetableModel(timetableModel);
-						}
+							x.AddTimetableColumns();
+							x.AddTimetableDays();
+							x.AddTimetableCells();
+							x.AddTimetableTimes();
+							foreach (TimetableModel timetableModel in timetableList)
+							{
+								x.AddTimetableModel(timetableModel);
+							}
+						});
 					});
 				});
 			});
